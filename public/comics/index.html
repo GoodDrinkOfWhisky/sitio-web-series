@@ -9,7 +9,8 @@
 {
   "imports": {
     "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
-    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
   }
 }
 </script>
@@ -21,12 +22,24 @@
 
 <h1 class="text-3xl font-bold text-center mb-6">COMICS WHISKY 🔥</h1>
 
-<!-- PANEL ADMIN -->
-<div id="adminLogin" class="max-w-md mx-auto mb-8 p-4 bg-zinc-900 rounded-xl">
-  <h2 class="font-bold mb-2">Panel Admin (solo tú)</h2>
-  <input id="adminPass" type="password" placeholder="Contraseña: whisky123" class="w-full p-2 rounded bg-black mb-2">
-  <button onclick="loginAdmin()" class="w-full bg-white text-black p-2 rounded font-bold">Entrar</button>
-  <div id="adminPanel" class="hidden mt-4">
+<!-- PANEL ADMIN AUTOMATICO -->
+<div id="adminLogin" class="max-w-md mx-auto mb-8 p-4 bg-zinc-900 rounded-xl text-center">
+  <div id="noLogueado">
+    <h2 class="font-bold mb-2">Panel Admin</h2>
+    <p class="text-xs opacity-60 mb-2">Solo lxvtorres@gmail.com puede entrar</p>
+    <button onclick="loginGoogle()" class="w-full bg-white text-black p-2 rounded font-bold">Iniciar sesión con Google</button>
+  </div>
+  
+  <div id="logueadoNoAdmin" class="hidden">
+    <p id="msgNoAdmin" class="text-sm"></p>
+    <button onclick="logout()" class="mt-2 w-full bg-zinc-800 p-2 rounded">Cerrar sesión</button>
+  </div>
+
+  <div id="adminPanel" class="hidden mt-4 text-left">
+    <div class="flex justify-between items-center mb-3">
+      <span id="adminEmail" class="text-xs text-green-400"></span>
+      <button onclick="logout()" class="text-xs bg-red-600 px-2 py-1 rounded">Salir</button>
+    </div>
     <input id="comicTitle" placeholder="Título del comic" class="w-full p-2 rounded bg-black mb-2">
     <input id="comicImage" placeholder="Link de imagen (imgur, etc)" class="w-full p-2 rounded bg-black mb-2">
     <input id="comicLink" placeholder="Link para leer / descargar" class="w-full p-2 rounded bg-black mb-2">
@@ -42,6 +55,7 @@
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "firebase/firestore";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXMgNxrFXyT6MUdRJ03u496iAMpx4mwP8",
@@ -53,18 +67,46 @@ const firebaseConfig = {
   measurementId: "G-R20EFY1CGB"
 };
 
+const ADMIN_EMAIL = "lxvtorres@gmail.com";
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 const comicsRef = collection(db, "comics");
 
 let isAdmin = false;
-window.loginAdmin = () => {
-  if(document.getElementById('adminPass').value === 'whisky123'){
+let comicsData = [];
+
+// DETECCIÓN AUTOMÁTICA
+onAuthStateChanged(auth, (user) => {
+  const noLog = document.getElementById('noLogueado');
+  const logNoAdmin = document.getElementById('logueadoNoAdmin');
+  const adminPanel = document.getElementById('adminPanel');
+
+  if(user && user.email === ADMIN_EMAIL){
     isAdmin = true;
-    document.getElementById('adminPanel').classList.remove('hidden');
-    alert('Admin activado');
-  } else { alert('Contraseña incorrecta'); }
-}
+    noLog.classList.add('hidden');
+    logNoAdmin.classList.add('hidden');
+    adminPanel.classList.remove('hidden');
+    document.getElementById('adminEmail').innerText = `Admin: ${user.email}`;
+  } else if(user){
+    isAdmin = false;
+    noLog.classList.add('hidden');
+    adminPanel.classList.add('hidden');
+    logNoAdmin.classList.remove('hidden');
+    document.getElementById('msgNoAdmin').innerText = `Conectado como ${user.email} - No eres admin`;
+  } else {
+    isAdmin = false;
+    adminPanel.classList.add('hidden');
+    logNoAdmin.classList.add('hidden');
+    noLog.classList.remove('hidden');
+  }
+  renderGrid();
+});
+
+window.loginGoogle = () => signInWithPopup(auth, provider);
+window.logout = () => signOut(auth);
 
 window.subirComic = async () => {
   const title = document.getElementById('comicTitle').value;
@@ -76,29 +118,37 @@ window.subirComic = async () => {
 }
 
 window.borrarComic = async (id) => {
-  if(!isAdmin) return alert('Solo admin puede borrar');
+  if(!isAdmin) return alert('Solo admin');
   if(confirm('¿Borrar este comic?')) await deleteDoc(doc(db, "comics", id));
 }
 
-// TIEMPO REAL - TODOS VEN LO MISMO
-const q = query(comicsRef, orderBy("createdAt", "desc"));
-onSnapshot(q, (snap) => {
+function renderGrid(){
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  if(snap.empty) grid.innerHTML = '<p class="col-span-full text-center opacity-50">Aún no hay comics, ¡sé el primero!</p>';
-  snap.forEach(d => {
-    const c = d.data();
+  if(comicsData.length === 0){
+    grid.innerHTML = '<p class="col-span-full text-center opacity-50">Aún no hay comics</p>';
+    return;
+  }
+  comicsData.forEach(item => {
+    const c = item.data;
     grid.innerHTML += `
       <div class="bg-zinc-900 rounded-xl overflow-hidden">
         <img src="${c.image}" class="w-full h-64 object-cover">
         <div class="p-3">
           <h3 class="font-bold">${c.title}</h3>
           ${c.link ? `<a href="${c.link}" target="_blank" class="text-yellow-400 text-sm underline">Leer</a>` : ''}
-          ${isAdmin ? `<button onclick="borrarComic('${d.id}')" class="block mt-2 text-xs bg-red-600 px-2 py-1 rounded">Borrar</button>` : ''}
+          ${isAdmin ? `<button onclick="borrarComic('${item.id}')" class="block mt-2 text-xs bg-red-600 px-2 py-1 rounded">Borrar</button>` : ''}
         </div>
       </div>
     `;
   });
+}
+
+const q = query(comicsRef, orderBy("createdAt", "desc"));
+onSnapshot(q, (snap) => {
+  comicsData = [];
+  snap.forEach(d => comicsData.push({id: d.id, data: d.data()}));
+  renderGrid();
 });
 </script>
 </body>
