@@ -2,9 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="/sitio-web-series/">
 <title>COMICS</title>
 <style>
 body{background:#121212;color:#fff;font-family:Arial;margin:0}
+.top{padding:12px 20px;background:#1a1a1a;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;position:sticky;top:0;z-index:10}
+.top a{background:#8B0000;color:#fff;padding:8px 14px;text-decoration:none;font-weight:bold;border-radius:3px}
 .biblioteca{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px;padding:30px}
 .portada{cursor:pointer;transition:0.1s}
 .portada img{width:100%;height:240px;object-fit:cover;border-radius:3px}
@@ -24,6 +28,10 @@ input{padding:8px;margin:5px;background:#222;color:#fff;border:1px solid #444}
 </style>
 </head>
 <body>
+<div class="top">
+  <h3 style="margin:0">COMICS</h3>
+  <a href="/sitio-web-series/">← VOLVER AL INICIO</a>
+</div>
 
 <div class="biblioteca" id="biblioteca"></div>
 
@@ -60,15 +68,14 @@ input{padding:8px;margin:5px;background:#222;color:#fff;border:1px solid #444}
 <script>
 let comics = JSON.parse(localStorage.getItem('comics_v2') || '[]');
 let seleccionado = 0, editando = -1, paginaActual = 0;
-
 function render(){
   const bib=document.getElementById('biblioteca');
   bib.innerHTML='';
+  if(comics.length==0){ bib.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#666;margin-top:50px">No hay comics aun. Presiona E 3 veces rapido para agregar.</p>'; return; }
   comics.forEach((c,i)=>{
     bib.innerHTML+=`<div class="portada" onclick="leer(${i})" ondblclick="menu(${i})"><img src="${c.portada}"><p>${c.titulo}</p></div>`;
   });
 }
-
 function leer(i){
   setTimeout(()=>{
     if(document.getElementById('miniMenu').style.display==='flex') return;
@@ -76,14 +83,12 @@ function leer(i){
     document.getElementById('visor').style.display='block';
   },150);
 }
-
 function mostrar(){
   const c=comics[seleccionado];
   if(!c.paginas.length){ alert('Este comic no tiene paginas. Editalo para agregar.'); return; }
   document.getElementById('imgVisor').src=c.paginas[paginaActual];
   document.getElementById('numPag').innerText=(paginaActual+1)+'/'+c.paginas.length;
 }
-
 function cambiar(dir){
   const c=comics[seleccionado];
   paginaActual+=dir;
@@ -91,11 +96,9 @@ function cambiar(dir){
   if(paginaActual>=c.paginas.length) paginaActual=c.paginas.length-1;
   mostrar();
 }
-
 function menu(i){ seleccionado=i; document.getElementById('mTitulo').innerText=comics[i].titulo; document.getElementById('miniMenu').style.display='flex'; }
 function borrarComic(){ if(confirm('¿Eliminar?')){ comics.splice(seleccionado,1); localStorage.setItem('comics_v2',JSON.stringify(comics)); document.getElementById('miniMenu').style.display='none'; render(); } }
 function editarComic(){ editando=seleccionado; abrirAdmin(); }
-
 function abrirAdmin(){
   document.getElementById('miniMenu').style.display='none';
   const c=editando>=0?comics[editando]:null;
@@ -112,9 +115,7 @@ function abrirAdmin(){
   }
   document.getElementById('admin').style.display='block';
 }
-
 function borrarPag(idx){ comics[editando].paginas.splice(idx,1); localStorage.setItem('comics_v2',JSON.stringify(comics)); abrirAdmin(); render(); }
-
 function toBase64(file){
   return new Promise(async (r)=>{
     const img=new Image();
@@ -129,7 +130,6 @@ function toBase64(file){
     r(canvas.toDataURL('image/jpeg',0.7));
   });
 }
-
 async function guardarComic(){
   const titulo=document.getElementById('titulo').value.trim();
   if(!titulo) return alert('Falta titulo');
@@ -155,7 +155,6 @@ async function guardarComic(){
   editando=-1;
   render();
 }
-
 document.addEventListener('keydown',e=>{
   if(e.key.toLowerCase()=='e'){
     window.cc=(window.cc||0)+1;
