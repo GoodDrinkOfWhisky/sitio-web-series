@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html> 
+  <div id="splash"><img src="GOODDRINKICON.png"></div>
+
+<style>
+#splash{
+  position:fixed !important;
+  top:0 !important; left:0 !important;
+  width:100vw !important;
+  height:100vh !important;
+  background:#000 !important;
+  z-index:9999999 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  transition:opacity .8s ease !important;
+}
+#splash img{width:1200px !important; height:auto !important;}
+#splash.oculto{opacity:0 !important; pointer-events:none !important}
+</style>
+
+<script>
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('splash').classList.add('oculto');
+    setTimeout(()=>document.getElementById('splash').remove(),800);
+  },1200);
+});
+</script>
+ 
+ 
+ 
+ 
+ <style>
+  
+#pj-wrap{
+  position:fixed; left:20px; top:20px; z-index:10000;
+  width:200px; text-align:center;
+}
+#pj-gif{
+  width: 300px; height:300px; object-fit:contain;
+  cursor:pointer; display:block; margin:0 auto;
+  filter: drop-shadow(0 0 6px #fff);
+  user-select:none; -webkit-user-drag:none;
+}
+#pj-gif.talking{
+  animation: talk 0.12s infinite alternate;
+}
+@keyframes talk{
+  from{ transform: scale(1); }
+  to{ transform: scale(1.08) translateY(-2px); }
+}
+#pj-globo{
+  display:none; position:absolute; top:500px; left:0;
+  width:200px; background:#8B0000; color:#000;
+  font-weight:900; font-size:25px; padding:8px;
+  border-radius:8px; border:2px solid #2b0000;
+  box-shadow:0 0 10px #400000, 0 0 15px #8B0000;
+  text-shadow: 0 0 2px #fff; line-height:1.2;
+  word-break:break-word;
+}
+</style>
+
+<div id="pj-wrap">
+  <img id="pj-gif" src="RENYA.gif" draggable="false">
+  <div id="pj-globo"></div>
+</div>
+
+<script>
+(function(){
+  const PASS2 = "admin123";
+  let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!,mucho gusto estoy aqui para brindarte consejos bassicos", "Mira la galeria", "Esta diseñada para los fanarts","tambien puedes apoyar el conenido al visitar las demas redes sociales,los links se encuentran abajo","este sitio se encuentra en una fase muy temprana asi que no hay mucho que hacer por ahora lo siento..."]');
+  let pos = 0;
+  let busy = false;
+  const elGif = document.getElementById("pj-gif");
+  const elGlobo = document.getElementById("pj-globo");
+
+  elGif.addEventListener("click", function(){
+    if(busy) return;
+    if(lista.length === 0) return;
+    busy = true;
+    elGif.classList.add("talking");
+    elGlobo.innerText = lista[pos];
+    elGlobo.style.display = "block";
+    pos = (pos + 1) % lista.length;
+    setTimeout(function(){
+      elGif.classList.remove("talking");
+      setTimeout(function(){ elGlobo.style.display="none"; busy=false; }, 2000);
+    }, 1200);
+  });
+
+  let t = null;
+  function startHold(){ t = setTimeout(openAdmin, 1200); }
+  function stopHold(){ clearTimeout(t); }
+  elGif.addEventListener("mousedown", startHold);
+  elGif.addEventListener("mouseup", stopHold);
+  elGif.addEventListener("mouseleave", stopHold);
+  elGif.addEventListener("touchstart", startHold, {passive:true});
+  elGif.addEventListener("touchend", stopHold);
+
+  function openAdmin(){
+    if(prompt("Pass:")!== PASS2) return;
+    let txt = prompt("Actuales:\n" + lista.join("\n") + "\n\nEscribe nuevo texto, vacio borra ultimo:");
+    if(txt === null) return;
+    txt = txt.trim();
+    if(txt === ""){ lista.pop(); } else { lista.push(txt); }
+    localStorage.setItem("frases", JSON.stringify(lista));
+  }
+})();
+</script>
+  <!-- ESTE ES EL BOTON, SIN ESTO NO APARECE -->
+<button id="btnComics">CÓMICS</button>
+
+<audio id="sonidoComics" src="click.mp3" preload="auto"></audio>
+
+<style>
+#btnComics{
+  position: fixed !important;
+  left: 15px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 999999 !important;
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  width: 210px !important;
+  padding: 14px 0 !important;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.4);
+  transition: all 0.2s ease;
+  display: block !important;
+}
+#btnComics:hover{
+  box-shadow: 0 0 12px #fff, 0 0 25px #fff !important;
+  background: #111 !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+#btnComics:active{
+  transform: translateY(-50%) scale(0.95) !important;
+}
+</style>
+
+<script>
+  document.getElementById("btnComics")?.addEventListener("click",(e)=>{
+    e.preventDefault();
+    let audio = document.getElementById("sonidoComics");
+    if(audio){ audio.currentTime = 0; audio.play().catch(()=>{}); }
+    let v=document.getElementById("visorComics");
+    if(v) v.remove();
+    let d=document.createElement("div");
+    d.id="visorComics";
+    d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999999";
+    d.innerHTML=`
+      <div style="height:50px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 15px;border-bottom:2px solid #fff">
+        <span style="color:white;font-weight:bold;letter-spacing:1px">CÓMICS</span>
+        <button onclick="document.getElementById('visorComics').remove()" style="background:#000;color:white;border:2px solid #fff;padding:8px 15px;cursor:pointer;font-weight:bold">X CERRAR</button>
+      </div>
+      <iframe src="COMICS/COMICS.html" style="width:100%;height:calc(100% - 50px);border:none"></iframe>
+    `;
+    document.body.appendChild(d);
+  });
+</script>
+<style>
+#btnComics, #btnGaleria{
+  position:fixed; left:15px; z-index:9999;
+  background:#000; color:#fff; border:2px solid #fff;
+  width:210px; padding:14px 0; font-weight:bold;
+  letter-spacing:1px; cursor:pointer; border-radius:6px;
+  box-shadow:0 0 10px #fff; transition: all 0.2s ease;
+}
+#btnComics{ top:50%; transform:translateY(-50%); }
+#btnGaleria{ top:calc(50% + 60px); transform:translateY(-50%); }
+#btnComics:hover, #btnGaleria:hover{
+  box-shadow:0 0 12px #fff, 0 0 25px #fff!important;
+  transform:translateY(-50%) scale(1.05)!important;
+}
+</style>
+
+<button id="btnGaleria">GALERÍA</button>
+
+<script>
+const PASS = "admin123";
+let fotos = JSON.parse(localStorage.getItem("fotos") || "[]");
+let admin = false;
+let indiceActual = 0;
+
+document.getElementById("btnGaleria").onclick = () => {
+  document.getElementById("sonidoComics")?.play().catch(()=>{});
+  abrirGaleria();
+};
+
+function abrirGaleria(){
+  document.getElementById("visorComics")?.remove();
+  let visor = document.createElement("div");
+  visor.id = "visorComics";
+  visor.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999999;display:flex;flex-direction:column;";
+
+  let grid = fotos.map((src,i)=>`
+    <div style="position:relative">
+      <img src="${src}" onclick="verFoto(${i})" style="width:100%;height:220px;object-fit:cover;border:2px solid #fff;border-radius:8px;cursor:pointer">
+      ${admin?`<button onclick="event.stopPropagation(); quitar(${i})" style="position:absolute;top:5px;right:5px;background:red;color:#fff;border:none;padding:5px 8px;cursor:pointer">X</button>`:""}
+    </div>
+  `).join("");
+
+  visor.innerHTML = `
+    <div style="height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 15px;border-bottom:2px solid #fff;background:#000;flex-shrink:0">
+      <b style="color:#fff">GALERÍA</b>
+      <div style="display:flex;gap:10px">
+        <button onclick="loginAdmin()" style="background:#fff;color:#000;border:none;padding:6px 12px;font-weight:bold;cursor:pointer">${admin?"ADMIN ON":"ADMIN"}</button>
+        <button onclick="this.closest('#visorComics').remove()" style="background:#000;color:#fff;border:2px solid #fff;padding:6px 12px;cursor:pointer">CERRAR</button>
+      </div>
+    </div>
+    ${admin?`<div style="padding:10px;display:flex;gap:10px;background:#111"><input type="file" id="fileIn" accept="image/*" multiple style="color:#fff"><button onclick="poner()" style="background:#fff;color:#000;font-weight:bold;padding:6px 15px;cursor:pointer">SUBIR</button></div>`:""}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;padding:20px;overflow-y:auto;background:#0a0a0a;flex:1">${grid || "<p style='color:#fff'>No hay fotos aún. Entra como admin para subir.</p>"}</div>
+  `;
+  document.body.appendChild(visor);
+}
+
+// === FUNCION PARA METERSE A LAS FOTOS ===
+window.verFoto = (i)=>{
+  indiceActual = i;
+  mostrarFoto();
+};
+
+function mostrarFoto(){
+  document.getElementById("visorFoto")?.remove();
+  let v = document.createElement("div");
+  v.id = "visorFoto";
+  v.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:9999999;display:flex;align-items:center;justify-content:center;";
+
+  v.innerHTML = `
+    <button onclick="cambiarFoto(-1)" style="position:absolute;left:15px;top:50%;transform:translateY(-50%);background:#000;color:#fff;border:2px solid #fff;padding:15px 18px;font-size:24px;cursor:pointer;border-radius:50%">‹</button>
+    <img id="imgGrande" src="${fotos[indiceActual]}" style="max-width:80%;max-height:75%;border:2px solid #fff;box-shadow:0 0 30px #fff;border-radius:8px">
+    <button onclick="cambiarFoto(1)" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);background:#000;color:#fff;border:2px solid #fff;padding:15px 18px;font-size:24px;cursor:pointer;border-radius:50%">›</button>
+    <button onclick="document.getElementById('visorFoto').remove()" style="position:absolute;bottom:25px;left:50%;transform:translateX(-50%);background:#000;color:#fff;border:2px solid #fff;padding:10px 35px;font-weight:bold;cursor:pointer;border-radius:6px;box-shadow:0 0 15px #fff;letter-spacing:3px">X</button>
+  `;
+  document.body.appendChild(v);
+
+  // Deslizar con el dedo
+  let startX = 0;
+  let img = v.querySelector("#imgGrande");
+  img.addEventListener("touchstart", e => startX = e.touches[0].clientX, {passive:true});
+  img.addEventListener("touchend", e => {
+    let diff = e.changedTouches[0].clientX - startX;
+    if(diff > 50) cambiarFoto(-1);
+    if(diff < -50) cambiarFoto(1);
+  });
+}
+
+window.cambiarFoto = (dir)=>{
+  indiceActual += dir;
+  if(indiceActual < 0) indiceActual = fotos.length - 1;
+  if(indiceActual >= fotos.length) indiceActual = 0;
+  document.getElementById("imgGrande").src = fotos[indiceActual];
+}
+
+window.loginAdmin = ()=>{
+  if(prompt("Contraseña:") === PASS){ admin=true; abrirGaleria(); } else alert("Mal");
+}
+window.poner = ()=>{
+  let files = document.getElementById("fileIn").files;
+  for(let f of files){
+    let r = new FileReader();
+    r.onload = e => { fotos.push(e.target.result); localStorage.setItem("fotos", JSON.stringify(fotos)); abrirGaleria(); };
+    r.readAsDataURL(f);
+  }
+}
+window.quitar = (i)=>{
+  fotos.splice(i,1); localStorage.setItem("fotos", JSON.stringify(fotos)); abrirGaleria();
+}
+</script>
+</body>
+</html>
+<head>
+    <title>www.GoodDrinkOfSeries.com</title>
+</head>
+<div class="video-fondo">
+  <video autoplay loop muted playsinline>
+    <source src="0001-0027.mp4" type="video/mp4">
+  </video>
+</div>
+
+<style>
+.video-fondo{
+  /* === CAMBIA EL TAMAÑO AQUÍ === */
+  --ancho: 100%;   /* pon 100% para pantalla completa, o 800px, 500px */
+  --alto: 100%;    /* pon 100% para pantalla completa, o 400px */
+  --pos-x: 0;      /* mueve horizontal: 0 = izquierda, 50% = centro */
+  --pos-y: 0;      /* mueve vertical: 0 = arriba, 50% = centro */
+
+  position: fixed !important;
+  width: var(--ancho) !important;
+  height: var(--alto) !important;
+  left: var(--pos-x) !important;
+  top: var(--pos-y) !important;
+  z-index: 1 !important;
+  pointer-events: none !important; /* BLOQUEADO - no se puede clickear ni mover */
+  overflow: hidden !important;
+}
+
+.video-fondo video{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* cambia a 'contain' si no quieres que recorte */
+  pointer-events: none !important;
+}
+</style>
+
+
+    <IMG SRC="S3E.png" width="500px" height="300"/>
+    <style>
+.titulo{
+  position:fixed; top:20px; left:50%; transform:translateX(-50%);
+  transition:0.3s;
+}
+.titulo img{width:200px; transition:0.3s;}
+.titulo:hover img{width:300px;}
+</style>
+<body>
+  <style>.titulo-top{
+  position: absolute;
+  top: 70px; /* 0px = pegadísimo arriba, 30px = un poco separado */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: auto;
+}
+.titulo-top img{
+  width: 220px; /* cambia el tamaño aquí */
+  height: auto;
+  display: block;
+  transition: transform 0.20s ease-out;
+}
+.titulo-top img:hover{
+  transform: scale(1.18);
+}
+body{
+  padding-top: 15px; /* deja espacio para que no tape tu biblioteca */
+}</style>
+<video autoplay loop muted playsinline style="position:fixed; top:18%; left:50%; transform:translate(-50%,-50%); width:650px; pointer-events:none; z-index:9999; mix-blend-mode:screen; filter: brightness(1.0) contrast(2.8);">
+  <source src="celina.mp4" type="video/mp4">
+</video>
+<style>
+#music-box{
+  position:fixed; right:10px; top:10px; z-index:10001;
+  display:flex; gap:8px; align-items:center;
+}
+#music-box img{
+  width:38px; height:38px; cursor:pointer;
+  filter: drop-shadow(0 0 5px #fff);
+  transition: transform 0.1s;
+}
+#music-box img:active{ transform:scale(0.9); }
+</style>
+
+<div id="music-box">
+  <img id="btn-mute" src="https://cdn-icons-png.flaticon.com/512/138/138817.png" title="mute">
+  <img id="btn-next" src="https://cdn-icons-png.flaticon.com/512/138/138932.png" title="next">
+</div>
+
+<audio id="player" loop></audio>
+
+<script>
+(function(){
+  // === AQUI ANADES TUS MUSICAS, MAX 5 ===
+  const SONGS = [
+    "BOSSA.mp3",
+    "LANDSCAPE.mp3",
+    "EmbersCALL.mp3"
+  ];
+
+  // === IMAGENES DE BOTONES, PUEDES CAMBIARLAS ===
+  const IMG_SOUND_ON = "https://cdn-icons-png.flaticon.com/512/138/138817.png";
+  const IMG_SOUND_OFF = "https://cdn-icons-png.flaticon.com/512/64/64595.png";
+  const IMG_NEXT = "https://cdn-icons-png.flaticon.com/512/138/138932.png";
+
+  const player = document.getElementById("player");
+  const btnMute = document.getElementById("btn-mute");
+  const btnNext = document.getElementById("btn-next");
+
+  let idx = 0;
+  let clicks = 0;
+  const MAX_CLICKS = 5; // maximo de cambios
+
+  player.src = SONGS[0];
+  player.volume = 0.6;
+  player.loop = true; // loop infinito cada cancion
+
+  // autoplay al primer click en la pagina
+  document.addEventListener("click", function init(){
+    player.play().catch(()=>{});
+    document.removeEventListener("click", init);
+  });
+
+  btnMute.src = IMG_SOUND_ON;
+  btnNext.src = IMG_NEXT;
+
+  btnMute.addEventListener("click", function(){
+    player.muted =!player.muted;
+    btnMute.src = player.muted? IMG_SOUND_OFF : IMG_SOUND_ON;
+  });
+
+  btnNext.addEventListener("click", function(){
+    if(clicks >= MAX_CLICKS) return;
+    clicks++;
+    idx = (idx + 1) % SONGS.length;
+    player.src = SONGS[idx];
+    player.play().catch(()=>{});
+    if(clicks >= MAX_CLICKS){
+      btnNext.style.opacity = "0.3";
+      btnNext.style.pointerEvents = "none";
+    }
+  });
+
+  // si quieres que cambie sola al terminar, quita player.loop = true y usa esto:
+  // player.addEventListener("ended", ()=>{ btnNext.click(); });
+
+})();
+</script>
+<style>
+#feed-wrap{
+  position:fixed;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:300px;
+  height:610px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:10px 10px 0 10px;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  scroll-snap-type:y mandatory;
+  scroll-padding-top:10px;
+  z-index:5000;
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+}
+#feed-wrap::-webkit-scrollbar{ display:none; }
+
+.feed-item{
+  width:100%;
+  height:290px;
+  scroll-snap-align:start;
+  margin-bottom:10px;
+  border-radius:14px;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.feed-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+</style>
+
+<div id="feed-wrap"></div>
+
+<script>
+(function(){
+  const PASS_F = "admin123";
+  const MAX_IMG = 6;
+  let imagenes = JSON.parse(localStorage.getItem("feed_imgs") || '["https://picsum.photos/300/300?1","https://picsum.photos/300/300?2","https://picsum.photos/300/300?3","https://picsum.photos/300/300?4"]');
+  const cont = document.getElementById("feed-wrap");
+
+  function render(){
+    cont.innerHTML = "";
+    imagenes.forEach((src)=>{
+      const div = document.createElement("div");
+      div.className = "feed-item";
+      div.innerHTML = `<img src="${src}" loading="lazy">`;
+      cont.appendChild(div);
+    });
+  }
+  render();
+  cont.addEventListener("dblclick", openAdmin);
+  function openAdmin(){
+    if(prompt("Pass:") !== PASS_F) return;
+    let op = prompt("1=agregar 2=borrar ultima 3=borrar todas | Total:"+imagenes.length+"/"+MAX_IMG);
+    if(op==="1"){
+      if(imagenes.length>=MAX_IMG){ alert("Max "+MAX_IMG); return; }
+      let url = prompt("URL o archivo:");
+      if(!url) return;
+      imagenes.push(url.trim());
+      localStorage.setItem("feed_imgs", JSON.stringify(imagenes));
+      render();
+    }
+    if(op==="2"){
+      imagenes.pop();
+      localStorage.setItem("feed_imgs", JSON.stringify(imagenes));
+      render();
+    }
+    if(op==="3"){
+      imagenes=[];
+      localStorage.setItem("feed_imgs", JSON.stringify(imagenes));
+      render();
+    }
+  }
+})();
+</script>
+<div style="
+  position:fixed;
+  top:15%;
+  left:48%;
+  width:159px;
+  height:198px;
+  background:black;
+  transform:translate(-50%, -50%);
+  pointer-events:none;
+  z-index:9998;
+"></div>
+<div style="
+  position:fixed;
+  top:25%;
+  left:49%;
+  width:750px;
+  height:70px;
+  background:black;
+  transform:translate(-50%, -50%);
+  pointer-events:none;
+  z-index:9998;
+"></div>
+ <style>
+.brasa-img {
+position: fixed;
+top: 37%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 450px;
+height: auto;
+z-index: 9999;
+mix-blend-mode: screen;
+opacity: 0.6;
+filter: brightness(1) contrast(1.2);
+transition: all 0.4s ease;
+pointer-events: auto !important;
+cursor: pointer;
+}
+.brasa-img:hover {
+opacity: 1 !important;
+filter: brightness(1.8) contrast(1.5) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 15px #ff6a00) drop-shadow(0 0 30px #ff3300) !important;
+animation: brasaImg 0.15s infinite alternate;
+}
+@keyframes brasaImg {
+0% { filter: brightness(1.6) contrast(1.4) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 10px #ff6a00); }
+100% { filter: brightness(2) contrast(1.6) sepia(1) hue-rotate(-10deg) saturate(4) drop-shadow(0 0 25px #ff3300) drop-shadow(0 0 40px #ff6a00); }
+}
+</style>
+
+<img src="tituloOFICIAL13.png" class="brasa-img">

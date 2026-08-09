@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>COMICS</title>
+<style>
+body{background:#121212;color:#fff;font-family:Arial;margin:0}
+.biblioteca{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px;padding:30px}
+.portada{cursor:pointer;transition:0.1s}
+.portada img{width:100%;height:240px;object-fit:cover;border-radius:3px}
+.portada:hover{transform:scale(1.05)}
+.portada p{text-align:center;font-size:13px;margin-top:6px}
+#miniMenu{display:none;position:fixed;inset:0;background:#000000cc;z-index:95;align-items:center;justify-content:center}
+#miniBox{background:#1e1e1e;padding:20px;border-radius:5px;text-align:center;border:1px solid #333;min-width:220px}
+.btn-rojo{width:100%;padding:10px;background:#8B0000;color:#fff;border:none;margin:5px 0;cursor:pointer;font-weight:bold}
+#admin{display:none;position:fixed;inset:0;background:#000000ee;z-index:100;padding:20px;overflow:auto;text-align:center}
+#visor{display:none;position:fixed;inset:0;background:#000;z-index:90}
+#visor img{width:100%;height:100%;object-fit:contain}
+input{padding:8px;margin:5px;background:#222;color:#fff;border:1px solid #444}
+.b{position:absolute;background:rgba(0,0,0,0.5);color:#fff;border:1px solid rgba(255,255,255,0.6);border-radius:50%;width:46px;height:46px;cursor:pointer;font-size:22px}
+#x{top:15px;right:15px;font-size:16px}
+#l{left:15px;top:50%;transform:translateY(-50%)}
+#r{right:15px;top:50%;transform:translateY(-50%)}
+</style>
+</head>
+<body>
+
+<div class="biblioteca" id="biblioteca"></div>
+
+<div id="miniMenu" onclick="if(event.target==this) this.style.display='none'">
+  <div id="miniBox">
+    <h3 id="mTitulo"></h3>
+    <button class="btn-rojo" onclick="editarComic()">EDITAR</button>
+    <button class="btn-rojo" onclick="borrarComic()">ELIMINAR</button>
+    <button class="btn-rojo" onclick="document.getElementById('miniMenu').style.display='none'" style="background:#333">CERRAR</button>
+  </div>
+</div>
+
+<div id="visor">
+  <button class="b" id="x" onclick="document.getElementById('visor').style.display='none'">X</button>
+  <button class="b" id="l" onclick="cambiar(-1)">‹</button>
+  <button class="b" id="r" onclick="cambiar(1)">›</button>
+  <img id="imgVisor">
+  <div id="numPag" style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);padding:4px 10px;font-size:12px;border-radius:10px"></div>
+</div>
+
+<div id="admin">
+  <h2 id="adminTitulo">NUEVO COMIC</h2>
+  <input id="titulo" placeholder="Título"><br>
+  <p style="font-size:10px;color:#777">PORTADA - NO SALE DENTRO DE LA LECTURA</p>
+  <input type="file" id="portadaFile" accept="image/*"><br>
+  <p style="font-size:10px;color:#777">PAGINAS - ILIMITADO, SE SUMAN AL EDITAR</p>
+  <input type="file" id="paginas" multiple accept="image/*"><br>
+  <div id="listaPaginas" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:15px;max-width:800px;margin-left:auto;margin-right:auto"></div>
+  <br>
+  <button onclick="guardarComic()" style="background:#fff;color:#000;padding:10px 20px;font-weight:bold;cursor:pointer">GUARDAR</button>
+  <button onclick="document.getElementById('admin').style.display='none'" style="background:#222;color:#fff;border:1px solid #444;padding:10px 20px;margin-left:10px">CERRAR</button>
+</div>
+
+<script>
+let comics = JSON.parse(localStorage.getItem('comics_v2') || '[]');
+let seleccionado = 0, editando = -1, paginaActual = 0;
+
+function render(){
+  const bib=document.getElementById('biblioteca');
+  bib.innerHTML='';
+  comics.forEach((c,i)=>{
+    bib.innerHTML+=`<div class="portada" onclick="leer(${i})" ondblclick="menu(${i})"><img src="${c.portada}"><p>${c.titulo}</p></div>`;
+  });
+}
+
+function leer(i){
+  setTimeout(()=>{
+    if(document.getElementById('miniMenu').style.display==='flex') return;
+    seleccionado=i; paginaActual=0; mostrar();
+    document.getElementById('visor').style.display='block';
+  },150);
+}
+
+function mostrar(){
+  const c=comics[seleccionado];
+  if(!c.paginas.length){ alert('Este comic no tiene paginas. Editalo para agregar.'); return; }
+  document.getElementById('imgVisor').src=c.paginas[paginaActual];
+  document.getElementById('numPag').innerText=(paginaActual+1)+'/'+c.paginas.length;
+}
+
+function cambiar(dir){
+  const c=comics[seleccionado];
+  paginaActual+=dir;
+  if(paginaActual<0) paginaActual=0;
+  if(paginaActual>=c.paginas.length) paginaActual=c.paginas.length-1;
+  mostrar();
+}
+
+function menu(i){ seleccionado=i; document.getElementById('mTitulo').innerText=comics[i].titulo; document.getElementById('miniMenu').style.display='flex'; }
+function borrarComic(){ if(confirm('¿Eliminar?')){ comics.splice(seleccionado,1); localStorage.setItem('comics_v2',JSON.stringify(comics)); document.getElementById('miniMenu').style.display='none'; render(); } }
+function editarComic(){ editando=seleccionado; abrirAdmin(); }
+
+function abrirAdmin(){
+  document.getElementById('miniMenu').style.display='none';
+  const c=editando>=0?comics[editando]:null;
+  document.getElementById('adminTitulo').innerText=c?'EDITANDO: '+c.titulo:'NUEVO COMIC';
+  document.getElementById('titulo').value=c?c.titulo:'';
+  document.getElementById('listaPaginas').innerHTML='';
+  if(c){
+    c.paginas.forEach((p,idx)=>{
+      const d=document.createElement('div');
+      d.style.position='relative';
+      d.innerHTML=`<img src="${p}" style="width:100%;aspect-ratio:2/3;object-fit:cover;border:1px solid #333"><button onclick="borrarPag(${idx})" style="position:absolute;top:2px;right:2px;background:red;color:#fff;border:none;width:18px;height:18px;cursor:pointer">X</button>`;
+      document.getElementById('listaPaginas').appendChild(d);
+    });
+  }
+  document.getElementById('admin').style.display='block';
+}
+
+function borrarPag(idx){ comics[editando].paginas.splice(idx,1); localStorage.setItem('comics_v2',JSON.stringify(comics)); abrirAdmin(); render(); }
+
+function toBase64(file){
+  return new Promise(async (r)=>{
+    const img=new Image();
+    img.src=URL.createObjectURL(file);
+    await new Promise(res=>img.onload=res);
+    const canvas=document.createElement('canvas');
+    const max=900;
+    let w=img.width,h=img.height;
+    if(w>max){ h=h*(max/w); w=max; }
+    canvas.width=w; canvas.height=h;
+    canvas.getContext('2d').drawImage(img,0,0,w,h);
+    r(canvas.toDataURL('image/jpeg',0.7));
+  });
+}
+
+async function guardarComic(){
+  const titulo=document.getElementById('titulo').value.trim();
+  if(!titulo) return alert('Falta titulo');
+  const portFile=document.getElementById('portadaFile').files[0];
+  const pagFiles=document.getElementById('paginas').files;
+  let portadaBase=null;
+  let paginasBase=[];
+  if(portFile) portadaBase=await toBase64(portFile);
+  for(let f of pagFiles){ paginasBase.push(await toBase64(f)); }
+  if(editando===-1){
+    if(!portadaBase) return alert('Falta portada');
+    comics.push({titulo,portada:portadaBase,paginas:paginasBase});
+  }else{
+    comics[editando].titulo=titulo;
+    if(portadaBase) comics[editando].portada=portadaBase;
+    if(paginasBase.length>0) comics[editando].paginas.push(...paginasBase);
+  }
+  localStorage.setItem('comics_v2',JSON.stringify(comics));
+  document.getElementById('admin').style.display='none';
+  document.getElementById('titulo').value='';
+  document.getElementById('portadaFile').value='';
+  document.getElementById('paginas').value='';
+  editando=-1;
+  render();
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key.toLowerCase()=='e'){
+    window.cc=(window.cc||0)+1;
+    if(window.cc>=3){ editando=-1; abrirAdmin(); window.cc=0; }
+    setTimeout(()=>window.cc=0,1000);
+  }
+});
+render();
+</script>
+</body>
+</html>
