@@ -3,68 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COMICS</title>
+<title>Comics Whisky</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="importmap">
+{
+  "imports": {
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+  }
+}
+</script>
 <style>
-body{margin:0;background:#0e0e0e;color:white;font-family:Arial, sans-serif}
-header{padding:15px;text-align:center;background:#1a1a1a}
-header a{color:white;text-decoration:none;font-size:20px;font-weight:bold}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px;padding:20px}
-.comic{background:#1e1e1e;border-radius:10px;overflow:hidden}
-.comic img{width:100%;height:250px;object-fit:cover;display:block}
-.comic h3{padding:10px;margin:0;font-size:14px;text-align:center}
-#adminPanel{display:none;padding:20px;background:#222;margin:20px;border-radius:10px;border:1px dashed #555}
-#adminPanel input, #adminPanel button{width:100%;padding:10px;margin-top:10px;border-radius:5px;border:none}
-#adminPanel button{background:#e50914;color:white;font-weight:bold;cursor:pointer}
+  body { background: #0a0a0a; color: white; font-family: sans-serif; }
 </style>
 </head>
-<body>
-<header><a href="../../">← Volver a Series</a></header>
+<body class="p-4">
 
-<!-- PANEL ADMIN OCULTO -->
-<div id="adminPanel">
-  <h2>Panel Admin (Solo tú)</h2>
-  <input id="titulo" type="text" placeholder="Titulo del comic">
-  <input id="imagen" type="text" placeholder="URL de imagen o /public/comics/img.jpg">
-  <button onclick="agregarComic()">Agregar Comic</button>
+<h1 class="text-3xl font-bold text-center mb-6">COMICS WHISKY 🔥</h1>
+
+<!-- PANEL ADMIN -->
+<div id="adminLogin" class="max-w-md mx-auto mb-8 p-4 bg-zinc-900 rounded-xl">
+  <h2 class="font-bold mb-2">Panel Admin (solo tú)</h2>
+  <input id="adminPass" type="password" placeholder="Contraseña: whisky123" class="w-full p-2 rounded bg-black mb-2">
+  <button onclick="loginAdmin()" class="w-full bg-white text-black p-2 rounded font-bold">Entrar</button>
+  <div id="adminPanel" class="hidden mt-4">
+    <input id="comicTitle" placeholder="Título del comic" class="w-full p-2 rounded bg-black mb-2">
+    <input id="comicImage" placeholder="Link de imagen (imgur, etc)" class="w-full p-2 rounded bg-black mb-2">
+    <input id="comicLink" placeholder="Link para leer / descargar" class="w-full p-2 rounded bg-black mb-2">
+    <button onclick="subirComic()" class="w-full bg-yellow-400 text-black p-2 rounded font-bold">SUBIR COMIC</button>
+  </div>
 </div>
 
-<div id="grid"></div>
+<!-- GRID PUBLICO -->
+<div id="grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
+  <p class="col-span-full text-center opacity-50">Cargando comics...</p>
+</div>
 
-<script>
-const ADMIN_PASS = "whisky123";
-const params = new URLSearchParams(window.location.search);
-const esAdmin = params.get('admin') === ADMIN_PASS;
+<script type="module">
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "firebase/firestore";
 
-if(esAdmin){
-  document.getElementById('adminPanel').style.display = 'block';
+const firebaseConfig = {
+  apiKey: "AIzaSyBXMgNxrFXyT6MUdRJ03u496iAMpx4mwP8",
+  authDomain: "comics-whisky.firebaseapp.com",
+  projectId: "comics-whisky",
+  storageBucket: "comics-whisky.firebasestorage.app",
+  messagingSenderId: "418946277283",
+  appId: "1:418946277283:web:77427c48417c1bfdfe4416",
+  measurementId: "G-R20EFY1CGB"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const comicsRef = collection(db, "comics");
+
+let isAdmin = false;
+window.loginAdmin = () => {
+  if(document.getElementById('adminPass').value === 'whisky123'){
+    isAdmin = true;
+    document.getElementById('adminPanel').classList.remove('hidden');
+    alert('Admin activado');
+  } else { alert('Contraseña incorrecta'); }
 }
 
-let comics = JSON.parse(localStorage.getItem('mis_comics') || '[]');
+window.subirComic = async () => {
+  const title = document.getElementById('comicTitle').value;
+  const image = document.getElementById('comicImage').value;
+  const link = document.getElementById('comicLink').value;
+  if(!title || !image) return alert('Falta título o imagen');
+  await addDoc(comicsRef, { title, image, link, createdAt: serverTimestamp() });
+  document.getElementById('comicTitle').value = ''; document.getElementById('comicImage').value = ''; document.getElementById('comicLink').value = '';
+}
 
-function mostrar(){
+window.borrarComic = async (id) => {
+  if(!isAdmin) return alert('Solo admin puede borrar');
+  if(confirm('¿Borrar este comic?')) await deleteDoc(doc(db, "comics", id));
+}
+
+// TIEMPO REAL - TODOS VEN LO MISMO
+const q = query(comicsRef, orderBy("createdAt", "desc"));
+onSnapshot(q, (snap) => {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  if(comics.length === 0){
-    grid.innerHTML = '<p style="padding:20px;opacity:.6">Aún no hay cómics</p>';
-    return;
-  }
-  comics.forEach(c=>{
-    grid.innerHTML += `<div class="comic"><img src="${c.img}"><h3>${c.titulo}</h3></div>`;
+  if(snap.empty) grid.innerHTML = '<p class="col-span-full text-center opacity-50">Aún no hay comics, ¡sé el primero!</p>';
+  snap.forEach(d => {
+    const c = d.data();
+    grid.innerHTML += `
+      <div class="bg-zinc-900 rounded-xl overflow-hidden">
+        <img src="${c.image}" class="w-full h-64 object-cover">
+        <div class="p-3">
+          <h3 class="font-bold">${c.title}</h3>
+          ${c.link ? `<a href="${c.link}" target="_blank" class="text-yellow-400 text-sm underline">Leer</a>` : ''}
+          ${isAdmin ? `<button onclick="borrarComic('${d.id}')" class="block mt-2 text-xs bg-red-600 px-2 py-1 rounded">Borrar</button>` : ''}
+        </div>
+      </div>
+    `;
   });
-}
-
-function agregarComic(){
-  const t = document.getElementById('titulo').value;
-  const i = document.getElementById('imagen').value;
-  if(!t || !i) return alert('Llena todo');
-  comics.push({titulo:t, img:i});
-  localStorage.setItem('mis_comics', JSON.stringify(comics));
-  document.getElementById('titulo').value = '';
-  document.getElementById('imagen').value = '';
-  mostrar();
-}
-
-mostrar();
+});
 </script>
 </body>
 </html>
