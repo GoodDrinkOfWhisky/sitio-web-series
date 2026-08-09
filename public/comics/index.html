@@ -1,155 +1,191 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comics Whisky</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script type="importmap">
-{
-  "imports": {
-    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
-    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js",
-    "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
-  }
-}
-</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómics</title>
 <style>
-  body { background: #0a0a0a; color: white; font-family: sans-serif; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#0e0e10;color:white;padding:80px 20px}
+.top-bar{position:fixed;top:0;left:0;width:100%;height:70px;display:flex;justify-content:flex-end;align-items:center;padding:0 20px;gap:18px;background:rgba(14,14,16,0.8);backdrop-filter:blur(12px);z-index:1000}
+.profile-circle{width:42px;height:42px;border-radius:50%;background:#2a2a2e;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid white;box-shadow:0 0 12px rgba(255,255,255,0.7);overflow:hidden;transition:0.2s}
+.profile-circle img{width:100%;height:100%;object-fit:cover}
+.profile-circle svg{fill:#aaa;width:24px;height:24px}
+.close-btn{width:42px;height:42px;border-radius:50%;border:2px solid white;background:rgba(0,0,0,0.4);color:white;text-decoration:none;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 12px rgba(255,255,255,0.5)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:2000}
+.modal-overlay.active{display:flex}
+.login-box{background:rgba(28,28,30,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:30px 25px;width:90%;max-width:340px}
+.login-box input{width:100%;padding:12px 14px;margin-bottom:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.4);color:white;outline:none}
+.login-box button{width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:600;cursor:pointer}
+
+/* EDITOR FOTO CIRCULAR */
+#cropModal{background:#2e2e30}
+.crop-wrapper{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.crop-circle-viewport{
+  width:300px;height:300px;border-radius:50%;overflow:hidden;
+  position:relative;background:#1a1a1a;
+  box-shadow:0 0 0 4000px rgba(0,0,0,0.6); /* fondo gris oscurecido */
+  border:3px solid white;
+}
+.crop-circle-viewport img{position:absolute;top:0;left:0;max-width:none;user-select:none;cursor:grab}
+.crop-controls{display:flex;gap:10px;align-items:center}
+.crop-controls input[type=range]{width:200px}
 </style>
 </head>
-<body class="p-4">
+<body>
 
-<h1 class="text-3xl font-bold text-center mb-6">COMICS WHISKY 🔥</h1>
+<div class="top-bar">
+  <div class="profile-circle" id="profileBtn"></div>
+  <a href="../index.html" class="close-btn">✕</a>
+</div>
 
-<!-- PANEL ADMIN AUTOMATICO -->
-<div id="adminLogin" class="max-w-md mx-auto mb-8 p-4 bg-zinc-900 rounded-xl text-center">
-  <div id="noLogueado">
-    <h2 class="font-bold mb-2">Panel Admin</h2>
-    <p class="text-xs opacity-60 mb-2">Solo lxvtorres@gmail.com puede entrar</p>
-    <button onclick="loginGoogle()" class="w-full bg-white text-black p-2 rounded font-bold">Iniciar sesión con Google</button>
+<h2>CÓMICS</h2>
+<div id="lista-comics"></div>
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="login-box">
+    <h3 style="text-align:center;margin-bottom:15px">Admin</h3>
+    <input type="email" id="emailInput" placeholder="lxvtorres@gmail.com">
+    <input type="password" id="passInput" placeholder="Contraseña">
+    <button id="loginBtn">Entrar</button>
+    <p style="font-size:11px;color:#888;text-align:center;margin-top:10px" id="userStatus"></p>
   </div>
-  
-  <div id="logueadoNoAdmin" class="hidden">
-    <p id="msgNoAdmin" class="text-sm"></p>
-    <button onclick="logout()" class="mt-2 w-full bg-zinc-800 p-2 rounded">Cerrar sesión</button>
-  </div>
+</div>
 
-  <div id="adminPanel" class="hidden mt-4 text-left">
-    <div class="flex justify-between items-center mb-3">
-      <span id="adminEmail" class="text-xs text-green-400"></span>
-      <button onclick="logout()" class="text-xs bg-red-600 px-2 py-1 rounded">Salir</button>
+<!-- OPCIONES PERFIL ADMIN -->
+<div class="modal-overlay" id="profileOptions">
+  <div class="login-box" style="text-align:center">
+    <div style="width:80px;height:80px;border-radius:50%;margin:0 auto 15px;overflow:hidden;border:2px solid white" id="previewBig"></div>
+    <button onclick="document.getElementById('fileInput').click()" style="margin-bottom:8px">Agregar / Cambiar foto</button>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <button onclick="cerrarSesion()" style="background:rgba(255,0,0,0.15);color:#ff6b6b;border:1px solid rgba(255,0,0,0.3)">Cerrar sesión</button>
+    <button onclick="document.getElementById('profileOptions').classList.remove('active')" style="background:transparent;color:white;border:1px solid rgba(255,255,255,0.2);margin-top:8px">Cancelar</button>
+  </div>
+</div>
+
+<!-- CROP CIRCULAR -->
+<div class="modal-overlay" id="cropModal">
+  <div class="crop-wrapper">
+    <div class="crop-circle-viewport" id="cropViewport">
+      <img id="cropImage">
     </div>
-    <input id="comicTitle" placeholder="Título del comic" class="w-full p-2 rounded bg-black mb-2">
-    <input id="comicImage" placeholder="Link de imagen (imgur, etc)" class="w-full p-2 rounded bg-black mb-2">
-    <input id="comicLink" placeholder="Link para leer / descargar" class="w-full p-2 rounded bg-black mb-2">
-    <button onclick="subirComic()" class="w-full bg-yellow-400 text-black p-2 rounded font-bold">SUBIR COMIC</button>
+    <div class="crop-controls">
+      <span style="font-size:12px">Zoom</span>
+      <input type="range" id="zoomRange" min="0.5" max="3" step="0.01" value="1">
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="guardarFotoRecortada()" style="padding:10px 20px;border-radius:20px;border:none;background:white;color:black;font-weight:600">Guardar</button>
+      <button onclick="document.getElementById('cropModal').classList.remove('active')" style="padding:10px 20px;border-radius:20px;border:1px solid white;background:transparent;color:white">Cancelar</button>
+    </div>
   </div>
 </div>
 
-<!-- GRID PUBLICO -->
-<div id="grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
-  <p class="col-span-full text-center opacity-50">Cargando comics...</p>
-</div>
+<script>
+const ADMIN_EMAIL="lxvtorres@gmail.com";
+let userEmail=localStorage.getItem("userEmail")||"";
+let profilePic=localStorage.getItem("adminProfilePic")||"";
+const profileBtn=document.getElementById("profileBtn");
 
-<script type="module">
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "firebase/firestore";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBXMgNxrFXyT6MUdRJ03u496iAMpx4mwP8",
-  authDomain: "comics-whisky.firebaseapp.com",
-  projectId: "comics-whisky",
-  storageBucket: "comics-whisky.firebasestorage.app",
-  messagingSenderId: "418946277283",
-  appId: "1:418946277283:web:77427c48417c1bfdfe4416",
-  measurementId: "G-R20EFY1CGB"
-};
-
-const ADMIN_EMAIL = "lxvtorres@gmail.com";
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-const comicsRef = collection(db, "comics");
-
-let isAdmin = false;
-let comicsData = [];
-
-// DETECCIÓN AUTOMÁTICA
-onAuthStateChanged(auth, (user) => {
-  const noLog = document.getElementById('noLogueado');
-  const logNoAdmin = document.getElementById('logueadoNoAdmin');
-  const adminPanel = document.getElementById('adminPanel');
-
-  if(user && user.email === ADMIN_EMAIL){
-    isAdmin = true;
-    noLog.classList.add('hidden');
-    logNoAdmin.classList.add('hidden');
-    adminPanel.classList.remove('hidden');
-    document.getElementById('adminEmail').innerText = `Admin: ${user.email}`;
-  } else if(user){
-    isAdmin = false;
-    noLog.classList.add('hidden');
-    adminPanel.classList.add('hidden');
-    logNoAdmin.classList.remove('hidden');
-    document.getElementById('msgNoAdmin').innerText = `Conectado como ${user.email} - No eres admin`;
+function renderProfileIcon(){
+  if(profilePic){
+    profileBtn.innerHTML=`<img src="${profilePic}">`;
+    document.getElementById("previewBig").innerHTML=`<img src="${profilePic}" style="width:100%;height:100%;object-fit:cover">`;
   } else {
-    isAdmin = false;
-    adminPanel.classList.add('hidden');
-    logNoAdmin.classList.add('hidden');
-    noLog.classList.remove('hidden');
+    profileBtn.innerHTML=`<svg viewBox="0 0 24 24"><path fill="#aaa" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+    document.getElementById("previewBig").innerHTML=profileBtn.innerHTML;
   }
-  renderGrid();
-});
-
-window.loginGoogle = () => signInWithPopup(auth, provider);
-window.logout = () => signOut(auth);
-
-window.subirComic = async () => {
-  const title = document.getElementById('comicTitle').value;
-  const image = document.getElementById('comicImage').value;
-  const link = document.getElementById('comicLink').value;
-  if(!title || !image) return alert('Falta título o imagen');
-  await addDoc(comicsRef, { title, image, link, createdAt: serverTimestamp() });
-  document.getElementById('comicTitle').value = ''; document.getElementById('comicImage').value = ''; document.getElementById('comicLink').value = '';
+  document.getElementById("userStatus").innerText=userEmail?`Guardado en este dispositivo: ${userEmail}`:"";
 }
+renderProfileIcon();
 
-window.borrarComic = async (id) => {
-  if(!isAdmin) return alert('Solo admin');
-  if(confirm('¿Borrar este comic?')) await deleteDoc(doc(db, "comics", id));
-}
-
-function renderGrid(){
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  if(comicsData.length === 0){
-    grid.innerHTML = '<p class="col-span-full text-center opacity-50">Aún no hay comics</p>';
-    return;
+// CLICK PERFIL
+profileBtn.onclick=()=>{
+  if(userEmail.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+    document.getElementById("loginModal").classList.add("active");
+  } else {
+    document.getElementById("profileOptions").classList.add("active");
   }
-  comicsData.forEach(item => {
-    const c = item.data;
-    grid.innerHTML += `
-      <div class="bg-zinc-900 rounded-xl overflow-hidden">
-        <img src="${c.image}" class="w-full h-64 object-cover">
-        <div class="p-3">
-          <h3 class="font-bold">${c.title}</h3>
-          ${c.link ? `<a href="${c.link}" target="_blank" class="text-yellow-400 text-sm underline">Leer</a>` : ''}
-          ${isAdmin ? `<button onclick="borrarComic('${item.id}')" class="block mt-2 text-xs bg-red-600 px-2 py-1 rounded">Borrar</button>` : ''}
-        </div>
-      </div>
-    `;
-  });
+}
+document.getElementById("loginModal").onclick=e=>{if(e.target.id==="loginModal")e.currentTarget.classList.remove("active")}
+document.getElementById("profileOptions").onclick=e=>{if(e.target.id==="profileOptions")e.currentTarget.classList.remove("active")}
+
+document.getElementById("loginBtn").onclick=()=>{
+  const em=document.getElementById("emailInput").value.trim().toLowerCase();
+  if(em!==ADMIN_EMAIL){alert("Solo lxvtorres@gmail.com puede ser admin");return}
+  userEmail=em; localStorage.setItem("userEmail",userEmail);
+  document.getElementById("loginModal").classList.remove("active");
+  renderProfileIcon(); alert("Sesión guardada solo en TU dispositivo");
 }
 
-const q = query(comicsRef, orderBy("createdAt", "desc"));
-onSnapshot(q, (snap) => {
-  comicsData = [];
-  snap.forEach(d => comicsData.push({id: d.id, data: d.data()}));
-  renderGrid();
-});
+function cerrarSesion(){userEmail="";localStorage.removeItem("userEmail");document.getElementById("profileOptions").classList.remove("active");renderProfileIcon();}
+
+// --- LOGICA RECORTE CIRCULAR ---
+let scale=1,posX=0,posY=0,isDrag=false,startX,startY;
+const cropImg=document.getElementById("cropImage");
+const viewport=document.getElementById("cropViewport");
+
+document.getElementById("fileInput").onchange=e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const url=URL.createObjectURL(file);
+  cropImg.src=url; scale=1; posX=0; posY=0;
+  document.getElementById("zoomRange").value=1;
+  document.getElementById("profileOptions").classList.remove("active");
+  document.getElementById("cropModal").classList.add("active");
+  cropImg.onload=()=>updateTransform();
+}
+
+function updateTransform(){cropImg.style.transform=`translate(${posX}px, ${posY}px) scale(${scale})`;}
+document.getElementById("zoomRange").oninput=e=>{scale=parseFloat(e.target.value);updateTransform();}
+
+// Drag
+cropImg.addEventListener("mousedown", e=>{isDrag=true;startX=e.clientX-posX;startY=e.clientY-posY;cropImg.style.cursor="grabbing"});
+window.addEventListener("mousemove", e=>{if(!isDrag)return;posX=e.clientX-startX;posY=e.clientY-startY;updateTransform();});
+window.addEventListener("mouseup", ()=>{isDrag=false;cropImg.style.cursor="grab"});
+// Touch
+cropImg.addEventListener("touchstart", e=>{isDrag=true;startX=e.touches[0].clientX-posX;startY=e.touches[0].clientY-posY;},{passive:false});
+window.addEventListener("touchmove", e=>{if(!isDrag)return;posX=e.touches[0].clientX-startX;posY=e.touches[0].clientY-startY;updateTransform();},{passive:false});
+window.addEventListener("touchend", ()=>isDrag=false);
+
+function guardarFotoRecortada(){
+  const canvas=document.createElement("canvas");
+  canvas.width=300;canvas.height=300;
+  const ctx=canvas.getContext("2d");
+  ctx.beginPath();ctx.arc(150,150,150,0,Math.PI*2);ctx.clip();
+  // Calcular posición real
+  const imgRect=cropImg.getBoundingClientRect();
+  const vpRect=viewport.getBoundingClientRect();
+  const tempCanvas=document.createElement("canvas");
+  // Dibujo simplificado: usamos el transform actual
+  ctx.drawImage(cropImg, posX + (300 - cropImg.width*scale)/2 + 150, posY + (300 - cropImg.height*scale)/2 + 150, cropImg.naturalWidth*scale, cropImg.naturalHeight*scale);
+  // fallback más simple y preciso: renderizamos como se ve
+  const finalCanvas=document.createElement("canvas");
+  finalCanvas.width=300;finalCanvas.height=300;
+  const fctx=finalCanvas.getContext("2d");
+  fctx.beginPath();fctx.arc(150,150,150,0,Math.PI*2);fctx.clip();
+  fctx.drawImage(cropImg, 0,0, 300,300); // truco visual directo del viewport
+
+  // método correcto: tomar screenshot del viewport con canvas
+  html2canvasLike();
+}
+
+function html2canvasLike(){
+  const size=300;
+  const canvas=document.createElement("canvas");
+  canvas.width=size;canvas.height=size;
+  const ctx=canvas.getContext("2d");
+  ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();
+  const imgW=cropImg.naturalWidth*scale;
+  const imgH=cropImg.naturalHeight*scale;
+  const offsetX=posX + (size - cropImg.getBoundingClientRect().width)/2 + 0;
+  const offsetY=posY + (size - cropImg.getBoundingClientRect().height)/2 + 0;
+  // Dibuja centrado con drag
+  ctx.drawImage(cropImg, offsetX + size/2 - imgW/2, offsetY + size/2 - imgH/2, imgW, imgH);
+  const dataURL=canvas.toDataURL("image/png");
+  localStorage.setItem("adminProfilePic",dataURL);
+  profilePic=dataURL; renderProfileIcon();
+  document.getElementById("cropModal").classList.remove("active");
+}
 </script>
 </body>
 </html>
