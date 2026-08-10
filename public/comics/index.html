@@ -4,17 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body{margin:0;background:#000;color:#fff;font-family:sans-serif}.profile-circle{width:42px;height:42px;border-radius:50%;background:#2a2a2e;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid white;box-shadow:0 0 15px rgba(255,255,255,0.8);overflow:hidden}
-.profile-circle img{width:100%;height:100%;object-fit:cover}
-.close-btn{width:42px;height:42px;border-radius:50%;border:2px solid white;background:rgba(0,0,0,0.3);color:white;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 0 15px rgba(255,255,255,0.6)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:5000}
-.modal.active{display:flex}
-.box{background:#1e1e20;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:25px;width:90%;max-width:340px;text-align:center}
-#cropModal{background:#121214}
-.crop-ui{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.viewport{width:320px;height:320px;position:relative;border-radius:50%;overflow:hidden;background:#222;border:3px solid white;box-shadow:0 0 0 9999px rgba(0,0,0,0.65)}
-.viewport img{position:absolute;left:50%;top:50%;transform-origin:center;will-change:transform;cursor:grab;max-width:none}
-input[type=range]{width:260px;accent-color:white}
+  body{margin:0;background:#000;color:#fff;font-family:sans-serif}
   #contenido{padding:20px}
   #closeX{position:fixed;top:2px;right:15px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold;font-size:18px}
 </style>
@@ -25,7 +15,7 @@ input[type=range]{width:260px;accent-color:white}
 <div id="contenido">
   <!-- AQUI VA TODO TU CONTENIDO ORIGINAL DE COMICS, NO LO TOCO -->
 </div>
- 
+
 <script>
 function goHome(){
   window.parent.postMessage("CERRAR_COMICS", "*");
