@@ -31,80 +31,134 @@ window.addEventListener('load',()=>{
  
  
  
- <style>
-  
+<style>
 #pj-wrap{
   position:fixed; left:20px; top:20px; z-index:10000;
-  width:200px; text-align:center;
+  display:flex; align-items:flex-start; gap:12px;
 }
-#pj-gif{
-  width: 300px; height:300px; object-fit:contain;
-  cursor:pointer; display:block; margin:0 auto;
+#pj-gif, #pj-video-char{
+  width:300px; height:300px; object-fit:contain;
+  cursor:pointer; display:block;
   filter: drop-shadow(0 0 6px #fff);
   user-select:none; -webkit-user-drag:none;
 }
-#pj-gif.talking{
-  animation: talk 0.12s infinite alternate;
-}
-@keyframes talk{
-  from{ transform: scale(1); }
-  to{ transform: scale(1.08) translateY(-2px); }
-}
+#pj-video-char{ display:none; pointer-events:none; }
 #pj-globo{
-  display:none; position:absolute; top:500px; left:0;
-  width:200px; background:#8B0000; color:#000;
-  font-weight:900; font-size:25px; padding:8px;
-  border-radius:8px; border:2px solid #2b0000;
-  box-shadow:0 0 10px #400000, 0 0 15px #8B0000;
-  text-shadow: 0 0 2px #fff; line-height:1.2;
-  word-break:break-word;
+  display:none;
+  width:300px; height:110px;
+  background:#fff; color:#111;
+  font-family:Arial, sans-serif; font-weight:600;
+  font-size:16px; padding:12px 14px;
+  border-radius:14px; border:2px solid #000;
+  box-shadow:4px 4px 0 #000;
+  line-height:1.3; overflow:hidden;
 }
+#pj-video-box{
+  display:none;
+  width:300px; height:170px; background:#000;
+  border:2px solid #000; border-radius:12px;
+  overflow:hidden; margin-top:8px;
+  pointer-events:none;
+}
+#pj-video-box video{ width:100%; height:100%; object-fit:cover; pointer-events:none; }
 </style>
 
 <div id="pj-wrap">
-  <img id="pj-gif" src="RENYA.gif" draggable="false">
-  <div id="pj-globo"></div>
+  <div style="position:relative; width:300px; height:300px">
+    <img id="pj-gif" src="RENYA.gif" draggable="false">
+    <video id="pj-video-char" muted loop playsinline></video>
+  </div>
+  <div style="display:flex; flex-direction:column">
+    <div id="pj-globo"></div>
+    <div id="pj-video-box"><video id="pj-video" muted loop playsinline></video></div>
+  </div>
 </div>
 
 <script>
 (function(){
   const PASS2 = "admin123";
-  let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!,mucho gusto estoy aqui para brindarte consejos bassicos", "Mira la galeria", "Esta diseñada para los fanarts","tambien puedes apoyar el conenido al visitar las demas redes sociales,los links se encuentran abajo","este sitio se encuentra en una fase muy temprana asi que no hay mucho que hacer por ahora lo siento..."]');
-  let pos = 0;
-  let busy = false;
-  const elGif = document.getElementById("pj-gif");
-  const elGlobo = document.getElementById("pj-globo");
+  const CHAR_VIDEO = "renya_hablando.mp4"; // VIDEO DE RENYA HABLANDO LOOP
+  const EXTRA_VIDEO = "video.mp4"; // video extra si quieres
+  const AUDIO_SRC = "typing.mp3";
 
-  elGif.addEventListener("click", function(){
+  let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!, mucho gusto estoy aqui para brindarte consejos basicos","Mira la galeria","Esta diseñada para los fanarts"]');
+  let pos=0, busy=false;
+
+  const elGif=document.getElementById("pj-gif");
+  const elCharVideo=document.getElementById("pj-video-char");
+  const elGlobo=document.getElementById("pj-globo");
+  const vBox=document.getElementById("pj-video-box");
+  const vEl=document.getElementById("pj-video");
+  elCharVideo.src=CHAR_VIDEO;
+  vEl.src=EXTRA_VIDEO;
+
+  const audio=new Audio(AUDIO_SRC); audio.loop=true;
+
+  function ajustarFuente(t){
+    let s=18; if(t.length>70)s=15; if(t.length>130)s=13; if(t.length>200)s=11.5;
+    elGlobo.style.fontSize=s+"px";
+  }
+
+  function escribir(texto){
     if(busy) return;
-    if(lista.length === 0) return;
-    busy = true;
-    elGif.classList.add("talking");
-    elGlobo.innerText = lista[pos];
-    elGlobo.style.display = "block";
-    pos = (pos + 1) % lista.length;
-    setTimeout(function(){
-      elGif.classList.remove("talking");
-      setTimeout(function(){ elGlobo.style.display="none"; busy=false; }, 2000);
-    }, 1200);
+    busy=true;
+
+    // GIF -> VIDEO LOOP
+    elGif.style.display="none";
+    elCharVideo.style.display="block";
+    elCharVideo.currentTime=0;
+    elCharVideo.play().catch(()=>{});
+
+    elGlobo.style.display="block";
+    vBox.style.display="block";
+    vEl.currentTime=0; vEl.play().catch(()=>{});
+    elGlobo.textContent="";
+    ajustarFuente(texto);
+
+    audio.currentTime=0; audio.play().catch(()=>{});
+
+    let i=0;
+    let inter=setInterval(()=>{
+      elGlobo.textContent+=texto[i]||""; i++;
+      if(i>=texto.length){
+        clearInterval(inter);
+        audio.pause();
+
+        // cuando acaba texto, video vuelve a ser gif
+        elCharVideo.pause();
+        elCharVideo.style.display="none";
+        elGif.style.display="block";
+
+        setTimeout(()=>{
+          elGlobo.style.display="none";
+          vBox.style.display="none";
+          busy=false;
+        }, 2500);
+      }
+    },28);
+  }
+
+  elGif.addEventListener("click",()=>{
+    if(!lista.length) return;
+    escribir(lista[pos]);
+    pos=(pos+1)%lista.length;
   });
 
-  let t = null;
-  function startHold(){ t = setTimeout(openAdmin, 1200); }
+  let t=null;
+  function startHold(){ t=setTimeout(openAdmin,1200); }
   function stopHold(){ clearTimeout(t); }
-  elGif.addEventListener("mousedown", startHold);
-  elGif.addEventListener("mouseup", stopHold);
-  elGif.addEventListener("mouseleave", stopHold);
-  elGif.addEventListener("touchstart", startHold, {passive:true});
-  elGif.addEventListener("touchend", stopHold);
+  elGif.addEventListener("mousedown",startHold);
+  elGif.addEventListener("mouseup",stopHold);
+  elGif.addEventListener("mouseleave",stopHold);
+  elGif.addEventListener("touchstart",startHold,{passive:true});
+  elGif.addEventListener("touchend",stopHold);
 
   function openAdmin(){
-    if(prompt("Pass:")!== PASS2) return;
-    let txt = prompt("Actuales:\n" + lista.join("\n") + "\n\nEscribe nuevo texto, vacio borra ultimo:");
-    if(txt === null) return;
-    txt = txt.trim();
-    if(txt === ""){ lista.pop(); } else { lista.push(txt); }
-    localStorage.setItem("frases", JSON.stringify(lista));
+    if(prompt("Pass:")!==PASS2) return;
+    let txt=prompt("Actuales:\n"+lista.join("\n")+"\n\nNuevo texto, vacio borra ultimo:");
+    if(txt===null) return; txt=txt.trim();
+    if(txt==="") lista.pop(); else lista.push(txt);
+    localStorage.setItem("frases",JSON.stringify(lista));
   }
 })();
 </script>
