@@ -7,26 +7,75 @@
   body{margin:0;background:#000;color:#fff;font-family:sans-serif}
   #contenido{padding:20px}
   #closeX{position:fixed;top:2px;right:15px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold;font-size:18px}
+
+  /* PERFIL MINIMALISTA */
+  #perfilBox{position:fixed;top:6px;right:70px;z-index:99999;cursor:pointer}
+  #perfilImg{width:32px;height:32px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px rgba(255,255,255,0.9), 0 0 15px rgba(255,255,255,0.4);object-fit:cover;background:#111;display:block;transition:0.2s}
+  #perfilImg:hover{transform:scale(1.1);box-shadow:0 0 12px #fff}
+
+  /* MODAL FLUIDO */
+  #perfilModal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+  #perfilCard{background:#111;border:1px solid #333;border-radius:16px;padding:20px;width:90%;max-width:300px;text-align:center}
+  #previewImg{width:120px;height:120px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 15px rgba(255,255,255,0.6);object-fit:cover;margin:0 auto 15px;display:block;background:#000}
+ .btn{width:100%;padding:10px;border-radius:10px;border:1px solid #fff;background:#000;color:#fff;cursor:pointer;margin-top:8px;font-weight:bold}
+ .btn:hover{background:#fff;color:#000}
 </style>
 </head>
 <body>
 
 <button id="closeX" onclick="goHome()">X</button>
+
+<!-- PERFIL -->
+<div id="perfilBox" onclick="abrirPerfil()">
+  <img id="perfilImg" src="https://i.imgur.com/8Km9tLL.png">
+</div>
+
 <div id="contenido">
   <!-- AQUI VA TODO TU CONTENIDO ORIGINAL DE COMICS, NO LO TOCO -->
 </div>
 
+<!-- MODAL CAMBIAR IMAGEN -->
+<div id="perfilModal" onclick="if(event.target==this) cerrarPerfil()">
+  <div id="perfilCard">
+    <img id="previewImg" src="">
+    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="cargarImagen(event)">
+    <button class="btn" onclick="document.getElementById('fileInput').click()">Elegir imagen</button>
+    <button class="btn" onclick="guardarPerfil()">Guardar</button>
+    <button class="btn" style="opacity:0.5;border-color:#555" onclick="cerrarPerfil()">Cancelar</button>
+  </div>
+</div>
+
 <script>
+const perfilImg = document.getElementById('perfilImg');
+const previewImg = document.getElementById('previewImg');
+const modal = document.getElementById('perfilModal');
+
+// Cargar guardada
+perfilImg.src = localStorage.getItem('imgPerfilComics') || 'https://i.imgur.com/8Km9tLL.png';
+
 function goHome(){
   window.parent.postMessage("CERRAR_COMICS", "*");
-  try{
-    if(window.parent !== window){
-      window.parent.document.getElementById("visorComics")?.remove();
-    }
-  }catch(e){}
+  try{ if(window.parent!== window){ window.parent.document.getElementById("visorComics")?.remove(); } }catch(e){}
   return false;
+}
+function abrirPerfil(){
+  previewImg.src = perfilImg.src;
+  modal.style.display='flex';
+}
+function cerrarPerfil(){ modal.style.display='none'; }
+function cargarImagen(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { previewImg.src = ev.target.result; }
+  reader.readAsDataURL(file);
+}
+function guardarPerfil(){
+  perfilImg.src = previewImg.src;
+  localStorage.setItem('imgPerfilComics', previewImg.src);
+  cerrarPerfil();
 }
 </script>
 
 </body>
-</html> 
+</html>
