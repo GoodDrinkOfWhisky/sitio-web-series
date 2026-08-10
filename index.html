@@ -673,3 +673,87 @@ animation: brasaImg 0.15s infinite alternate;
 </style>
 
 <img src="tituloOFICIAL13.png" class="brasa-img">
+<style>
+#mac-wrap{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:420px;max-width:90vw;z-index:99999;display:none}
+#mac-win{background:#0e0e0e;border-radius:14px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.7);border:1px solid #222;font-family:-apple-system,monospace}
+#mac-bar{height:38px;background:#2d2d2d;display:flex;align-items:center;padding:0 14px;justify-content:space-between;cursor:move}
+#mac-dots{display:flex;gap:8px}.dot{width:12px;height:12px;border-radius:50%}.dot.r{background:#ff5f56}.dot.y{background:#ffbd2e}.dot.g{background:#27c93f}
+#mac-title{color:#aaa;font-size:12px}
+#xbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;background:#111}
+.xbox-tile{
+  height:105px;border-radius:8px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;
+  transition:.15s; border:2px solid transparent;
+  font-weight:bold; color:white; font-size:16px;
+}
+.xbox-tile:hover{transform:scale(1.04);border-color:white}
+.xbox-tile.logo{font-size:30px;margin-bottom:4px}
+.xbox-tile.tiktok{background:#000}.xbox-tile.discord{background:#5865F2}.xbox-tile.youtube{background:#ff0000}.xbox-tile.insta{background:linear-gradient(45deg,#feda75,#d62976,#4f5bd5)}
+#mac-foot{display:flex;justify-content:space-between;padding:10px 12px;background:#1c1c1e}
+.mac-btn{background:#0a84ff;color:white;border:none;padding:6px 14px;border-radius:7px;cursor:pointer;font-size:12px}
+.mac-btn.sec{background:#3a3a3c}
+#mac-edit-panel{display:none;padding:10px;background:#1c1c1e;border-top:1px solid #333}
+#mac-edit-panel input{width:100%;margin:5px 0;padding:7px;border-radius:6px;border:1px solid #444;background:#2c2c2e;color:white;font-size:12px;box-sizing:border-box}
+#mac-open-btn{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:99998;background:black;color:white;border:1px solid #333;padding:8px 18px;border-radius:20px;cursor:pointer}
+</style>
+
+<div id="mac-open-btn" onclick="abrirMac()">🎮 Redes</div>
+
+<div id="mac-wrap">
+  <div id="mac-win">
+    <div id="mac-bar">
+      <div id="mac-dots">
+        <div class="dot r" onclick="cerrarMac()"></div>
+        <div class="dot y" onclick="cerrarMac()"></div>
+        <div class="dot g"></div>
+      </div>
+      <div id="mac-title">Redes</div>
+      <div style="width:40px"></div>
+    </div>
+    <div id="xbox-grid">
+      <div class="xbox-tile tiktok" onclick="openLink('tiktok')"><div class="logo">♪</div>TikTok</div>
+      <div class="xbox-tile discord" onclick="openLink('discord')"><div class="logo">◉</div>Discord</div>
+      <div class="xbox-tile youtube" onclick="openLink('youtube')"><div class="logo">▶</div>YouTube</div>
+      <div class="xbox-tile insta" onclick="openLink('insta')"><div class="logo">◎</div>Instagram</div>
+    </div>
+    <div id="mac-edit-panel">
+      <input id="inp-tiktok" placeholder="Link TikTok">
+      <input id="inp-discord" placeholder="Link Discord">
+      <input id="inp-youtube" placeholder="Link YouTube">
+      <input id="inp-insta" placeholder="Link Instagram">
+    </div>
+    <div id="mac-foot">
+      <button class="mac-btn sec" onclick="cerrarMac()">Cerrar</button>
+      <button class="mac-btn" id="mac-edit-btn" onclick="toggleEdit()">🔒 Editar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MAC_PASS="admin123";
+const LINK_KEY="xbox_links_v1";
+let links = JSON.parse(localStorage.getItem(LINK_KEY) || '{"tiktok":"","discord":"","youtube":"","insta":""}');
+let macEditable=false;
+function abrirMac(){ document.getElementById("mac-wrap").style.display="block"; }
+function cerrarMac(){ document.getElementById("mac-wrap").style.display="none"; }
+function openLink(t){ if(macEditable) return; const u=links[t]; if(!u) return alert("Sin link para "+t); window.open(u,"_blank"); }
+function toggleEdit(){
+  const panel=document.getElementById("mac-edit-panel"), btn=document.getElementById("mac-edit-btn");
+  if(!macEditable){
+    if(prompt("Pass:")!==MAC_PASS) return;
+    macEditable=true; panel.style.display="block";
+    document.getElementById("inp-tiktok").value=links.tiktok;
+    document.getElementById("inp-discord").value=links.discord;
+    document.getElementById("inp-youtube").value=links.youtube;
+    document.getElementById("inp-insta").value=links.insta;
+    btn.textContent="💾 Guardar"; btn.style.background="#30d158";
+  }else{
+    links.tiktok=document.getElementById("inp-tiktok").value.trim();
+    links.discord=document.getElementById("inp-discord").value.trim();
+    links.youtube=document.getElementById("inp-youtube").value.trim();
+    links.insta=document.getElementById("inp-insta").value.trim();
+    localStorage.setItem(LINK_KEY, JSON.stringify(links));
+    macEditable=false; panel.style.display="none"; btn.textContent="🔒 Editar"; btn.style.background="#0a84ff"; alert("Guardado!");
+  }
+}
+</script>
