@@ -8,16 +8,12 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#0a0a0a; color:white; font-family:Arial; min-height:100vh; padding:20px; }
 .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-.btn-volver { background:#ff0033; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px; }
+.btn-volver { background:#ff0033; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; }
 .btn-x { background:transparent; border:2px solid white; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:15px; }
-.card { background:#1a1a1a; border-radius:12px; overflow:hidden; }
-.card img { width:100%; height:250px; object-fit:cover; }
-.card h3 { padding:10px; text-align:center; }
+#overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9998; }
 #adminPanel { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; padding:25px; border-radius:15px; z-index:9999; width:90%; max-width:400px; border:2px solid #ff0033; }
 #adminPanel input { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:none; }
 #adminPanel button { width:100%; padding:12px; background:#ff0033; color:white; border:none; border-radius:8px; margin-top:10px; cursor:pointer; font-weight:bold; }
-#overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9998; }
 </style>
 </head>
 <body>
@@ -27,74 +23,44 @@ body { background:#0a0a0a; color:white; font-family:Arial; min-height:100vh; pad
 <button class="btn-x" onclick="goHome()">X</button>
 </div>
 
-<div class="grid" id="comicsGrid"></div>
+<div id="grid"></div>
 
 <div id="overlay" onclick="cerrarPanel()"></div>
 <div id="adminPanel">
-<h2 style="text-align:center; margin-bottom:15px;">Agregar Cómic</h2>
-<input id="tituloComic" placeholder="Título del cómic">
-<input id="imgComic" placeholder="Link de la imagen">
-<input id="linkComic" placeholder="Link del cómic">
-<button onclick="agregarComic()">Agregar Cómic</button>
+<h2 style="text-align:center;">Agregar Cómic</h2>
+<input id="tituloComic" placeholder="Título">
+<input id="imgComic" placeholder="Link imagen">
+<input id="linkComic" placeholder="Link cómic">
+<button onclick="agregarComic()">Agregar Nuevo Cómic</button>
 <button onclick="cerrarPanel()" style="background:#444;">Cerrar</button>
 </div>
 
 <script>
 let comics = JSON.parse(localStorage.getItem('misComics')) || [];
-
-function goHome(){
- window.location.href = "../index.html";
-}
-
+function goHome(){ window.location.href = "../index.html"; }
 function render(){
- const grid = document.getElementById('comicsGrid');
- grid.innerHTML = "";
- comics.forEach(c=>{
-   grid.innerHTML += `<div class="card"><img src="${c.img}"><h3>${c.titulo}</h3></div>`;
- });
+ const grid = document.getElementById('grid');
+ grid.innerHTML = comics.map(c=>`<div style="background:#1a1a1a;padding:10px;margin:10px;border-radius:10px;"><img src="${c.img}" style="width:100%;height:250px;object-fit:cover;"><h3>${c.titulo}</h3></div>`).join('');
 }
-
 function agregarComic(){
- const t = document.getElementById('tituloComic').value;
- const i = document.getElementById('imgComic').value;
- const l = document.getElementById('linkComic').value;
- if(!t || !i) return alert('Falta título o imagen');
- comics.push({titulo:t, img:i, link:l});
- localStorage.setItem('misComics', JSON.stringify(comics));
- document.getElementById('tituloComic').value="";
- document.getElementById('imgComic').value="";
- document.getElementById('linkComic').value="";
- cerrarPanel();
- render();
- alert('Cómic agregado');
+ const t=tituloComic.value, i=imgComic.value, l=linkComic.value;
+ if(!t||!i) return alert('Falta dato');
+ comics.push({titulo:t,img:i,link:l});
+ localStorage.setItem('misComics',JSON.stringify(comics));
+ cerrarPanel(); render();
 }
-
-function abrirPanel(){
- document.getElementById('adminPanel').style.display='block';
- document.getElementById('overlay').style.display='block';
-}
-function cerrarPanel(){
- document.getElementById('adminPanel').style.display='none';
- document.getElementById('overlay').style.display='none';
-}
-
-// Triple E
-let countE = 0;
-let lastTime = 0;
-document.addEventListener('keydown', (e)=>{
- if(e.key.toLowerCase() === 'e'){
-   let now = Date.now();
-   if(now - lastTime > 800) countE = 0;
-   countE++;
-   lastTime = now;
-   if(countE === 3){
-     abrirPanel();
-     countE = 0;
-   }
+function abrirPanel(){ adminPanel.style.display='block'; overlay.style.display='block'; }
+function cerrarPanel(){ adminPanel.style.display='none'; overlay.style.display='none'; }
+let countE=0,lastTime=0;
+document.addEventListener('keydown',e=>{
+ if(e.key.toLowerCase()==='e'){
+   let now=Date.now();
+   if(now-lastTime>800) countE=0;
+   countE++; lastTime=now;
+   if(countE===3){ abrirPanel(); countE=0; }
  }
 });
-
 render();
 </script>
 </body>
-</html> 
+</html>
