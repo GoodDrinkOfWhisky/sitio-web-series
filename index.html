@@ -266,115 +266,87 @@ window.addEventListener('load',()=>{
 </script>
 
  <div id="botonera"></div>
-<audio id="sonidoComics" src="click.mp3" preload="auto"></audio>
 
 <style>
 #botonera{position:fixed;left:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:9999}
-.boton-wrap{display:flex;align-items:center;transform:translateX(-400px);opacity:0;filter:drop-shadow(4px 4px 0 #000)}
-.boton-wrap.entrar{animation:entrada 0.8s cubic-bezier(.68,-0.55,.27,1.55) forwards}
-@keyframes entrada{0%{transform:translateX(-400px) rotate(-8deg);opacity:0}70%{transform:translateX(18px) rotate(2deg);opacity:1}85%{transform:translateX(-8px) rotate(-1deg)}100%{transform:translateX(0) rotate(0);opacity:1}}
+.boton-wrap{display:flex;align-items:center;filter:drop-shadow(4px 4px 0 #000)}
 .mini-left{width:62px;height:62px;border:3px solid #000;border-right:0;border-radius:10px 0 0 10px;background:#222;overflow:hidden;cursor:pointer}
-.mini-left img,.mini-left video{width:100%;height:100%;object-fit:cover;display:block}
-.btn-img{width:170px;height:62px;border:3px solid #000;border-radius:0 10px 10px 0;background:#111;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mini-left img{width:100%;height:100%;object-fit:cover}
+.btn-img{width:170px;height:62px;border:3px solid #000;border-radius:0 10px 10px 0;background:#111;overflow:hidden;cursor:pointer}
 .btn-img img{width:100%;height:100%;object-fit:cover}
 #visorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999999;display:flex;flex-direction:column}
-#modalBox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
-.modal{width:90%;max-width:320px;background:#0a0a0a;border:2px solid #fff;border-radius:16px;padding:20px;text-align:center;box-shadow:0 0 30px rgba(255,255,255,0.2)}
-.modal h3{color:#fff;margin:0 0 15px 0;font-size:16px;letter-spacing:2px}
-.modal.row{display:flex;gap:10px;margin-top:15px}
-.modal button{flex:1;padding:12px;border-radius:8px;font-weight:bold;cursor:pointer;border:2px solid #fff;transition:0.2s}
-.btn-white{background:#fff;color:#000}
-.btn-black{background:#000;color:#fff}
-.btn-red{background:#ff1a1a;color:#fff;border-color:#ff1a1a!important}
-.btn-white:hover,.btn-black:hover{transform:scale(1.03);box-shadow:0 0 15px #fff}
-.modal input{width:100%;padding:12px;background:#000;color:#fff;border:2px solid #333;border-radius:8px;margin-top:10px;outline:none}
-.modal input:focus{border-color:#fff}
+#modalBox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999999999;display:none;align-items:center;justify-content:center}
+.modal{width:320px;background:#0a0a0a;border:2px solid #fff;border-radius:16px;padding:20px;text-align:center}
+.modal button{padding:12px;border-radius:8px;font-weight:bold;cursor:pointer;border:2px solid #fff;margin-top:8px;width:100%}
 </style>
 
-<div id="modalBox" onclick="if(event.target===this) cerrarModal()"></div>
+<div id="modalBox"></div>
 
 <script>
-var CLAVE = "admin123";
-var FONDO = "";
-var lista = JSON.parse(localStorage.getItem("fotos") || "[]");
-var miFoto = localStorage.getItem("mi_foto_perfil") || "img/perfil.jpg";
-var esAdmin = localStorage.getItem("admin_sesion") === "1";
-var actual = 0; var editIndex = -1;
+var CLAVE="admin123";
+var lista=JSON.parse(localStorage.getItem("fotos")||"[]");
+var miFoto=localStorage.getItem("mi_foto_perfil")||"img/perfil.jpg";
+var esAdmin=localStorage.getItem("admin_sesion")==="1";
+var editIndex=-1;
 
-var listaBotones = [
-  { img:'COMICSBOTONPORT.png', miniImg:'img/m1.png', miniVideo:'OJOANIMATED.mp4', tipo:'COMICS' },
-  { img:'img/b2.jpg', miniImg:'img/m2.png', miniVideo:'videos/m2.mp4', tipo:'GALERIA' },
-  { img:'img/b3.jpg', miniImg:'img/m3.png', miniVideo:'videos/m3.mp4', link:'#' },
-  { img:'img/b4.jpg', miniImg:'img/m4.png', miniVideo:'videos/m4.mp4', link:'#' },
-  { img:'img/b5.jpg', miniImg:'img/m5.png', miniVideo:'videos/m5.mp4', link:'#' },
-  { img:'img/b6.jpg', miniImg:'img/m6.png', miniVideo:'videos/m6.mp4', link:'#' }
+var listaBotones=[
+ {img:'COMICSBOTONPORT.png', miniImg:'img/m1.png', tipo:'COMICS'},
+ {img:'img/b2.jpg', miniImg:'img/m2.png', tipo:'GALERIA'},
+ {img:'img/b3.jpg', miniImg:'img/m3.png', link:'#'},
+ {img:'img/b4.jpg', miniImg:'img/m4.png', link:'#'},
+ {img:'img/b5.jpg', miniImg:'img/m5.png', link:'#'},
+ {img:'img/b6.jpg', miniImg:'img/m6.png', link:'#'}
 ];
 
-function abrirModal(html){ document.getElementById("modalBox").innerHTML=html; document.getElementById("modalBox").style.display="flex"; }
-function cerrarModal(){ document.getElementById("modalBox").style.display="none"; }
+function modal(h){ document.getElementById("modalBox").innerHTML=h; document.getElementById("modalBox").style.display="flex"; }
+function cerrar(){ document.getElementById("modalBox").style.display="none"; }
 
 function abrirComics(){
-  var s=document.getElementById("sonidoComics"); if(s){s.currentTime=0; s.play().catch(()=>{});}
-  document.getElementById("visorComics")?.remove();
-  var d=document.createElement("div"); d.id="visorComics";
-  d.innerHTML='<button onclick="this.parentElement.remove()" style="position:fixed;top:10px;right:15px;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer">X</button><iframe src="/sitio-web-series/public/comics/" style="width:100%;height:100%;border:none"></iframe>';
-  document.body.appendChild(d);
+ document.getElementById("visorComics")?.remove();
+ var d=document.createElement("div"); d.id="visorComics";
+ d.innerHTML='<div style="height:60px;display:flex;justify-content:space-between;align-items:center;padding:0 15px;background:#000;border-bottom:2px solid #222"><b style="color:#fff">BIBLIOTECA</b><button onclick="document.getElementById(\'visorComics\').remove()" style="width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer">X</button></div><iframe src="/sitio-web-series/public/comics/" style="width:100%;flex:1;border:none"></iframe>';
+ document.body.appendChild(d);
 }
 
 function abrirGaleria(){
-  document.getElementById("visorComics")?.remove();
-  var v=document.createElement("div"); v.id="visorComics";
-  var fotosHtml=""; for(var i=0;i<lista.length;i++){ fotosHtml+='<img src="'+lista[i]+'" data-i="'+i+'" style="width:100%;height:210px;object-fit:cover;border:2px solid #fff;border-radius:10px;cursor:pointer">'; }
-  if(!fotosHtml) fotosHtml='<p style="color:#666;text-align:center;margin-top:50px;letter-spacing:2px">GALERÍA VACÍA</p>';
-  var videoFondo = FONDO? '<video src="'+FONDO+'" autoplay muted loop playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.25;z-index:-1"></video>' : '';
-  v.innerHTML = videoFondo +
-  '<div style="height:64px;display:flex;justify-content:space-between;align-items:center;padding:0 15px;border-bottom:2px solid #222;background:#000;flex-shrink:0">'+
-    '<b style="color:#fff;letter-spacing:3px;font-size:14px">GALERÍA</b>'+
-    '<div style="display:flex;gap:10px;align-items:center">'+
-      '<div id="perfilBtn" style="width:44px;height:44px;border-radius:50%;border:2px solid #fff;overflow:hidden;cursor:pointer;background:#222"><img src="'+miFoto+'" onerror="this.src=\'https://cdn-icons-png.flaticon.com/512/149/149071.png\'" style="width:100%;height:100%;object-fit:cover"></div>'+
-      '<button onclick="document.getElementById(\'visorComics\').remove()" style="width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #333;cursor:pointer">X</button>'+
-    '</div></div>'+
-  '<input type="file" id="fileIn" accept="image/*" multiple style="display:none"><input type="file" id="filePerfil" accept="image/*" style="display:none"><input type="file" id="fileEdit" accept="image/*" style="display:none">'+
-  '<div id="gridFotos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:16px;overflow:auto;flex:1">'+fotosHtml+'</div>';
-  document.body.appendChild(v);
-  document.querySelectorAll("#gridFotos img").forEach(function(img){ var idx=parseInt(img.getAttribute("data-i")); img.onclick=function(){ verFoto(idx); }; img.ondblclick=function(){ dobleClick(idx); }; });
-  document.getElementById("perfilBtn").onclick=clickPerfil;
-  document.getElementById("fileIn").onchange=subirFotos;
-  document.getElementById("filePerfil").onchange=subirPerfil;
-  document.getElementById("fileEdit").onchange=confirmarEdit;
+ document.getElementById("visorComics")?.remove();
+ var v=document.createElement("div"); v.id="visorComics";
+ var html=""; for(var i=0;i<lista.length;i++){ html+='<img src="'+lista[i]+'" ondblclick="dobleClick('+i+')" onclick="verFoto('+i+')" style="width:100%;height:210px;object-fit:cover;border:2px solid #fff;border-radius:10px;cursor:pointer">'; }
+ if(!html) html='<p style="color:#555;text-align:center;margin-top:50px">VACÍA</p>';
+ v.innerHTML='<div style="height:64px;display:flex;justify-content:space-between;align-items:center;padding:0 15px;background:#000;border-bottom:2px solid #222"><b style="color:#fff;letter-spacing:3px">GALERÍA</b><div style="display:flex;gap:10px"><div onclick="clickPerfil()" style="width:44px;height:44px;border-radius:50%;border:2px solid #fff;overflow:hidden;cursor:pointer"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #333">X</button></div></div><input type="file" id="fileIn" multiple style="display:none"><input type="file" id="filePerfil" style="display:none"><input type="file" id="fileEdit" style="display:none"><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:16px;overflow:auto;flex:1">'+html+'</div>';
+ document.body.appendChild(v);
+ document.getElementById("fileIn").onchange=subirFotos;
+ document.getElementById("filePerfil").onchange=subirPerfil;
+ document.getElementById("fileEdit").onchange=confirmarEdit;
 }
 
 function dobleClick(i){
-  if(!esAdmin){ abrirModal('<div class="modal"><h3>SOLO ADMIN</h3><p style="color:#888;font-size:13px">Necesitas iniciar sesión</p><div class="row"><button class="btn-white" onclick="cerrarModal()">OK</button></div></div>'); return; }
-  editIndex=i;
-  abrirModal('<div class="modal"><h3>EDITAR FOTO</h3><img src="'+lista[i]+'" style="width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid #333"><div class="row"><button class="btn-black" onclick="cerrarModal(); document.getElementById(\'fileEdit\').click()">✎ EDITAR</button><button class="btn-red" onclick="cerrarModal(); borrar('+i+')">BORRAR</button></div><button class="btn-black" style="width:100%;margin-top:10px;border-color:#333" onclick="cerrarModal()">CANCELAR</button></div>');
+ if(!esAdmin){ modal('<div class="modal"><h3 style="color:#fff">SOLO ADMIN</h3><button style="background:#fff;color:#000" onclick="cerrar()">OK</button></div>'); return; }
+ editIndex=i;
+ modal('<div class="modal"><h3 style="color:#fff">¿QUÉ HACER?</h3><img src="'+lista[i]+'" style="width:100%;height:120px;object-fit:cover;border-radius:10px;margin:10px 0"><button style="background:#fff;color:#000" onclick="cerrar(); document.getElementById(\'fileEdit\').click()">✎ EDITAR FOTO</button><button style="background:#ff1a1a;color:#fff;border-color:#ff1a1a" onclick="cerrar(); borrar('+i+')">BORRAR FOTO</button><button style="background:#000;color:#fff" onclick="cerrar()">CANCELAR</button></div>');
 }
 
 function clickPerfil(){
-  if(!esAdmin){
-    abrirModal('<div class="modal"><h3>ADMIN LOGIN</h3><input id="inputPass" type="password" placeholder="Contraseña"><div class="row"><button class="btn-black" onclick="cerrarModal()">CANCELAR</button><button class="btn-white" onclick="checkPass()">ENTRAR</button></div></div>');
-    setTimeout(()=>document.getElementById("inputPass")?.focus(),100);
-  } else {
-    abrirModal('<div class="modal"><div style="width:80px;height:80px;border-radius:50%;border:3px solid #fff;overflow:hidden;margin:0 auto 12px"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><h3>MI PERFIL</h3><p style="color:#888;font-size:12px">ADMINISTRADOR</p><div style="display:flex;flex-direction:column;gap:8px;margin-top:15px"><button class="btn-white" onclick="cerrarModal(); document.getElementById(\'fileIn\').click()">+ AÑADIR IMÁGENES</button><button class="btn-black" onclick="cerrarModal(); document.getElementById(\'filePerfil\').click()">CAMBIAR MI FOTO</button><button class="btn-black" style="color:#ff5555;border-color:#331111" onclick="salirAdmin()">CERRAR SESIÓN</button></div><button class="btn-black" style="width:100%;margin-top:10px;border-color:#222" onclick="cerrarModal()">CERRAR</button></div>');
-  }
+ if(!esAdmin){
+   modal('<div class="modal"><h3 style="color:#fff">CONTRASEÑA</h3><input id="pass" type="password" style="width:100%;padding:12px;background:#000;color:#fff;border:2px solid #333;border-radius:8px"><button style="background:#fff;color:#000" onclick="if(document.getElementById(\'pass\').value===\'admin123\'){esAdmin=true; localStorage.setItem(\'admin_sesion\',\'1\'); cerrar(); abrirGaleria()}">ENTRAR</button><button style="background:#000;color:#fff" onclick="cerrar()">CANCELAR</button></div>');
+ } else {
+   modal('<div class="modal"><div style="width:80px;height:80px;border-radius:50%;border:3px solid #fff;overflow:hidden;margin:0 auto"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><h3 style="color:#fff;margin-top:10px">MI PERFIL</h3><button style="background:#fff;color:#000" onclick="cerrar(); document.getElementById(\'fileIn\').click()">+ AÑADIR IMÁGENES</button><button style="background:#000;color:#fff" onclick="cerrar(); document.getElementById(\'filePerfil\').click()">CAMBIAR MI FOTO</button><button style="background:#000;color:#ff5555;border-color:#331111" onclick="esAdmin=false; localStorage.removeItem(\'admin_sesion\'); cerrar(); abrirGaleria()">CERRAR SESIÓN</button><button style="background:#000;color:#fff;border-color:#222" onclick="cerrar()">CERRAR</button></div>');
+ }
 }
-function checkPass(){ if(document.getElementById("inputPass").value===CLAVE){ esAdmin=true; localStorage.setItem("admin_sesion","1"); cerrarModal(); abrirGaleria(); } else { document.getElementById("inputPass").style.borderColor="red"; } }
-function salirAdmin(){ esAdmin=false; localStorage.removeItem("admin_sesion"); cerrarModal(); abrirGaleria(); }
-function subirPerfil(){ var f=document.getElementById("filePerfil").files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ miFoto=e.target.result; localStorage.setItem("mi_foto_perfil", miFoto); abrirGaleria(); }; r.readAsDataURL(f); }
-function subirFotos(){ var files=document.getElementById("fileIn").files; var total=files.length, done=0; for(var k=0;k<total;k++){ var r=new FileReader(); r.onload=function(e){ lista.push(e.target.result); done++; if(done===total){ localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); } }; r.readAsDataURL(files[k]); } }
-function confirmarEdit(){ var f=document.getElementById("fileEdit").files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ lista[editIndex]=e.target.result; localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); }; r.readAsDataURL(f); }
-function borrar(i){ abrirModal('<div class="modal"><h3>¿BORRAR?</h3><p style="color:#888;font-size:13px">Esta acción no se puede deshacer</p><div class="row"><button class="btn-black" onclick="cerrarModal()">NO</button><button class="btn-red" onclick="lista.splice('+i+',1); localStorage.setItem(\'fotos\', JSON.stringify(lista)); cerrarModal(); abrirGaleria();">SÍ, BORRAR</button></div></div>'); }
-function verFoto(i){ actual=i; var old=document.getElementById("visorFoto"); if(old) old.remove(); var d=document.createElement("div"); d.id="visorFoto"; d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.96);z-index:99999999;display:flex;align-items:center;justify-content:center"; d.innerHTML='<button onclick="actual--; if(actual<0) actual=lista.length-1; document.getElementById(\'imgG\').src=lista[actual]" style="position:absolute;left:10px;background:#000;color:#fff;border:2px solid #fff;padding:14px;border-radius:50%">‹</button><img id="imgG" src="'+lista[i]+'" style="max-width:82%;max-height:75%;border:2px solid #fff;border-radius:12px"><button onclick="actual++; if(actual>=lista.length) actual=0; document.getElementById(\'imgG\').src=lista[actual]" style="position:absolute;right:10px;background:#000;color:#fff;border:2px solid #fff;padding:14px;border-radius:50%">›</button><button onclick="this.parentElement.remove()" style="position:absolute;bottom:24px;background:#fff;color:#000;border:none;padding:10px 30px;border-radius:20px;font-weight:bold;letter-spacing:2px">X</button>'; document.body.appendChild(d); }
+
+function subirPerfil(){ var f=document.getElementById("filePerfil").files[0]; var r=new FileReader(); r.onload=function(e){ miFoto=e.target.result; localStorage.setItem("mi_foto_perfil", miFoto); abrirGaleria(); }; r.readAsDataURL(f); }
+function subirFotos(){ var files=document.getElementById("fileIn").files; var c=0; for(var k=0;k<files.length;k++){ var r=new FileReader(); r.onload=function(e){ lista.push(e.target.result); c++; if(c===files.length){ localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); } }; r.readAsDataURL(files[k]); } }
+function confirmarEdit(){ var f=document.getElementById("fileEdit").files[0]; var r=new FileReader(); r.onload=function(e){ lista[editIndex]=e.target.result; localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); }; r.readAsDataURL(f); }
+function borrar(i){ modal('<div class="modal"><h3 style="color:#fff">¿BORRAR?</h3><button style="background:#ff1a1a;color:#fff" onclick="lista.splice('+i+',1); localStorage.setItem(\'fotos\', JSON.stringify(lista)); cerrar(); abrirGaleria()">SÍ BORRAR</button><button style="background:#000;color:#fff" onclick="cerrar()">NO</button></div>'); }
+function verFoto(i){ var d=document.createElement("div"); d.id="visorFoto"; d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.97);z-index:99999999;display:flex;align-items:center;justify-content:center"; d.innerHTML='<img src="'+lista[i]+'" style="max-width:80%;max-height:80%;border:2px solid #fff;border-radius:12px"><button onclick="this.parentElement.remove()" style="position:absolute;bottom:20px;background:#fff;color:#000;border:none;padding:10px 30px;border-radius:20px;font-weight:bold">X</button>'; document.body.appendChild(d); d.onclick=function(e){ if(e.target===d) d.remove(); }; }
 
 var cont=document.getElementById('botonera');
-listaBotones.forEach(function(b,i){
-  var wrap=document.createElement('div'); wrap.className='boton-wrap';
-  var mini=document.createElement('div'); mini.className='mini-left'; mini.innerHTML='<img src="'+b.miniImg+'">';
-  var enVid=false; mini.onclick=function(e){ e.stopPropagation(); mini.innerHTML=!enVid?'<video src="'+b.miniVideo+'" autoplay muted loop playsinline></video>':'<img src="'+b.miniImg+'">'; enVid=!enVid; };
-  var btn=document.createElement('div'); btn.className='btn-img'; btn.innerHTML='<img src="'+b.img+'">';
-  if(b.tipo==='COMICS') btn.onclick=abrirComics; else if(b.tipo==='GALERIA') btn.onclick=abrirGaleria;
-  wrap.appendChild(mini); wrap.appendChild(btn); cont.appendChild(wrap);
-  setTimeout(function(){ wrap.classList.add('entrar'); }, 600+i*100);
+listaBotones.forEach(function(b){
+ var wrap=document.createElement('div'); wrap.className='boton-wrap';
+ var mini=document.createElement('div'); mini.className='mini-left'; mini.innerHTML='<img src="'+b.miniImg+'">';
+ var btn=document.createElement('div'); btn.className='btn-img'; btn.innerHTML='<img src="'+b.img+'">';
+ if(b.tipo==='COMICS') btn.onclick=abrirComics; else if(b.tipo==='GALERIA') btn.onclick=abrirGaleria;
+ wrap.appendChild(mini); wrap.appendChild(btn); cont.appendChild(wrap);
 });
 </script>
 </body>
