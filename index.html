@@ -430,7 +430,7 @@ window.quitar = (i)=>{
   fotos.splice(i,1); localStorage.setItem("fotos", JSON.stringify(fotos)); abrirGaleria();
 }
 </script>
-<!-- 6 BOTONES IZQUIERDA PEGADOS -->
+<!-- 6 BOTONES IZQUIERDA PEGADOS - CON COMICS EN EL 1RO -->
 <style>
 #botonera{
   position:fixed; 
@@ -462,9 +462,8 @@ window.quitar = (i)=>{
   flex-shrink:0;
 }
 .mini-left img, .mini-left video{width:100%;height:100%;object-fit:cover; display:block}
-
 .btn-img{
-  width:170px; height:62px; /* MAS ANCHO, NO TAN ALTO */
+  width:170px; height:62px;
   border:3px solid #000; 
   border-radius:0 10px 10px 0;
   background:#111; overflow:hidden; cursor:pointer;
@@ -472,23 +471,52 @@ window.quitar = (i)=>{
 }
 .btn-img img, .btn-img video{width:100%;height:100%;object-fit:cover; display:block}
 .boton-wrap:hover{transform:scale(1.04)}
+
+/* VISOR DE COMICS */
+#visorComics{
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:#000; z-index:9999999;
+}
+#closeX{
+  position:fixed; top:10px; right:15px; z-index:99999;
+  width:40px; height:40px; border-radius:50%;
+  background:#000; color:#fff; border:2px solid #fff;
+  cursor:pointer; font-weight:bold; font-size:18px;
+}
 </style>
 
 <div id="botonera"></div>
+<audio id="sonidoComics" src="click.mp3" preload="auto"></audio>
 
 <script>
-// ===== EDITA AQUI TUS IMAGENES / VIDEOS =====
 const BOTONES = [
-  { img:'COMICSBOTONPORT.png',  miniImg:'img/m1.png', miniVideo:'OJOANIMATED.mp4', link:'#' },
+  { img:'COMICSBOTONPORT.png', miniImg:'img/m1.png', miniVideo:'OJOANIMATED.mp4', link:'COMICS', esComics:true },
   { img:'img/b2.jpg',  miniImg:'img/m2.png', miniVideo:'videos/m2.mp4', link:'#' },
   { img:'img/b3.jpg',  miniImg:'img/m3.png', miniVideo:'videos/m3.mp4', link:'#' },
   { img:'img/b4.jpg',  miniImg:'img/m4.png', miniVideo:'videos/m4.mp4', link:'#' },
   { img:'img/b5.jpg',  miniImg:'img/m5.png', miniVideo:'videos/m5.mp4', link:'#' },
   { img:'img/b6.jpg',  miniImg:'img/m6.png', miniVideo:'videos/m6.mp4', link:'#' },
 ];
-// ============================================
 
-const cont=document.getElementById('botonera');
+const cont = document.getElementById('botonera');
+
+function abrirComics(){
+  let audio = document.getElementById("sonidoComics");
+  if(audio){ audio.currentTime = 0; audio.play().catch(()=>{}); }
+  
+  let v = document.getElementById("visorComics");
+  if(v) v.remove();
+  
+  let d = document.createElement("div");
+  d.id = "visorComics";
+  d.innerHTML = `
+    <button id="closeX">X</button>
+    <iframe src="/sitio-web-series/public/comics/" style="width:100%;height:100%;border:none"></iframe>
+  `;
+  document.body.appendChild(d);
+  document.getElementById("closeX").onclick = () => d.remove();
+}
+
 BOTONES.forEach((b,i)=>{
   const wrap=document.createElement('div'); wrap.className='boton-wrap';
 
@@ -503,14 +531,23 @@ BOTONES.forEach((b,i)=>{
 
   const btn=document.createElement('div'); btn.className='btn-img';
   btn.innerHTML=`<img src="${b.img}" onerror="this.parentElement.style.background='#555'">`;
-  btn.onclick=()=>{ if(b.link!=='#') window.location=b.link };
+  
+  // AQUI ESTA LA MAGIA - SI ES EL PRIMERO ABRE COMICS
+  if(b.esComics){
+    btn.onclick = abrirComics;
+  } else {
+    btn.onclick = ()=>{ if(b.link!=='#') window.location=b.link };
+  }
 
   wrap.appendChild(mini); wrap.appendChild(btn);
   cont.appendChild(wrap);
 
-  // ANIMACION DESPUES DE TU INTRO - 2.2 SEGUNDOS DESPUES
   setTimeout(()=>{ wrap.classList.add('entrar'); wrap.style.animationDelay=(i*0.1)+'s'; }, 2200 + i*90);
-}); 
+});
+
+window.addEventListener("message", e => {
+  if(e.data === "CERRAR_COMICS") document.getElementById("visorComics")?.remove();
+});
 </script>
 </body>
 </html>
