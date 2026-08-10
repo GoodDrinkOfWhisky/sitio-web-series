@@ -80,8 +80,7 @@ window.addEventListener('load',()=>{
 <script>
 (function(){
   const PASS2 = "admin123";
-  const CHAR_VIDEO = "renyaTALK.mp4";
-  const AUDIO_SRC = "renya voice.mp4";
+  const CHAR_VIDEO = "renyaTALK.mp4"; // tu video hablando
 
   let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!, mucho gusto estoy aqui para brindarte consejos basicos","Mira la galeria","Esta diseñada para los fanarts","tambien puedes apoyar el contenido al visitar las demas redes sociales, los links se encuentran abajo","este sitio se encuentra en una fase muy temprana asi que no hay mucho que hacer por ahora lo siento..."]');
   let pos=0, busy=false;
@@ -90,7 +89,19 @@ window.addEventListener('load',()=>{
   const elCharVideo=document.getElementById("pj-video-char");
   const elGlobo=document.getElementById("pj-globo");
   elCharVideo.src=CHAR_VIDEO;
-  const audio=new Audio(AUDIO_SRC); audio.loop=true;
+
+  // SONIDO ORIGINAL TIPO TORIEL FEMENINA - SIN COPYRIGHT - GENERADO EN VIVO
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function beepOriginal(){
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type='square';
+    o.frequency.value = 185 + Math.random()*12; // voz femenina
+    g.gain.setValueAtTime(0.18, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.13);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+0.13);
+  }
 
   function ajustarFuente(t){
     let s=18; if(t.length>70)s=15; if(t.length>130)s=13; if(t.length>200)s=11.5;
@@ -100,6 +111,7 @@ window.addEventListener('load',()=>{
   function escribir(texto){
     if(busy) return;
     busy=true;
+    if(audioCtx.state==='suspended') audioCtx.resume();
     elGif.style.display="none";
     elCharVideo.style.display="block";
     elCharVideo.currentTime=0;
@@ -107,13 +119,13 @@ window.addEventListener('load',()=>{
     elGlobo.style.display="block";
     elGlobo.textContent="";
     ajustarFuente(texto);
-    audio.currentTime=0; audio.play().catch(()=>{});
     let i=0;
     let inter=setInterval(()=>{
-      elGlobo.textContent+=texto[i]||""; i++;
+      elGlobo.textContent+=texto[i]||"";
+      if(texto[i] && texto[i]!=" " && i%2==0) beepOriginal(); // BIP ORIGINAL POR LETRA
+      i++;
       if(i>=texto.length){
         clearInterval(inter);
-        audio.pause();
         elCharVideo.pause();
         elCharVideo.style.display="none";
         elGif.style.display="block";
