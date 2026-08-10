@@ -5,43 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   body{margin:0;background:#0e0e0e;color:#fff;font-family:Arial}
-  #topBar{height:50px;background:#000;display:flex;align-items:center;padding:0 15px;border-bottom:1px solid #222;letter-spacing:2px}
+  #topBar{height:50px;background:#000;display:flex;align-items:center;padding:0 15px;border-bottom:1px solid #222}
   #contenido{padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
   #closeX{position:fixed;top:6px;right:12px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold}
   #adminDot{position:fixed;top:6px;right:62px;z-index:99999;width:40px;height:40px;border-radius:50%;border:2px solid #fff;object-fit:cover;cursor:pointer;background:#111}
- .comicItem{position:relative;border-radius:6px;overflow:hidden;background:#1a1a1a;border:1px solid #222;cursor:pointer}
- .comicItem:hover{border-color:#fff;box-shadow:0 0 15px rgba(255,255,255,0.3)}
- .comicItem img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block}
- .comicInfo{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:25px 8px 8px}
- .comicInfo p{margin:0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comicItem{position:relative;border-radius:6px;overflow:hidden;background:#1a1a1a;border:1px solid #222;cursor:pointer}
+.comicItem img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block}
+.comicInfo{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:25px 8px 8px}
   #cropModal,#loginModal,#menuPerfil,#modalComic{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000000;display:none;align-items:center;justify-content:center}
   #cropArea{width:300px;height:300px;background:#555;position:relative;overflow:hidden;border-radius:12px}
   #cropImage{position:absolute;top:0;left:0;cursor:grab}
   #cropCircle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:170px;height:170px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,0.6);pointer-events:none}
   #loginBox,#menuBox{background:#151515;border:1px solid #333;border-radius:12px;padding:20px;width:90%;max-width:300px;text-align:center}
   #modalComicBox{background:#161616;border:1px solid #2a2a2a;border-radius:10px;width:95%;max-width:800px;height:75vh;display:flex;position:relative;overflow:hidden}
- .leftPreview{width:60%;background:#0d0d0d;display:flex;align-items:flex-start;justify-content:flex-start;padding:18px;flex-direction:column}
- .rightControls{position:absolute;top:10px;right:10px;width:200px;display:flex;flex-direction:column;gap:8px}
- .steamFrame{width:190px;height:280px;border:1px solid #333;background:#111;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;margin-top:5px}
- .steamFrame:hover{border-color:#fff;box-shadow:0 0 12px #fff}
- .steamFrame img{width:100%;height:100%;object-fit:cover}
- .controlBtn{background:#1f1f1f;border:1px solid #333;color:#888;padding:9px;border-radius:6px;cursor:pointer;text-align:left}
- .controlBtn:hover,.active{border-color:#fff;color:#fff;background:#2a2a2a}
+.leftPreview{width:60%;background:#0d0d0d;display:flex;align-items:flex-start;justify-content:flex-start;padding:18px;flex-direction:column}
+.rightControls{position:absolute;top:10px;right:10px;width:200px;display:flex;flex-direction:column;gap:8px}
+.steamFrame{width:190px;height:280px;border:1px solid #333;background:#111;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;margin-top:5px}
+.steamFrame:hover{border-color:#fff}
+.steamFrame img{width:100%;height:100%;object-fit:cover}
+.controlBtn{background:#1f1f1f;border:1px solid #333;color:#888;padding:9px;border-radius:6px;cursor:pointer;text-align:left}
+.controlBtn.active{border-color:#fff;color:#fff;background:#2a2a2a}
   #tituloInput{background:#0e0e0e;border:1px solid #333;color:#fff;padding:9px;border-radius:6px;width:100%;box-sizing:border-box}
   #galeriaPaginas{display:grid;grid-template-columns:repeat(auto-fill,90px);gap:8px;overflow-y:auto;max-height:300px;width:100%}
- .paginaThumb{width:90px;height:130px;border:1px solid #333;border-radius:6px;overflow:hidden;position:relative;background:#111}
- .paginaThumb img{width:100%;height:100%;object-fit:cover}
- .addPageCard{width:90px;height:130px;border:1px dashed #444;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
- .addPageCard:hover{border-color:#fff}
- .btn{width:100%;padding:10px;border-radius:6px;border:1px solid #fff;background:#000;color:#fff;cursor:pointer;font-weight:bold}
-  /* LECTOR */
+.paginaThumb{width:90px;height:130px;border:1px solid #333;border-radius:6px;overflow:hidden;position:relative;background:#111}
+.paginaThumb img{width:100%;height:100%;object-fit:cover}
+.addPageCard{width:90px;height:130px;border:1px dashed #444;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
+.addPageCard:hover{border-color:#fff}
+.btn{width:100%;padding:10px;border-radius:6px;border:1px solid #fff;background:#000;color:#fff;cursor:pointer;font-weight:bold}
   #lector{position:fixed;inset:0;background:#000;z-index:9999999;display:none}
-  #lectorImg{width:100%;height:100%;object-fit:contain;display:block;background:#000}
- .flecha{position:fixed;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px)}
- .flecha:hover{background:rgba(255,255,255,0.15);border-color:#fff;box-shadow:0 0 12px #fff}
+  #lectorImg{width:100%;height:100%;object-fit:contain;display:block}
+.flecha{position:fixed;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
   #fIzq{left:18px} #fDer{right:18px}
   #xLector{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  #xLector:hover{background:rgba(255,0,0,0.2);border-color:#fff}
 </style>
 </head>
 <body>
@@ -57,7 +52,7 @@
 <div id="modalComic" onclick="if(event.target==this)cerrarModalComic()">
 <div id="modalComicBox">
   <div class="leftPreview">
-    <div id="portadaView"><div style="font-size:10px;opacity:0.4;margin-bottom:6px">PORTADA - ESQUINA SUPERIOR IZQUIERDA</div><div class="steamFrame" id="framePortada"><div style="text-align:center"><div style="font-size:32px;opacity:0.3">+</div><div style="font-size:9px;opacity:0.4">AGREGAR PORTADA</div></div></div><p id="previewTitulo" style="margin-top:10px;opacity:0.5;font-size:11px">SIN TITULO</p></div>
+    <div id="portadaView"><div style="font-size:9px;opacity:0.4;margin-bottom:6px">ESQUINA SUPERIOR IZQUIERDA</div><div class="steamFrame" id="framePortada"><div style="text-align:center"><div style="font-size:28px;opacity:0.3">+</div><div style="font-size:9px;opacity:0.4">AGREGAR PORTADA</div></div></div><p id="previewTitulo" style="margin-top:10px;opacity:0.5;font-size:11px">SIN TITULO</p></div>
     <div id="paginasView" style="display:none;width:100%"><h4 style="opacity:0.5;margin:0 0 10px;font-size:12px">PÁGINAS</h4><div id="galeriaPaginas"></div></div>
   </div>
   <div class="rightControls">
@@ -67,12 +62,12 @@
     <button class="controlBtn" id="btnPaginas" type="button">PAGINAS</button>
     <button class="btn" id="btnGuardar" type="button" style="background:#fff;color:#000;margin-top:12px">GUARDAR CÓMIC</button>
     <button class="btn" type="button" style="opacity:0.4" onclick="cerrarModalComic()">CANCELAR</button>
+    <p id="statusGuardar" style="font-size:10px;opacity:0.5;margin:5px 0 0;display:none"></p>
   </div>
 </div>
 </div>
 
-<div id="lector"><img id="lectorImg"><div class="flecha" id="fIzq" onclick="cambiarPagina(-1)">‹</div><div class="flecha" id="fDer" onclick="cambiarPagina(1)">›</div><div id="xLector" onclick="cerrarLector()">✕</div></div>
-
+<div id="lector"><img id="lectorImg"><div class="flecha" id="fIzq">‹</div><div class="flecha" id="fDer">›</div><div id="xLector">✕</div></div>
 <input type="file" id="inputPortada" accept="image/*" style="display:none">
 <input type="file" id="inputPagina" accept="image/*" multiple style="display:none">
 
@@ -81,14 +76,12 @@ const ADMIN_EMAIL="lxvtorres@gmail.com";
 const adminDot=document.getElementById('adminDot');
 adminDot.src=localStorage.getItem('adminPerfilComics')||'https://i.imgur.com/8Km9tLL.png';
 function cerrarComics(){ window.parent.postMessage("CERRAR_COMICS","*"); try{const v=window.parent.document.getElementById("visorComics"); if(v) v.remove();}catch(e){} }
-
 let eCount=0,eTimer=null;
 window.addEventListener('keydown',ev=>{ if(ev.key.toLowerCase()==='e'){ eCount++; clearTimeout(eTimer); eTimer=setTimeout(()=>eCount=0,800); if(eCount===3){eCount=0;clickPerfil();}}});
 function clickPerfil(){ if(localStorage.getItem('sesionAdmin')!=='true'){loginModal.style.display='flex';} else {menuFoto.src=adminDot.src;menuPerfil.style.display='flex';}}
 function cerrarMenu(){menuPerfil.style.display='none';} function cerrarLogin(){loginModal.style.display='none';}
 function intentarLogin(){const p=passLogin.value.trim(); if(!p)return; let s=localStorage.getItem('adminPass'); if(!s){localStorage.setItem('adminPass',p);s=p;} if(p===s && emailLogin.value.toLowerCase()===ADMIN_EMAIL){localStorage.setItem('sesionAdmin','true');cerrarLogin();} else loginError.style.display='block';}
 function cerrarSesionAdmin(){localStorage.removeItem('sesionAdmin');cerrarMenu();}
-
 let pos={x:0,y:0,scale:0.2,sx:0,sy:0,drag:false}; zoom.min=0.05; zoom.max=1.2; zoom.step=0.005;
 function abrirEditor(){cropModal.style.display='flex';cropImage.src=adminDot.src;setTimeout(centerImage,50);}
 function cerrarEditor(){cropModal.style.display='none';}
@@ -100,9 +93,23 @@ cropImage.addEventListener('mousedown',e=>{pos.drag=true;pos.sx=e.clientX-pos.x;
 window.addEventListener('mousemove',e=>{if(!pos.drag)return;pos.x=e.clientX-pos.sx;pos.y=e.clientY-pos.sy;update();});
 window.addEventListener('mouseup',()=>pos.drag=false);
 
-let tempPortada=null,tempPaginas=[],comics=JSON.parse(localStorage.getItem('misComics')||'[]'),lectorIndex=0,lectorComic=null;
+// COMPRESOR - ESTO ARREGLA LO LENTO
+function comprimir(dataUrl,maxW=700,quality=0.65){
+  return new Promise(res=>{
+    const img=new Image(); img.onload=()=>{
+      const c=document.createElement('canvas');
+      let w=img.width,h=img.height;
+      if(w>maxW){ h=h*(maxW/w); w=maxW; }
+      c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      res(c.toDataURL('image/jpeg',quality));
+    }; img.src=dataUrl;
+  });
+}
 
-const framePortada=document.getElementById('framePortada'),galeriaDiv=document.getElementById('galeriaPaginas');
+let tempPortada=null,tempPaginas=[],comics=JSON.parse(localStorage.getItem('misComics')||'[]'),lectorIndex=0,lectorComic=null;
+const framePortada=document.getElementById('framePortada'),galeriaDiv=document.getElementById('galeriaPaginas'),btnGuardar=document.getElementById('btnGuardar'),statusGuardar=document.getElementById('statusGuardar');
+
 function abrirModalComic(){modalComic.style.display='flex';mostrarTab('portada');}
 function cerrarModalComic(){modalComic.style.display='none';}
 function mostrarTab(t){
@@ -115,13 +122,22 @@ function mostrarTab(t){
 framePortada.addEventListener('click',()=>inputPortada.click());
 btnPortada.addEventListener('click',()=>mostrarTab('portada'));
 btnPaginas.addEventListener('click',()=>mostrarTab('paginas'));
-inputPortada.addEventListener('change',e=>{
+
+inputPortada.addEventListener('change',async e=>{
   const f=e.target.files[0]; if(!f)return;
-  const r=new FileReader(); r.onload=ev=>{tempPortada=ev.target.result;framePortada.innerHTML=`<img src="${tempPortada}">`;}; r.readAsDataURL(f);
+  const r=new FileReader(); r.onload=async ev=>{
+    const comp=await comprimir(ev.target.result,500,0.7);
+    tempPortada=comp; framePortada.innerHTML=`<img src="${comp}">`;
+  }; r.readAsDataURL(f);
 });
 inputPagina.addEventListener('change',e=>{
-  const files=[...e.target.files]; if(!files.length)return;
-  let n=0; files.forEach(f=>{const r=new FileReader(); r.onload=ev=>{tempPaginas.push(ev.target.result); n++; if(n===files.length) renderGaleria();}; r.readAsDataURL(f);});
+  const files=[...e.target.files];
+  files.forEach(f=>{
+    const r=new FileReader(); r.onload=async ev=>{
+      const comp=await comprimir(ev.target.result,800,0.6);
+      tempPaginas.push(comp); renderGaleria();
+    }; r.readAsDataURL(f);
+  });
 });
 function renderGaleria(){
   galeriaDiv.innerHTML='';
@@ -142,20 +158,30 @@ function renderComics(){
     const el=document.createElement('div'); el.className='comicItem';
     el.innerHTML=`<img src="${com.portada}"><div class="comicInfo"><p>${com.titulo}</p><span>${com.paginas.length} págs</span></div>`;
     el.onclick=()=>abrirLector(real);
-    el.ondblclick=(e)=>{e.preventDefault();mostrarBorrar(real);};
-    let t=null; el.addEventListener('touchstart',()=>{t=setTimeout(()=>mostrarBorrar(real),600);}); el.addEventListener('touchend',()=>clearTimeout(t));
+    el.ondblclick=e=>{e.preventDefault();mostrarBorrar(real);};
     c.appendChild(el);
   });
 }
-// BOTON GUARDAR 100% FUNCIONAL CON LISTENER REAL
-document.getElementById('btnGuardar').addEventListener('click',()=>{
+
+// GUARDAR 100% RAPIDO
+btnGuardar.addEventListener('click',async()=>{
+  if(btnGuardar.disabled) return;
   const titulo=tituloInput.value.trim()||'Sin título';
   if(!tempPortada){ alert('Pon portada'); mostrarTab('portada'); return; }
-  comics.push({titulo,portada:tempPortada,paginas:[...tempPaginas]});
-  localStorage.setItem('misComics',JSON.stringify(comics));
-  tempPortada=null; tempPaginas=[]; tituloInput.value=''; previewTitulo.innerText='SIN TITULO';
-  framePortada.innerHTML=`<div style="text-align:center"><div style="font-size:28px;opacity:0.3">+</div><div style="font-size:9px;opacity:0.4">AGREGAR PORTADA</div></div>`;
-  cerrarModalComic(); renderComics();
+  btnGuardar.disabled=true; btnGuardar.textContent='GUARDANDO...'; statusGuardar.style.display='block'; statusGuardar.textContent='Comprimiendo...';
+  await new Promise(r=>setTimeout(r,50));
+  try{
+    comics.push({titulo,portada:tempPortada,paginas:[...tempPaginas]});
+    localStorage.setItem('misComics',JSON.stringify(comics));
+    tempPortada=null; tempPaginas=[]; tituloInput.value=''; previewTitulo.innerText='SIN TITULO';
+    framePortada.innerHTML=`<div style="text-align:center"><div style="font-size:28px;opacity:0.3">+</div><div style="font-size:9px;opacity:0.4">AGREGAR PORTADA</div></div>`;
+    statusGuardar.textContent='¡Guardado!';
+    setTimeout(()=>{ cerrarModalComic(); renderComics(); btnGuardar.disabled=false; btnGuardar.textContent='GUARDAR CÓMIC'; statusGuardar.style.display='none'; },400);
+  }catch(err){
+    btnGuardar.disabled=false; btnGuardar.textContent='GUARDAR CÓMIC';
+    statusGuardar.textContent='Memoria llena, borra algún cómic';
+    alert('Memoria llena. Tu localStorage está lleno. Borra cómics viejos. Error: '+err.message);
+  }
 });
 
 function mostrarBorrar(i){
@@ -163,17 +189,17 @@ function mostrarBorrar(i){
   const m=document.createElement('div'); m.id='menuBorrar';
   m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000006;display:flex;align-items:center;justify-content:center';
   m.innerHTML=`<div style="background:#151515;border:1px solid #333;padding:18px;border-radius:10px;width:260px;text-align:center"><p style="margin:0 0 12px;font-size:13px">¿Borrar ${comics[i].titulo}?</p><button class="btn" style="background:#fff;color:#000" onclick="borrarComic(${i})">BORRAR</button><button class="btn" style="opacity:0.5;margin-top:8px" onclick="document.getElementById('menuBorrar').remove()">CANCELAR</button></div>`;
-  m.onclick=e=>{if(e.target===m) m.remove();};
-  document.body.appendChild(m);
+  m.onclick=e=>{if(e.target===m) m.remove();}; document.body.appendChild(m);
 }
 function borrarComic(i){ comics.splice(i,1); localStorage.setItem('misComics',JSON.stringify(comics)); document.getElementById('menuBorrar')?.remove(); renderComics(); }
 
-// LECTOR NUEVO
 function abrirLector(i){ lectorComic=comics[i]; lectorIndex=0; document.getElementById('lector').style.display='block'; mostrarPagina(); }
 function mostrarPagina(){ if(!lectorComic) return; lectorImg.src=lectorComic.paginas[lectorIndex]||lectorComic.portada; }
 function cambiarPagina(d){ if(!lectorComic) return; lectorIndex+=d; if(lectorIndex<0) lectorIndex=0; if(lectorIndex>=lectorComic.paginas.length) lectorIndex=lectorComic.paginas.length-1; mostrarPagina(); }
 function cerrarLector(){ document.getElementById('lector').style.display='none'; lectorComic=null; }
-window.addEventListener('keydown',e=>{ if(document.getElementById('lector').style.display==='block'){ if(e.key==='ArrowRight') cambiarPagina(1); if(e.key==='ArrowLeft') cambiarPagina(-1); if(e.key==='Escape') cerrarLector(); }});
+fIzq.addEventListener('click',()=>cambiarPagina(-1)); fDer.addEventListener('click',()=>cambiarPagina(1)); xLector.addEventListener('click',cerrarLector);
+window.addEventListener('keydown',e=>{ if(lector.style.display==='block'){ if(e.key==='ArrowRight') cambiarPagina(1); if(e.key==='ArrowLeft') cambiarPagina(-1); if(e.key==='Escape') cerrarLector(); }});
+function guardarRecorte(){const c=canvas,ctx=c.getContext('2d'),size=400,R=90,cx=cropArea.clientWidth/2,cy=cropArea.clientHeight/2,sf=size/(R*2);ctx.clearRect(0,0,size,size);ctx.save();ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();const w=cropImage.naturalWidth*pos.scale*sf,h=cropImage.naturalHeight*pos.scale*sf,x=(pos.x-(cx-R))*sf+size/2-R*sf,y=(pos.y-(cy-R))*sf+size/2-R*sf;ctx.drawImage(cropImage,x,y,w,h);ctx.restore();const d=c.toDataURL('image/png');localStorage.setItem('adminPerfilComics',d);adminDot.src=d;cerrarEditor();}
 
 renderComics();
 </script>
