@@ -274,6 +274,95 @@ window.quitar = (i)=>{
   fotos.splice(i,1); localStorage.setItem("fotos", JSON.stringify(fotos)); abrirGaleria();
 }
 </script>
+<!-- 6 BOTONES ANIMADOS - PEGA ESTO EN TU PAGINA PRINCIPAL -->
+<style>
+#botonera{
+  position:fixed; right:24px; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:18px; z-index:9999;
+}
+.boton-wrap{
+  display:flex; align-items:center; gap:12px;
+  transform:translateX(400px); /* empieza fuera */
+  opacity:0;
+}
+.boton-wrap.entrar{
+  animation: entrada 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+@keyframes entrada{
+  0%{transform:translateX(400px) rotate(8deg); opacity:0}
+  70%{transform:translateX(-25px) rotate(-3deg); opacity:1}
+  85%{transform:translateX(12px) rotate(2deg)}
+  100%{transform:translateX(0) rotate(0); opacity:1}
+}
+.btn-img{
+  width:160px; height:90px; /* MEDIANO */
+  border:3px solid #000; border-radius:14px;
+  background:#111; overflow:hidden; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:6px 6px 0 #000;
+  transition:transform .15s;
+}
+.btn-img:hover{transform:scale(1.07) rotate(-1deg)}
+.btn-img img, .btn-img video{width:100%;height:100%;object-fit:cover;display:block}
+
+.mini-left{
+  width:70px; height:70px;
+  border:3px solid #000; border-radius:50%;
+  background:#222; overflow:hidden; cursor:pointer;
+  box-shadow:4px 4px 0 #000; flex-shrink:0;
+}
+.mini-left img, .mini-left video{width:100%;height:100%;object-fit:cover}
+</style>
+
+<div id="botonera"></div>
+
+<script>
+// ========= EDITABLE - CAMBIA TUS IMAGENES / VIDEOS AQUI =========
+const BOTONES = [
+  { id:'btn1', img:'img/boton1.jpg', video:'videos/boton1.mp4', miniImg:'img/mini1.png', miniVideo:'videos/mini1.mp4', link:'#' },
+  { id:'btn2', img:'img/boton2.jpg', video:'videos/boton2.mp4', miniImg:'img/mini2.png', miniVideo:'videos/mini2.mp4', link:'#' },
+  { id:'btn3', img:'img/boton3.jpg', video:'videos/boton3.mp4', miniImg:'img/mini3.png', miniVideo:'videos/mini3.mp4', link:'#' },
+  { id:'btn4', img:'img/boton4.jpg', video:'videos/boton4.mp4', miniImg:'img/mini4.png', miniVideo:'videos/mini4.mp4', link:'#' },
+  { id:'btn5', img:'img/boton5.jpg', video:'videos/boton5.mp4', miniImg:'img/mini5.png', miniVideo:'videos/mini5.mp4', link:'#' },
+  { id:'btn6', img:'img/boton6.jpg', video:'videos/boton6.mp4', miniImg:'img/mini6.png', miniVideo:'videos/mini6.mp4', link:'#' },
+];
+// ================================================================
+
+const cont=document.getElementById('botonera');
+BOTONES.forEach((b,i)=>{
+  const wrap=document.createElement('div'); wrap.className='boton-wrap';
+  wrap.style.animationDelay=(i*0.12)+'s';
+  setTimeout(()=>wrap.classList.add('entrar'), 100+i*120);
+
+  // mini izquierda (imagen -> video al click)
+  const mini=document.createElement('div'); mini.className='mini-left';
+  mini.innerHTML=`<img src="${b.miniImg}">`;
+  let miniEnVideo=false;
+  mini.onclick=(e)=>{
+    e.stopPropagation();
+    if(!miniEnVideo){
+      mini.innerHTML=`<video src="${b.miniVideo}" autoplay muted loop></video>`;
+    }else{
+      mini.innerHTML=`<img src="${b.miniImg}">`;
+    }
+    miniEnVideo=!miniEnVideo;
+  };
+
+  // boton grande (imagen o video)
+  const btn=document.createElement('div'); btn.className='btn-img';
+  // si quieres que sea video directo cambia a <video>
+  btn.innerHTML=`<img src="${b.img}" onerror="this.style.background='#555'">`;
+  // hover muestra video si quieres: descomenta
+  // btn.onmouseenter=()=>btn.innerHTML=`<video src="${b.video}" autoplay muted loop></video>`;
+  // btn.onmouseleave=()=>btn.innerHTML=`<img src="${b.img}">`;
+  btn.onclick=()=>{ if(b.link!=='#') window.location.href=b.link; };
+
+  wrap.appendChild(mini);
+  wrap.appendChild(btn);
+  cont.appendChild(wrap);
+});
+</script>
+<!-- FIN BOTONES --> 
 </body>
 </html>
 <head>
