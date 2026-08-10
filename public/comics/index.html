@@ -6,60 +6,108 @@
 <title>CÓMICS</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#0a0a0a; color:white; font-family:Arial; min-height:100vh; padding:20px; }
-.header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-.btn-volver { background:#ff0033; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; }
-.btn-x { background:transparent; border:2px solid white; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; }
-#overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9998; }
-#adminPanel { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; padding:25px; border-radius:15px; z-index:9999; width:90%; max-width:400px; border:2px solid #ff0033; }
-#adminPanel input { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:none; }
-#adminPanel button { width:100%; padding:12px; background:#ff0033; color:white; border:none; border-radius:8px; margin-top:10px; cursor:pointer; font-weight:bold; }
+body { background: #0a0a0a url('https://i.imgur.com/8Km9tLL.jpg'); background-size:cover; background-attachment:fixed; color:white; font-family:'Poppins', sans-serif; min-height:100vh; }
+
+.header-top { display:flex; justify-content:space-between; align-items:center; padding:20px 30px; }
+.perfil { display:flex; align-items:center; gap:12px; background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,0.15); padding:8px 15px; border-radius:30px; }
+.perfil img { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid white; }
+.perfil span { font-weight:600; color:#fff; text-shadow: 0 0 8px rgba(255,255,255,0.8); }
+
+.btn-x { background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,0.2); color:white; width:45px; height:45px; border-radius:50%; cursor:pointer; font-size:22px; font-weight:bold; transition:0.2s; }
+.btn-x:hover { background: rgba(255,0,51,0.8); }
+
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:20px; padding:20px 30px; }
+.card { background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.12); border-radius:16px; overflow:hidden; transition:0.3s; position:relative; }
+.card:hover { transform:translateY(-5px); border-color: rgba(255,255,255,0.3); }
+.card img { width:100%; height:280px; object-fit:cover; }
+.card h3 { padding:12px; text-align:center; color:#fff; text-shadow: 0 0 10px rgba(255,255,255,0.9); font-weight:600; letter-spacing:0.5px; }
+
+/* Botón + para agregar */
+.add-card { border:2px dashed rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); display:flex; flex-direction:column; justify-content:center; align-items:center; height:330px; border-radius:16px; cursor:pointer; transition:0.3s; }
+.add-card:hover { background: rgba(255,255,255,0.08); border-color: white; }
+.add-card span { font-size:60px; color:white; text-shadow: 0 0 15px white; }
+.add-card p { color:white; margin-top:10px; font-weight:600; text-shadow: 0 0 8px white; }
+
+/* Panel Admin - Transparente opaco que pediste */
+#overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index:9998; }
+#adminPanel { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background: rgba(15,15,15,0.75); backdrop-filter: blur(25px); border:1px solid rgba(255,255,255,0.2); padding:30px; border-radius:20px; z-index:9999; width:90%; max-width:420px; box-shadow: 0 0 40px rgba(255,255,255,0.1); }
+#adminPanel h2 { color:#fff; text-align:center; margin-bottom:20px; text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 25px rgba(255,255,255,0.6); letter-spacing:1px; }
+#adminPanel input { width:100%; padding:12px 15px; margin:10px 0; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color:white; outline:none; }
+#adminPanel input::placeholder { color: rgba(255,255,255,0.6); }
+#adminPanel input:focus { border-color:white; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+.btn-add { width:100%; padding:13px; background: linear-gradient(90deg, #ff0033, #ff3366); color:white; border:none; border-radius:12px; margin-top:15px; cursor:pointer; font-weight:bold; font-size:16px; text-shadow: 0 0 8px white; box-shadow: 0 0 20px rgba(255,0,51,0.4); }
+.btn-close { width:100%; padding:12px; background: rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:12px; margin-top:10px; cursor:pointer; }
 </style>
 </head>
 <body>
 
-<div class="header">
-<button class="btn-volver" onclick="goHome()">← Volver</button>
-<button class="btn-x" onclick="goHome()">X</button>
+<div class="header-top">
+  <div class="perfil">
+    <img src="https://i.imgur.com/6VBx3io.png" id="imgPerfil">
+    <span>Mis Cómics</span>
+  </div>
+  <button class="btn-x" onclick="goHome()">X</button>
 </div>
 
-<div id="grid"></div>
+<div class="grid" id="grid">
+  <!-- Aquí se agregan los cómics + el botón + -->
+</div>
 
 <div id="overlay" onclick="cerrarPanel()"></div>
 <div id="adminPanel">
-<h2 style="text-align:center;">Agregar Cómic</h2>
-<input id="tituloComic" placeholder="Título">
-<input id="imgComic" placeholder="Link imagen">
-<input id="linkComic" placeholder="Link cómic">
-<button onclick="agregarComic()">Agregar Nuevo Cómic</button>
-<button onclick="cerrarPanel()" style="background:#444;">Cerrar</button>
+  <h2>NUEVO CÓMIC</h2>
+  <input id="tituloComic" placeholder="Título del cómic">
+  <input id="imgComic" placeholder="Link de la portada">
+  <input id="linkComic" placeholder="Link del cómic">
+  <button class="btn-add" onclick="agregarComic()">+ Agregar Cómic</button>
+  <button class="btn-close" onclick="cerrarPanel()">Cerrar</button>
 </div>
 
 <script>
 let comics = JSON.parse(localStorage.getItem('misComics')) || [];
-function goHome(){ window.location.href = "../index.html"; }
+
+function goHome(){
+  window.location.href = "../index.html";
+}
+
 function render(){
- const grid = document.getElementById('grid');
- grid.innerHTML = comics.map(c=>`<div style="background:#1a1a1a;padding:10px;margin:10px;border-radius:10px;"><img src="${c.img}" style="width:100%;height:250px;object-fit:cover;"><h3>${c.titulo}</h3></div>`).join('');
+  const grid = document.getElementById('grid');
+  grid.innerHTML = "";
+  comics.forEach(c=>{
+    grid.innerHTML += `<div class="card"><img src="${c.img}"><h3>${c.titulo}</h3></div>`;
+  });
+  // Sistema de paneles con signo de más que pediste
+  grid.innerHTML += `<div class="add-card" onclick="abrirPanel()"><span>+</span><p>Agregar Cómic</p></div>`;
 }
+
 function agregarComic(){
- const t=tituloComic.value, i=imgComic.value, l=linkComic.value;
- if(!t||!i) return alert('Falta dato');
- comics.push({titulo:t,img:i,link:l});
- localStorage.setItem('misComics',JSON.stringify(comics));
- cerrarPanel(); render();
+  const t = document.getElementById('tituloComic').value.trim();
+  const i = document.getElementById('imgComic').value.trim();
+  const l = document.getElementById('linkComic').value.trim();
+  if(!t || !i){ alert('Pon título e imagen'); return; }
+  comics.push({titulo:t, img:i, link:l});
+  localStorage.setItem('misComics', JSON.stringify(comics));
+  document.getElementById('tituloComic').value="";
+  document.getElementById('imgComic').value="";
+  document.getElementById('linkComic').value="";
+  cerrarPanel();
+  render();
 }
-function abrirPanel(){ adminPanel.style.display='block'; overlay.style.display='block'; }
-function cerrarPanel(){ adminPanel.style.display='none'; overlay.style.display='none'; }
+
+function abrirPanel(){ document.getElementById('adminPanel').style.display='block'; document.getElementById('overlay').style.display='block'; }
+function cerrarPanel(){ document.getElementById('adminPanel').style.display='none'; document.getElementById('overlay').style.display='none'; }
+
+// Triple E
 let countE=0,lastTime=0;
 document.addEventListener('keydown',e=>{
- if(e.key.toLowerCase()==='e'){
-   let now=Date.now();
-   if(now-lastTime>800) countE=0;
-   countE++; lastTime=now;
-   if(countE===3){ abrirPanel(); countE=0; }
- }
+  if(e.key.toLowerCase()==='e'){
+    let now=Date.now();
+    if(now-lastTime>800) countE=0;
+    countE++; lastTime=now;
+    if(countE===3){ abrirPanel(); countE=0; }
+  }
 });
+
 render();
 </script>
 </body>
