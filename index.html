@@ -33,131 +33,120 @@ window.addEventListener('load',()=>{
  
 <style>
 #pj-wrap{
-  position:fixed; left:20px; top:20px; z-index:10000;
-  display:flex; align-items:flex-start; gap:12px;
+  position:fixed;
+  left:45%; bottom:5%; /* 45% = CENTRO ABAJO UN POCO A LA IZQUIERDA, YA ALEJADA DE LA ESQUINA */
+  z-index:10000;
+  display:flex; align-items:center; gap:16px;
+  transform:translateX(-50%);
 }
-#pj-gif{
+#char-container{
+  position:relative; width:300px; height:300px; flex-shrink:0;
+}
+#pj-gif, #pj-video-char{
+  position:absolute; top:0; left:0;
   width:300px; height:300px; object-fit:contain;
-  cursor:pointer; display:block;
+  display:block;
   filter: drop-shadow(0 0 6px #fff);
   user-select:none; -webkit-user-drag:none;
-  /* REBOTE QUITADO */
+}
+#pj-gif{ cursor:pointer; z-index:2; }
+#pj-video-char{
+  display:none; z-index:1;
+  pointer-events:none;
+  cursor:default;
 }
 #pj-globo{
   display:none;
-  width:300px; height:110px; /* LIMITE FIJO - NO CRECE */
+  width:300px; height:110px;
   background:#fff; color:#111;
   font-family:Arial, sans-serif; font-weight:600;
-  font-size:16px; padding:12px 14px;
+  padding:12px 14px;
   border-radius:14px; border:2px solid #000;
   box-shadow:4px 4px 0 #000;
   line-height:1.3; overflow:hidden;
   word-break:break-word;
-}
-#pj-video-box{
-  display:none;
-  width:300px; height:170px; background:#000;
-  border:2px solid #000; border-radius:12px;
-  overflow:hidden; margin-top:8px;
-  pointer-events:none; /* NO CLICKEABLE */
-}
-#pj-video-box video{
-  width:100%; height:100%; object-fit:cover;
-  pointer-events:none;
+  align-self:center;
 }
 </style>
 
 <div id="pj-wrap">
-  <img id="pj-gif" src="RENYA.gif" draggable="false">
-  <div style="display:flex; flex-direction:column">
-    <div id="pj-globo"></div>
-    <div id="pj-video-box"><video id="pj-video" muted loop playsinline></video></div>
+  <div id="char-container">
+    <img id="pj-gif" src="RENYA.gif" draggable="false">
+    <video id="pj-video-char" muted loop playsinline></video>
   </div>
+  <div id="pj-globo"></div>
 </div>
 
 <script>
 (function(){
   const PASS2 = "admin123";
-  const VIDEO_SRC = "video.mp4"; // TU VIDEO AQUI
-  const AUDIO_SRC = "typing.mp3"; // TU AUDIO LOOP AQUI
+  const CHAR_VIDEO = "renya_hablando.mp4";
+  const AUDIO_SRC = "typing.mp3";
 
-  let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!, mucho gusto estoy aqui para brindarte consejos basicos", "Mira la galeria", "Esta diseñada para los fanarts","tambien puedes apoyar el contenido al visitar las demas redes sociales, los links se encuentran abajo","este sitio se encuentra en una fase muy temprana asi que no hay mucho que hacer por ahora lo siento..."]');
-  let pos = 0;
-  let busy = false;
+  let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!, mucho gusto estoy aqui para brindarte consejos basicos","Mira la galeria","Esta diseñada para los fanarts","tambien puedes apoyar el contenido al visitar las demas redes sociales, los links se encuentran abajo","este sitio se encuentra en una fase muy temprana asi que no hay mucho que hacer por ahora lo siento..."]');
+  let pos=0, busy=false;
 
-  const elGif = document.getElementById("pj-gif");
-  const elGlobo = document.getElementById("pj-globo");
-  const vBox = document.getElementById("pj-video-box");
-  const vEl = document.getElementById("pj-video");
-  vEl.src = VIDEO_SRC;
+  const elGif=document.getElementById("pj-gif");
+  const elCharVideo=document.getElementById("pj-video-char");
+  const elGlobo=document.getElementById("pj-globo");
+  elCharVideo.src=CHAR_VIDEO;
+  const audio=new Audio(AUDIO_SRC); audio.loop=true;
 
-  const audio = new Audio(AUDIO_SRC);
-  audio.loop = true;
-
-  function ajustarFuente(texto){
-    let size = 18;
-    if(texto.length > 70) size = 15;
-    if(texto.length > 130) size = 13;
-    if(texto.length > 200) size = 11.5;
-    elGlobo.style.fontSize = size+"px";
+  function ajustarFuente(t){
+    let s=18; if(t.length>70)s=15; if(t.length>130)s=13; if(t.length>200)s=11.5;
+    elGlobo.style.fontSize=s+"px";
   }
 
   function escribir(texto){
     if(busy) return;
-    busy = true;
-    elGlobo.style.display = "block";
-    vBox.style.display = "block";
-    vEl.currentTime = 0;
-    vEl.play().catch(()=>{});
-
-    elGlobo.textContent = "";
+    busy=true;
+    elGif.style.display="none";
+    elCharVideo.style.display="block";
+    elCharVideo.currentTime=0;
+    elCharVideo.play().catch(()=>{});
+    elGlobo.style.display="block";
+    elGlobo.textContent="";
     ajustarFuente(texto);
-
-    audio.currentTime = 0;
-    audio.play().catch(()=>{});
-
-    let i = 0;
-    let interval = setInterval(()=>{
-      elGlobo.textContent += texto[i] || "";
-      i++;
-      if(i >= texto.length){
-        clearInterval(interval);
+    audio.currentTime=0; audio.play().catch(()=>{});
+    let i=0;
+    let inter=setInterval(()=>{
+      elGlobo.textContent+=texto[i]||""; i++;
+      if(i>=texto.length){
+        clearInterval(inter);
         audio.pause();
-        // se queda 2.5s y se oculta
+        elCharVideo.pause();
+        elCharVideo.style.display="none";
+        elGif.style.display="block";
         setTimeout(()=>{
           elGlobo.style.display="none";
-          vBox.style.display="none";
-          vEl.pause();
           busy=false;
-        }, 2500);
+        },2500);
       }
-    }, 28); // escritura consistente
+    },28);
   }
 
-  elGif.addEventListener("click", function(){
-    if(lista.length === 0) return;
-    let texto = lista[pos];
-    pos = (pos + 1) % lista.length;
-    escribir(texto);
+  elGif.addEventListener("click",()=>{
+    if(busy) return;
+    if(!lista.length) return;
+    escribir(lista[pos]);
+    pos=(pos+1)%lista.length;
   });
 
-  // admin hold
-  let t = null;
-  function startHold(){ t = setTimeout(openAdmin, 1200); }
+  let t=null;
+  function startHold(){ t=setTimeout(openAdmin,1200); }
   function stopHold(){ clearTimeout(t); }
-  elGif.addEventListener("mousedown", startHold);
-  elGif.addEventListener("mouseup", stopHold);
-  elGif.addEventListener("mouseleave", stopHold);
-  elGif.addEventListener("touchstart", startHold, {passive:true});
-  elGif.addEventListener("touchend", stopHold);
+  elGif.addEventListener("mousedown",startHold);
+  elGif.addEventListener("mouseup",stopHold);
+  elGif.addEventListener("mouseleave",stopHold);
+  elGif.addEventListener("touchstart",startHold,{passive:true});
+  elGif.addEventListener("touchend",stopHold);
 
   function openAdmin(){
-    if(prompt("Pass:")!== PASS2) return;
-    let txt = prompt("Actuales:\n" + lista.join("\n") + "\n\nEscribe nuevo texto, vacio borra ultimo:");
-    if(txt === null) return;
-    txt = txt.trim();
-    if(txt === ""){ lista.pop(); } else { lista.push(txt); }
-    localStorage.setItem("frases", JSON.stringify(lista));
+    if(prompt("Pass:")!==PASS2) return;
+    let txt=prompt("Actuales:\n"+lista.join("\n")+"\n\nNuevo texto, vacio borra ultimo:");
+    if(txt===null) return; txt=txt.trim();
+    if(txt==="") lista.pop(); else lista.push(txt);
+    localStorage.setItem("frases",JSON.stringify(lista));
   }
 })();
 </script>
