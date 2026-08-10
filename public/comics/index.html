@@ -4,27 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  /* TU ESTILO ORIGINAL - NO LO TOCO */
   body{margin:0;background:#000;color:#fff;font-family:sans-serif}
-  #topBar{height:50px;background:#000;display:flex;align-items:center;padding:0 15px;border-bottom:2px solid #fff}
   #contenido{padding:20px}
-  #closeX{position:fixed;top:5px;right:15px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold;font-size:18px}
+  #closeX{position:fixed;top:2px;right:15px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold;font-size:18px}
 </style>
 </head>
 <body>
 
 <button id="closeX" onclick="goHome()">X</button>
-<div id="topBar">CÓMICS</div>
 <div id="contenido">
   <!-- AQUI VA TODO TU CONTENIDO ORIGINAL DE COMICS, NO LO TOCO -->
 </div>
 
 <script>
-// --- UNICO ARREGLO, SOLO ESTO TOQUE ---
 function goHome(){
-  // 1. Intenta cerrar el visor de la página principal
   window.parent.postMessage("CERRAR_COMICS", "*");
-  // 2. Por si estás viendo el archivo directo, sin visor
   try{
     if(window.parent !== window){
       window.parent.document.getElementById("visorComics")?.remove();
@@ -32,7 +26,6 @@ function goHome(){
   }catch(e){}
   return false;
 }
-// --- FIN DEL ARREGLO ---
 </script>
 
 </body>
