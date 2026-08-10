@@ -58,51 +58,36 @@ input[type=range]{width:260px;accent-color:white}
 </div>
 
 <script>
-// ESTE ES EL BUENO - BORRA TODO HASTA EL FONDO NEGRO PARA DEVELAR LA PRINCIPAL
-function goHome(){
-  document.getElementById("topBar").remove();
-  document.getElementById("contenido").remove();
-  document.getElementById("loginModal").remove();
-  document.getElementById("optModal").remove();
-  document.getElementById("cropModal").remove();
-  document.body.style.background="transparent";
-  document.documentElement.style.background="transparent";
-  document.body.innerHTML=""; // limpia cualquier resto
-}
+  document.getElementById("btnComics")?.addEventListener("click",(e)=>{
+    e.preventDefault();
+    let audio = document.getElementById("sonidoComics");
+    if(audio){ audio.currentTime = 0; audio.play().catch(()=>{}); }
+    
+    let v=document.getElementById("visorComics");
+    if(v) v.remove();
+    
+    let d=document.createElement("div");
+    d.id="visorComics";
+    d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999999";
+    d.innerHTML=`
+      <div style="height:50px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 15px;border-bottom:2px solid #fff">
+        <span style="color:white;font-weight:bold;letter-spacing:1px">CÓMICS</span>
+        <button onclick="document.getElementById('visorComics').remove()" style="background:#000;color:white;border:2px solid #fff;padding:8px 15px;cursor:pointer;font-weight:bold">X CERRAR</button>
+      </div>
+      <iframe id="iframeComics" src="/sitio-web-series/public/comics/" style="width:100%;height:calc(100% - 50px);border:none"></iframe>
+    `;
+    document.body.appendChild(d);
 
-const ADMIN="lxvtorres@gmail.com";
-let user=localStorage.getItem("userEmail")||"";
-let pic=localStorage.getItem("adminProfilePic")||"";
-const profileBtn=document.getElementById("profileBtn");
-const loginModal=document.getElementById("loginModal");
-const optModal=document.getElementById("optModal");
-const cropModal=document.getElementById("cropModal");
-const cropImg=document.getElementById("cropImg");
-const viewport=document.getElementById("viewport");
-
-function renderIcon(){
-  const svg=`<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#888" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
-  if(pic){profileBtn.innerHTML=`<img src="${pic}">`;document.getElementById("bigPrev").innerHTML=`<img src="${pic}" style="width:100%;height:100%;object-fit:cover">`;}
-  else{profileBtn.innerHTML=svg;document.getElementById("bigPrev").innerHTML=svg;}
-}
-renderIcon();
-profileBtn.onclick=()=>{ if(user.toLowerCase()!==ADMIN) loginModal.classList.add("active"); else optModal.classList.add("active"); };
-document.getElementById("doLogin").onclick=()=>{ const v=document.getElementById("emailInput").value.trim().toLowerCase(); if(v!==ADMIN)return alert("Solo "+ADMIN); user=v; localStorage.setItem("userEmail",v); loginModal.classList.remove("active"); renderIcon(); };
-function logout(){localStorage.removeItem("userEmail");user="";optModal.classList.remove("active");renderIcon();}
-document.getElementById("closeX").onclick=goHome;
-
-let scale=0.5,posX=0,posY=0,dragging=false,sX,sY;
-const zoom=document.getElementById("zoom");
-document.getElementById("fileIn").onchange=e=>{ const f=e.target.files[0]; if(!f) return; cropImg.src=URL.createObjectURL(f); optModal.classList.remove("active"); cropModal.classList.add("active"); scale=0.5;posX=0;posY=0;zoom.value=0.5; };
-cropImg.onload=()=>update();
-function update(){ cropImg.style.transform=`translate(-50%, -50%) translate(${posX}px, ${posY}px) scale(${scale})`; }
-zoom.oninput=e=>{ scale=parseFloat(e.target.value); update(); };
-function startDrag(x,y){dragging=true;sX=x-posX;sY=y-posY;}
-function moveDrag(x,y){if(!dragging)return;posX=x-sX;posY=y-sY;update();}
-function endDrag(){dragging=false;}
-viewport.addEventListener("mousedown",e=>startDrag(e.clientX,e.clientY));window.addEventListener("mousemove",e=>moveDrag(e.clientX,e.clientY));window.addEventListener("mouseup",endDrag);
-viewport.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX,e.touches[0].clientY),{passive:false});window.addEventListener("touchmove",e=>{if(dragging){e.preventDefault();moveDrag(e.touches[0].clientX,e.touches[0].clientY)}},{passive:false});window.addEventListener("touchend",endDrag);
-document.getElementById("savePic").onclick=()=>{ const canvas=document.createElement("canvas"); const size=400; canvas.width=size; canvas.height=size; const ctx=canvas.getContext("2d"); ctx.beginPath(); ctx.arc(size/2,size/2,size/2,0,Math.PI*2); ctx.clip(); const imgW=cropImg.naturalWidth*scale; const imgH=cropImg.naturalHeight*scale; const cx=size/2+posX; const cy=size/2+posY; ctx.drawImage(cropImg, cx - imgW/2, cy - imgH/2, imgW, imgH); const data=canvas.toDataURL("image/png"); localStorage.setItem("adminProfilePic",data); pic=data; renderIcon(); cropModal.classList.remove("active"); };
+    // ESTO HACE QUE LA X CIRCULAR DE ADENTRO CIERRE TODO SIN TOCAR TU CODIGO DE COMICS
+    document.getElementById("iframeComics").onload = function(){
+      try{
+        let btnDentro = this.contentDocument.getElementById("closeX");
+        if(btnDentro){
+          btnDentro.onclick = () => document.getElementById("visorComics").remove();
+        }
+      }catch(err){}
+    };
+  });
 </script>
 </body>
 </html>
