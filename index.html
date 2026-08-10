@@ -31,6 +31,36 @@ window.addEventListener('load',()=>{
  
  
  
+<style>
+#pj-wrap{
+  position:fixed;
+  left:50%; bottom:2%;
+  transform:translateX(-50%);
+  z-index:10000;
+  display:flex; align-items:flex-end; gap:14px;
+}
+#pj-video-idle, #pj-video-talk{
+  width:110px; height:110px;
+  object-fit:cover;
+  cursor:pointer;
+  border-radius:12px;
+}
+#pj-globo{
+  background:white; color:black;
+  padding:12px 18px; border-radius:18px;
+  border:2px solid black;
+  font-family:monospace;
+  max-width:260px;
+  display:none;
+}
+</style>
+
+<div id="pj-wrap">
+  <div id="pj-globo"></div>
+  <video id="pj-video-idle" autoplay loop muted playsinline></video>
+  <video id="pj-video-talk" loop muted playsinline style="display:none"></video>
+</div>
+
 <script>
 (function(){
   const PASS2 = "admin123";
@@ -46,6 +76,7 @@ window.addEventListener('load',()=>{
 
   elIdle.src = VIDEO_QUIETA;
   elTalk.src = VIDEO_HABLANDO;
+  elIdle.load(); elTalk.load();
   elIdle.play().catch(()=>{});
 
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -69,17 +100,9 @@ window.addEventListener('load',()=>{
     if(busy) return;
     busy=true;
     if(audioCtx.state==='suspended') audioCtx.resume();
-
-    elIdle.style.display="none";
-    elIdle.pause();
-    elTalk.style.display="block";
-    elTalk.currentTime=0;
-    elTalk.play().catch(()=>{});
-
-    elGlobo.style.display="block";
-    elGlobo.textContent="";
-    ajustarFuente(texto);
-
+    elIdle.style.display="none"; elIdle.pause();
+    elTalk.style.display="block"; elTalk.currentTime=0; elTalk.play().catch(()=>{});
+    elGlobo.style.display="block"; elGlobo.textContent=""; ajustarFuente(texto);
     let i=0;
     let inter=setInterval(()=>{
       elGlobo.textContent+=texto[i]||"";
@@ -87,31 +110,20 @@ window.addEventListener('load',()=>{
       i++;
       if(i>=texto.length){
         clearInterval(inter);
-        elTalk.pause();
-        elTalk.style.display="none";
-        elIdle.style.display="block";
-        elIdle.play().catch(()=>{});
-        setTimeout(()=>{
-          elGlobo.style.display="none";
-          busy=false;
-        },2500);
+        elTalk.pause(); elTalk.style.display="none";
+        elIdle.style.display="block"; elIdle.play().catch(()=>{});
+        setTimeout(()=>{ elGlobo.style.display="none"; busy=false; },2500);
       }
     },28);
   }
 
-  elIdle.addEventListener("click",()=>{
-    if(busy) return;
-    if(!lista.length) return;
+  function siguienteFrase(){
+    if(busy ||!lista.length) return;
     escribir(lista[pos]);
     pos=(pos+1)%lista.length;
-  });
-  // tambien que se pueda clickear cuando habla para cortar
-  elTalk.addEventListener("click",()=>{
-    if(busy) return;
-    if(!lista.length) return;
-    escribir(lista[pos]);
-    pos=(pos+1)%lista.length;
-  });
+  }
+  elIdle.addEventListener("click", siguienteFrase);
+  elTalk.addEventListener("click", siguienteFrase);
 
   let t=null;
   function startHold(){ t=setTimeout(openAdmin,1200); }
