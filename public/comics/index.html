@@ -6,21 +6,12 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:#0e0e10;color:white;min-height:100vh;padding-top:80px}
-
-/* PANTALLA NEGRA DE TRANSICION */
-#fade-screen{
-  position:fixed;inset:0;background:black;z-index:9999;
-  opacity:1;transition:opacity 0.6s ease;
-  pointer-events:none;
-}
+#fade-screen{position:fixed;inset:0;background:black;z-index:9999;opacity:1;transition:opacity 0.6s ease;pointer-events:none}
 #fade-screen.hide{opacity:0}
-
-/* TOP BAR SOLO PERFIL Y X */
 .top-bar{position:fixed;top:0;left:0;width:100%;height:70px;display:flex;justify-content:flex-end;align-items:center;padding:0 20px;gap:20px;background:rgba(14,14,16,0.85);backdrop-filter:blur(12px);z-index:1000;border-bottom:1px solid rgba(255,255,255,0.06)}
 .profile-circle{width:42px;height:42px;border-radius:50%;background:#2a2a2e;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid white;box-shadow:0 0 15px rgba(255,255,255,0.8);overflow:hidden}
 .profile-circle img{width:100%;height:100%;object-fit:cover}
 .close-btn{width:42px;height:42px;border-radius:50%;border:2px solid white;background:rgba(0,0,0,0.3);color:white;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 0 15px rgba(255,255,255,0.6)}
-
 .modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:5000}
 .modal.active{display:flex}
 .box{background:#1e1e20;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:25px;width:90%;max-width:340px;text-align:center}
@@ -29,6 +20,7 @@ body{background:#0e0e10;color:white;min-height:100vh;padding-top:80px}
 .viewport{width:320px;height:320px;position:relative;border-radius:50%;overflow:hidden;background:#222;border:3px solid white;box-shadow:0 0 0 9999px rgba(0,0,0,0.65)}
 .viewport img{position:absolute;left:50%;top:50%;transform-origin:center;will-change:transform;cursor:grab;max-width:none}
 input[type=range]{width:260px;accent-color:white}
+#secretPanel.box{max-width:420px}
 </style>
 </head>
 <body>
@@ -40,15 +32,13 @@ input[type=range]{width:260px;accent-color:white}
   <div class="close-btn" id="closeX">✕</div>
 </div>
 
-<div style="padding:20px">
-  <h2 style="opacity:0.5;font-size:14px;letter-spacing:2px">CÓMICS</h2>
-  <div id="lista-comics" style="margin-top:20px"></div>
-</div>
+<div id="lista-comics" style="padding:20px"></div>
 
 <div class="modal" id="loginModal"><div class="box">
   <h3>Admin Login</h3>
   <input id="emailInput" placeholder="lxvtorres@gmail.com" style="width:100%;padding:12px;margin:15px 0 10px;border-radius:10px;background:#111;border:1px solid #333;color:white">
   <button id="doLogin" style="width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:700">Entrar</button>
+  <button onclick="loginModal.classList.remove('active')" style="margin-top:10px;background:transparent;border:none;color:#666">Cancelar</button>
 </div></div>
 
 <div class="modal" id="optModal"><div class="box">
@@ -70,18 +60,16 @@ input[type=range]{width:260px;accent-color:white}
   </div>
 </div>
 
+<div class="modal" id="secretPanel"><div class="box">
+  <h3>Panel Secreto Admin</h3>
+  <p style="color:#888;margin:10px 0 15px;font-size:13px">Bienvenido, admin.</p>
+  <button style="width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:600">Agregar nuevo cómic</button>
+  <button onclick="secretPanel.classList.remove('active')" style="width:100%;padding:10px;margin-top:10px;background:transparent;border:1px solid #333;color:white;border-radius:10px">Cerrar</button>
+</div></div>
+
 <script>
-// TRANSICION ENTRADA
-window.addEventListener("load",()=>{
-  setTimeout(()=>document.getElementById("fade-screen").classList.add("hide"),100);
-});
-// TRANSICION SALIDA
-function goHome(){
-  const f=document.getElementById("fade-screen");
-  f.classList.remove("hide");
-  f.style.pointerEvents="auto";
-  setTimeout(()=>{ window.location.href="../index.html"; },600);
-}
+window.addEventListener("load",()=>{setTimeout(()=>document.getElementById("fade-screen").classList.add("hide"),100);});
+function goHome(){const f=document.getElementById("fade-screen");f.classList.remove("hide");f.style.pointerEvents="auto";setTimeout(()=>{window.location.href="../index.html";},600);}
 
 const ADMIN="lxvtorres@gmail.com";
 let user=localStorage.getItem("userEmail")||"";
@@ -90,6 +78,7 @@ const profileBtn=document.getElementById("profileBtn");
 const loginModal=document.getElementById("loginModal");
 const optModal=document.getElementById("optModal");
 const cropModal=document.getElementById("cropModal");
+const secretPanel=document.getElementById("secretPanel");
 const cropImg=document.getElementById("cropImg");
 const viewport=document.getElementById("viewport");
 
@@ -117,7 +106,17 @@ viewport.addEventListener("mousedown",e=>startDrag(e.clientX,e.clientY));window.
 viewport.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX,e.touches[0].clientY),{passive:false});window.addEventListener("touchmove",e=>{if(dragging){e.preventDefault();moveDrag(e.touches[0].clientX,e.touches[0].clientY)}},{passive:false});window.addEventListener("touchend",endDrag);
 document.getElementById("savePic").onclick=()=>{ const canvas=document.createElement("canvas"); const size=400; canvas.width=size; canvas.height=size; const ctx=canvas.getContext("2d"); ctx.beginPath(); ctx.arc(size/2,size/2,size/2,0,Math.PI*2); ctx.clip(); const imgW=cropImg.naturalWidth*scale; const imgH=cropImg.naturalHeight*scale; const cx=size/2+posX; const cy=size/2+posY; ctx.drawImage(cropImg, cx - imgW/2, cy - imgH/2, imgW, imgH); const data=canvas.toDataURL("image/png"); localStorage.setItem("adminProfilePic",data); pic=data; renderIcon(); cropModal.classList.remove("active"); };
 
-let eCount=0,eTimer;window.addEventListener("keydown",e=>{if(e.key.toLowerCase()==='e'){eCount++;clearTimeout(eTimer);eTimer=setTimeout(()=>eCount=0,800);if(eCount===3){eCount=0;if(user.toLowerCase()===ADMIN) alert("Panel secreto abierto");}}});
+let eCount=0,eTimer;
+window.addEventListener("keydown",e=>{
+  if(e.key.toLowerCase()==='e'){
+    eCount++;clearTimeout(eTimer);eTimer=setTimeout(()=>eCount=0,800);
+    if(eCount===3){
+      eCount=0;
+      if(user.toLowerCase()===ADMIN){ secretPanel.classList.add("active"); }
+      else{ alert("Debes iniciar sesion como admin primero"); }
+    }
+  }
+});
 </script>
 </body>
 </html>
