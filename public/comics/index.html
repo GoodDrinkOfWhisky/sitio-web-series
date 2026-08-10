@@ -25,7 +25,40 @@ input[type=range]{width:260px;accent-color:white}
 <div id="contenido">
   <!-- AQUI VA TODO TU CONTENIDO ORIGINAL DE COMICS, NO LO TOCO -->
 </div>
+<div class="top-bar" id="topBar">
+  <div class="profile-circle" id="profileBtn"></div>
+  
 
+
+<div style="padding:20px" id="contenido">
+  <h2 style="opacity:0.5;font-size:14px;letter-spacing:2px">CÓMICS</h2>
+  <div id="lista-comics" style="margin-top:20px"></div>
+</div>
+
+<div class="modal" id="loginModal"><div class="box">
+  <h3>Admin Login</h3>
+  <input id="emailInput" placeholder="lxvtorres@gmail.com" style="width:100%;padding:12px;margin:15px 0 10px;border-radius:10px;background:#111;border:1px solid #333;color:white">
+  <button id="doLogin" style="width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:700">Entrar</button>
+</div></div>
+
+<div class="modal" id="optModal"><div class="box">
+  <div id="bigPrev" style="width:90px;height:90px;border-radius:50%;overflow:hidden;margin:0 auto 15px;border:2px solid white;background:#2a2a2e"></div>
+  <button onclick="document.getElementById('fileIn').click()" style="width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:600;margin-bottom:8px">Cambiar foto de perfil</button>
+  <input type="file" id="fileIn" accept="image/*" hidden>
+  <button onclick="logout()" style="width:100%;padding:10px;border-radius:10px;background:transparent;border:1px solid #333;color:#888;margin-top:5px">Cerrar sesión</button>
+  <button onclick="optModal.classList.remove('active')" style="width:100%;padding:10px;border:none;background:transparent;color:white;margin-top:5px">Cancelar</button>
+</div></div>
+
+<div class="modal" id="cropModal">
+  <div class="crop-ui">
+    <div class="viewport" id="viewport"><img id="cropImg"></div>
+    <input type="range" id="zoom" min="0.1" max="3" step="0.01" value="0.5">
+    <div style="display:flex;gap:12px">
+      <button id="savePic" style="padding:12px 24px;border-radius:20px;border:none;background:white;color:black;font-weight:700">Guardar foto</button>
+      <button onclick="cropModal.classList.remove('active')" style="padding:12px 24px;border-radius:20px;background:transparent;border:1px solid white;color:white">Cancelar</button>
+    </div>
+  </div>
+</div>
 <script>
 function goHome(){
   window.parent.postMessage("CERRAR_COMICS", "*");
