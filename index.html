@@ -163,6 +163,9 @@ window.addEventListener('load',()=>{
     document.body.appendChild(d);
   });
 </script>
+window.addEventListener("message", e => {
+  if(e.data === "CERRAR_COMICS") document.getElementById("visorComics")?.remove();
+});
 <style>
 #btnComics, #btnGaleria{
   position:fixed; left:15px; z-index:9999;
