@@ -53,11 +53,13 @@ input[type=range]{width:260px;accent-color:white}
 </div>
 <script>
 window.addEventListener("load",()=>{ setTimeout(()=>document.getElementById("fade-screen").classList.add("hide"),100); });
-function goHome(){
+function  goHome(){
   const f=document.getElementById("fade-screen");
   f.classList.remove("hide");
   f.style.pointerEvents="auto";
-  setTimeout(()=>{ window.location.href="../index.html"; },600);
+  setTimeout(()=>{ 
+    window.location.href="/sitio-web-series/"; 
+  },600);
 }
 const ADMIN="lxvtorres@gmail.com";
 let user=localStorage.getItem("userEmail")||"";
