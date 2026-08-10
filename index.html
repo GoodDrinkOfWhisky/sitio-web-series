@@ -154,11 +154,7 @@ window.addEventListener('load',()=>{
     d.id="visorComics";
     d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999999";
     d.innerHTML=`
-      <div style="height:50px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 15px;border-bottom:2px solid #fff">
-        <span style="color:white;font-weight:bold;letter-spacing:1px">CÓMICS</span>
-        <button onclick="document.getElementById('visorComics').remove()" style="background:#000;color:white;border:2px solid #fff;padding:8px 15px;cursor:pointer;font-weight:bold">X CERRAR</button>
-      </div>
-      <iframe src="/sitio-web-series/public/comics/" style="width:100%;height:calc(100% - 50px);border:none"></iframe>
+      
     `;
     document.body.appendChild(d);
   });
