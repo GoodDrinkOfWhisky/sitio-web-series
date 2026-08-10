@@ -274,95 +274,88 @@ window.quitar = (i)=>{
   fotos.splice(i,1); localStorage.setItem("fotos", JSON.stringify(fotos)); abrirGaleria();
 }
 </script>
-<!-- 6 BOTONES ANIMADOS - PEGA ESTO EN TU PAGINA PRINCIPAL -->
+<!-- 6 BOTONES IZQUIERDA PEGADOS -->
 <style>
 #botonera{
-  position:fixed; right:24px; top:50%; transform:translateY(-50%);
-  display:flex; flex-direction:column; gap:18px; z-index:9999;
+  position:fixed; 
+  left:8px; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:10px; 
+  z-index:9999;
+  width:fit-content;
 }
 .boton-wrap{
-  display:flex; align-items:center; gap:12px;
-  transform:translateX(400px); /* empieza fuera */
+  display:flex; align-items:center;
+  transform:translateX(-400px);
   opacity:0;
+  filter: drop-shadow(4px 4px 0 #000);
 }
 .boton-wrap.entrar{
-  animation: entrada 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+  animation: entrada 0.8s cubic-bezier(.68,-0.55,.27,1.55) forwards;
 }
 @keyframes entrada{
-  0%{transform:translateX(400px) rotate(8deg); opacity:0}
-  70%{transform:translateX(-25px) rotate(-3deg); opacity:1}
-  85%{transform:translateX(12px) rotate(2deg)}
+  0%{transform:translateX(-400px) rotate(-8deg); opacity:0}
+  70%{transform:translateX(18px) rotate(2deg); opacity:1}
+  85%{transform:translateX(-8px) rotate(-1deg)}
   100%{transform:translateX(0) rotate(0); opacity:1}
 }
+.mini-left{
+  width:62px; height:62px;
+  border:3px solid #000; border-right:0;
+  border-radius:10px 0 0 10px;
+  background:#222; overflow:hidden; cursor:pointer;
+  flex-shrink:0;
+}
+.mini-left img, .mini-left video{width:100%;height:100%;object-fit:cover; display:block}
+
 .btn-img{
-  width:160px; height:90px; /* MEDIANO */
-  border:3px solid #000; border-radius:14px;
+  width:170px; height:62px; /* MAS ANCHO, NO TAN ALTO */
+  border:3px solid #000; 
+  border-radius:0 10px 10px 0;
   background:#111; overflow:hidden; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:6px 6px 0 #000;
-  transition:transform .15s;
 }
-.btn-img:hover{transform:scale(1.07) rotate(-1deg)}
-.btn-img img, .btn-img video{width:100%;height:100%;object-fit:cover;display:block}
-
-.mini-left{
-  width:70px; height:70px;
-  border:3px solid #000; border-radius:50%;
-  background:#222; overflow:hidden; cursor:pointer;
-  box-shadow:4px 4px 0 #000; flex-shrink:0;
-}
-.mini-left img, .mini-left video{width:100%;height:100%;object-fit:cover}
+.btn-img img, .btn-img video{width:100%;height:100%;object-fit:cover; display:block}
+.boton-wrap:hover{transform:scale(1.04)}
 </style>
 
 <div id="botonera"></div>
 
 <script>
-// ========= EDITABLE - CAMBIA TUS IMAGENES / VIDEOS AQUI =========
+// ===== EDITA AQUI TUS IMAGENES / VIDEOS =====
 const BOTONES = [
-  { id:'btn1', img:'img/boton1.jpg', video:'videos/boton1.mp4', miniImg:'img/mini1.png', miniVideo:'videos/mini1.mp4', link:'#' },
-  { id:'btn2', img:'img/boton2.jpg', video:'videos/boton2.mp4', miniImg:'img/mini2.png', miniVideo:'videos/mini2.mp4', link:'#' },
-  { id:'btn3', img:'img/boton3.jpg', video:'videos/boton3.mp4', miniImg:'img/mini3.png', miniVideo:'videos/mini3.mp4', link:'#' },
-  { id:'btn4', img:'img/boton4.jpg', video:'videos/boton4.mp4', miniImg:'img/mini4.png', miniVideo:'videos/mini4.mp4', link:'#' },
-  { id:'btn5', img:'img/boton5.jpg', video:'videos/boton5.mp4', miniImg:'img/mini5.png', miniVideo:'videos/mini5.mp4', link:'#' },
-  { id:'btn6', img:'img/boton6.jpg', video:'videos/boton6.mp4', miniImg:'img/mini6.png', miniVideo:'videos/mini6.mp4', link:'#' },
+  { img:'img/b1.jpg',  miniImg:'img/m1.png', miniVideo:'videos/m1.mp4', link:'#' },
+  { img:'img/b2.jpg',  miniImg:'img/m2.png', miniVideo:'videos/m2.mp4', link:'#' },
+  { img:'img/b3.jpg',  miniImg:'img/m3.png', miniVideo:'videos/m3.mp4', link:'#' },
+  { img:'img/b4.jpg',  miniImg:'img/m4.png', miniVideo:'videos/m4.mp4', link:'#' },
+  { img:'img/b5.jpg',  miniImg:'img/m5.png', miniVideo:'videos/m5.mp4', link:'#' },
+  { img:'img/b6.jpg',  miniImg:'img/m6.png', miniVideo:'videos/m6.mp4', link:'#' },
 ];
-// ================================================================
+// ============================================
 
 const cont=document.getElementById('botonera');
 BOTONES.forEach((b,i)=>{
   const wrap=document.createElement('div'); wrap.className='boton-wrap';
-  wrap.style.animationDelay=(i*0.12)+'s';
-  setTimeout(()=>wrap.classList.add('entrar'), 100+i*120);
 
-  // mini izquierda (imagen -> video al click)
   const mini=document.createElement('div'); mini.className='mini-left';
-  mini.innerHTML=`<img src="${b.miniImg}">`;
-  let miniEnVideo=false;
+  mini.innerHTML=`<img src="${b.miniImg}" onerror="this.parentElement.style.background='#333'">`;
+  let enVideo=false;
   mini.onclick=(e)=>{
     e.stopPropagation();
-    if(!miniEnVideo){
-      mini.innerHTML=`<video src="${b.miniVideo}" autoplay muted loop></video>`;
-    }else{
-      mini.innerHTML=`<img src="${b.miniImg}">`;
-    }
-    miniEnVideo=!miniEnVideo;
+    mini.innerHTML = !enVideo ? `<video src="${b.miniVideo}" autoplay muted loop></video>` : `<img src="${b.miniImg}">`;
+    enVideo=!enVideo;
   };
 
-  // boton grande (imagen o video)
   const btn=document.createElement('div'); btn.className='btn-img';
-  // si quieres que sea video directo cambia a <video>
-  btn.innerHTML=`<img src="${b.img}" onerror="this.style.background='#555'">`;
-  // hover muestra video si quieres: descomenta
-  // btn.onmouseenter=()=>btn.innerHTML=`<video src="${b.video}" autoplay muted loop></video>`;
-  // btn.onmouseleave=()=>btn.innerHTML=`<img src="${b.img}">`;
-  btn.onclick=()=>{ if(b.link!=='#') window.location.href=b.link; };
+  btn.innerHTML=`<img src="${b.img}" onerror="this.parentElement.style.background='#555'">`;
+  btn.onclick=()=>{ if(b.link!=='#') window.location=b.link };
 
-  wrap.appendChild(mini);
-  wrap.appendChild(btn);
+  wrap.appendChild(mini); wrap.appendChild(btn);
   cont.appendChild(wrap);
+
+  // ANIMACION DESPUES DE TU INTRO - 2.2 SEGUNDOS DESPUES
+  setTimeout(()=>{ wrap.classList.add('entrar'); wrap.style.animationDelay=(i*0.1)+'s'; }, 2200 + i*90);
 });
 </script>
-<!-- FIN BOTONES --> 
 </body>
 </html>
 <head>
