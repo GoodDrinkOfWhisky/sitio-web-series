@@ -8,113 +8,121 @@
   #topBar{height:50px;background:#000;display:flex;align-items:center;padding:0 15px;border-bottom:2px solid #fff}
   #contenido{padding:20px}
   #closeX{position:fixed;top:2px;right:15px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold;font-size:18px}
-  #adminDot{position:fixed;top:12px;right:65px;z-index:99999;width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px rgba(255,255,255,0.8);object-fit:cover;cursor:pointer;background:#111}
-  #cropModal{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000000;display:none;align-items:center;justify-content:center;flex-direction:column}
-  #cropArea{width:320px;height:320px;background:#888;position:relative;overflow:hidden;border-radius:12px;touch-action:none}
+  #adminDot{position:fixed;top:12px;right:65px;z-index:99999;width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px #fff;object-fit:cover;cursor:pointer;background:#111}
+  #cropModal{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000000;display:none;align-items:center;justify-content:center;flex-direction:column}
+  #cropArea{width:320px;height:320px;background:#888;position:relative;overflow:hidden;border-radius:16px}
   #cropImage{position:absolute;top:0;left:0;cursor:grab;max-width:none;user-select:none}
-  #cropCircle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,0.55), 0 0 15px #fff;pointer-events:none}
-  #controls{width:320px;margin-top:12px}
- .btn{width:100%;padding:10px;border-radius:10px;border:1px solid #fff;background:#000;color:#fff;cursor:pointer;margin-top:8px;font-weight:bold}
-  input[type=range]{width:100%}
-  #loginModal{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000001;display:none;align-items:center;justify-content:center}
-  #loginBox{background:#111;border:1px solid #333;border-radius:20px;padding:30px;width:90%;max-width:340px;text-align:center}
+  #cropCircle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,0.6), 0 0 15px #fff;pointer-events:none}
+  #loginModal{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000002;display:none;align-items:center;justify-content:center}
+  #loginBox{background:#111;border:1px solid #333;border-radius:20px;padding:28px;width:90%;max-width:330px;text-align:center}
   #loginBox input{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:1px solid #444;background:#000;color:#fff;box-sizing:border-box}
-  #modoAdmin{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:bold;z-index:999999;display:none}
+.btn{width:100%;padding:11px;border-radius:10px;border:1px solid #fff;background:#000;color:#fff;cursor:pointer;margin-top:8px;font-weight:bold}
+.btn:hover{background:#fff;color:#000}
 </style>
 </head>
-<body> 
+<body>
 
 <button id="closeX" onclick="goHome()">X</button>
-<img id="adminDot" onclick="handleAdminDot()">
+<img id="adminDot">
 
 <div id="topBar">CÓMICS</div>
-<div id="contenido">
-  <!-- AQUI VA TODO TU CONTENIDO ORIGINAL DE COMICS, NO LO TOCO -->
-  <p>Contenido de prueba - aquí van tus cómics</p>
-</div>
+<div id="contenido">TU CONTENIDO ORIGINAL VA AQUÍ</div>
 
+<!-- EDITOR BONITO DE FOTO -->
 <div id="cropModal">
-  <div id="cropArea">
-    <img id="cropImage">
-    <div id="cropCircle"></div>
-  </div>
-  <div id="controls">
-    <input type="range" id="zoom" min="0.5" max="3" step="0.01" value="1">
+  <div id="cropArea"><img id="cropImage"><div id="cropCircle"></div></div>
+  <div style="width:320px;margin-top:12px">
+    <input type="range" id="zoom" min="0.5" max="3" step="0.01" value="1" style="width:100%">
     <input type="file" id="fileInput" accept="image/*" style="display:none">
-    <button class="btn" onclick="document.getElementById('fileInput').click()">Agregar / Cambiar imagen</button>
-    <button class="btn" onclick="guardarRecorte()">Guardar en mi dispositivo</button>
-    <button class="btn" style="opacity:0.5" onclick="cerrarEditor()">Cancelar</button>
+    <button class="btn" onclick="fileInput.click()">Elegir imagen</button>
+    <button class="btn" onclick="guardarRecorte()">Guardar foto</button>
+    <button class="btn" style="opacity:0.5" onclick="cerrarEditor()">Cerrar</button>
   </div>
   <canvas id="canvas" width="400" height="400" style="display:none"></canvas>
 </div>
 
-<div id="loginModal" onclick="if(event.target==this) cerrarLogin()">
+<!-- LOGIN MINIMALISTA -->
+<div id="loginModal">
   <div id="loginBox">
-    <img src="https://www.google.com/favicon.ico">
     <h3 style="margin:0">Inicia sesión</h3>
-    <p style="opacity:0.6;font-size:13px">Solo administrador</p>
-    <input id="emailLogin" type="email" value="lxvtorres@gmail.com" readonly>
-    <input id="passLogin" type="password" placeholder="Contraseña de administrador">
+    <p style="opacity:0.6;font-size:13px">lxvtorres@gmail.com - Solo admin</p>
+    <input id="emailLogin" value="lxvtorres@gmail.com" readonly style="opacity:0.5">
+    <input id="passLogin" type="password" placeholder="Contraseña">
     <button class="btn" onclick="intentarLogin()">Entrar</button>
-    <p id="loginError" style="color:#ff4444;font-size:12px;display:none;margin-top:10px">Correo o contraseña incorrectos</p>
+    <button class="btn" style="opacity:0.5" onclick="cerrarLogin()">Cancelar</button>
+    <p id="loginError" style="color:#ff4444;font-size:12px;display:none">Contraseña incorrecta</p>
+    <p style="font-size:11px;opacity:0.4;margin-top:10px">La primera vez que entres, la contraseña que pongas se guardará solo en este dispositivo</p>
   </div>
 </div>
 
-<div id="modoAdmin">MODO ADMIN ACTIVO</div>
-
 <script>
-// --- CONFIGURA AQUI ---
-const ADMIN_EMAIL = "lxvtorres@gmail.com";
-const ADMIN_PASS = "PRIMUS55INT"; // <--- CAMBIALO TU EN TU PC
-// ----------------------
+const ADMIN_EMAIL="lxvtorres@gmail.com";
+const adminDot=document.getElementById('adminDot');
+const cropModal=document.getElementById('cropModal');
+const loginModal=document.getElementById('loginModal');
+const cropArea=document.getElementById('cropArea');
+const cropImg=document.getElementById('cropImage');
+const zoom=document.getElementById('zoom');
+const fileInput=document.getElementById('fileInput');
 
-const adminDot = document.getElementById('adminDot');
-const modal = document.getElementById('cropModal');
-const cropArea = document.getElementById('cropArea');
-const cropImg = document.getElementById('cropImage');
-const zoom = document.getElementById('zoom');
-let esAdmin = localStorage.getItem('sesionAdmin') === 'true';
-adminDot.src = localStorage.getItem('adminPerfilComics') || 'https://i.imgur.com/8Km9tLL.png';
+adminDot.src=localStorage.getItem('adminPerfilComics')||'https://i.imgur.com/8Km9tLL.png';
+function goHome(){window.parent.postMessage("CERRAR_COMICS","*");}
 
-function goHome(){ window.parent.postMessage("CERRAR_COMICS","*"); try{ if(window.parent!==window){ window.parent.document.getElementById("visorComics")?.remove(); } }catch(e){} return false; }
+adminDot.onclick=()=>{
+  if(localStorage.getItem('sesionAdmin')!=='true'){ loginModal.style.display='flex'; }
+  else { abrirEditor(); }
+};
 
-function handleAdminDot(){
-  if(!esAdmin){ document.getElementById('loginModal').style.display='flex'; return; }
-  abrirEditor();
-}
-function cerrarLogin(){ document.getElementById('loginModal').style.display='none'; }
+function cerrarLogin(){loginModal.style.display='none'; document.getElementById('loginError').style.display='none';}
 function intentarLogin(){
-  if(document.getElementById('emailLogin').value.toLowerCase()===ADMIN_EMAIL && document.getElementById('passLogin').value===ADMIN_PASS){
-    localStorage.setItem('sesionAdmin','true'); esAdmin=true; cerrarLogin();
-    document.getElementById('modoAdmin').style.display='block'; setTimeout(()=>document.getElementById('modoAdmin').style.display='none',2500);
-    activarEdicionComics(); abrirEditor();
-  } else { document.getElementById('loginError').style.display='block'; }
+  const pass=document.getElementById('passLogin').value.trim();
+  if(!pass) return;
+  let savedPass=localStorage.getItem('adminPass');
+  if(!savedPass){ // primera vez, guarda la que tú pongas
+    localStorage.setItem('adminPass', pass);
+    savedPass=pass;
+  }
+  if(document.getElementById('emailLogin').value.toLowerCase()===ADMIN_EMAIL && pass===savedPass){
+    localStorage.setItem('sesionAdmin','true');
+    cerrarLogin();
+    abrirEditor();
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
 }
-function activarEdicionComics(){ console.log("Admin activo - aquí muestras botones para agregar/quitar/editar"); if(esAdmin) document.getElementById('modoAdmin').style.display='block'; }
 
-let pos={x:0,y:0,scale:1,startX:0,startY:0,drag:false};
-function abrirEditor(){ modal.style.display='flex'; cropImg.src=adminDot.src; setTimeout(centerImage,50); }
-function cerrarEditor(){ modal.style.display='none'; }
-function centerImage(){ pos.scale=1; zoom.value=1; pos.x=(cropArea.clientWidth - cropImg.naturalWidth)/2; pos.y=(cropArea.clientHeight - cropImg.naturalHeight)/2; update(); }
-document.getElementById('fileInput').addEventListener('change', e=>{ const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=ev=>{ cropImg.src=ev.target.result; cropImg.onload=()=>centerImage(); }; r.readAsDataURL(file); });
-function update(){ cropImg.style.transform=`translate(${pos.x}px, ${pos.y}px) scale(${pos.scale})`; cropImg.style.transformOrigin='0 0'; }
-zoom.oninput=()=>{ pos.scale=parseFloat(zoom.value); update(); };
-cropImg.addEventListener('mousedown', e=>{ pos.drag=true; pos.startX=e.clientX-pos.x; pos.startY=e.clientY-pos.y; });
-window.addEventListener('mousemove', e=>{ if(!pos.drag) return; pos.x=e.clientX-pos.startX; pos.y=e.clientY-pos.startY; update(); });
-window.addEventListener('mouseup', ()=>pos.drag=false);
-cropImg.addEventListener('touchstart', e=>{ pos.drag=true; pos.startX=e.touches[0].clientX-pos.x; pos.startY=e.touches[0].clientY-pos.y; },{passive:false});
-window.addEventListener('touchmove', e=>{ if(!pos.drag) return; e.preventDefault(); pos.x=e.touches[0].clientX-pos.startX; pos.y=e.touches[0].clientY-pos.startY; update(); },{passive:false});
-window.addEventListener('touchend', ()=>pos.drag=false);
-function guardarRecorte(){
-  const canvas=document.getElementById('canvas'); const ctx=canvas.getContext('2d'); const size=400;
-  const circleR=90; const scaleFactor=size/(circleR*2); const circleX=cropArea.clientWidth/2; const circleY=cropArea.clientHeight/2;
-  ctx.clearRect(0,0,size,size); ctx.save(); ctx.beginPath(); ctx.arc(size/2,size/2,size/2,0,Math.PI*2); ctx.clip();
-  const drawW=cropImg.naturalWidth*pos.scale*scaleFactor; const drawH=cropImg.naturalHeight*pos.scale*scaleFactor;
-  const drawX=(pos.x-(circleX-circleR))*scaleFactor+size/2-circleR*scaleFactor; const drawY=(pos.y-(circleY-circleR))*scaleFactor+size/2-circleR*scaleFactor;
-  ctx.drawImage(cropImg,drawX,drawY,drawW,drawH); ctx.restore();
-  const data=canvas.toDataURL('image/png'); localStorage.setItem('adminPerfilComics',data); adminDot.src=data; cerrarEditor();
+// --- EDITOR DE FOTO BONITO ---
+let pos={x:0,y:0,scale:1,sx:0,sy:0,drag:false};
+function abrirEditor(){
+  cropModal.style.display='flex';
+  cropImg.src=adminDot.src;
+  setTimeout(centerImage,100);
 }
-if(esAdmin) activarEdicionComics();
+function cerrarEditor(){cropModal.style.display='none';}
+function centerImage(){pos.scale=1;zoom.value=1;pos.x=(cropArea.clientWidth-cropImg.naturalWidth)/2;pos.y=(cropArea.clientHeight-cropImg.naturalHeight)/2;update();}
+function update(){cropImg.style.transform=`translate(${pos.x}px, ${pos.y}px) scale(${pos.scale})`;cropImg.style.transformOrigin='0 0';}
+fileInput.onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader(); r.onload=ev=>{cropImg.src=ev.target.result; cropImg.onload=centerImage}; r.readAsDataURL(f);
+};
+zoom.oninput=()=>{pos.scale=parseFloat(zoom.value);update();};
+cropImg.onmousedown=e=>{pos.drag=true;pos.sx=e.clientX-pos.x;pos.sy=e.clientY-pos.y;};
+window.onmousemove=e=>{if(!pos.drag)return;pos.x=e.clientX-pos.sx;pos.y=e.clientY-pos.sy;update();};
+window.onmouseup=()=>pos.drag=false;
+cropImg.ontouchstart=e=>{pos.drag=true;pos.sx=e.touches[0].clientX-pos.x;pos.sy=e.touches[0].clientY-pos.y;},{passive:false};
+window.ontouchmove=e=>{if(!pos.drag)return;e.preventDefault();pos.x=e.touches[0].clientX-pos.sx;pos.y=e.touches[0].clientY-pos.sy;update();},{passive:false};
+window.ontouchend=()=>pos.drag=false;
+
+function guardarRecorte(){
+  const canvas=document.getElementById('canvas');const ctx=canvas.getContext('2d');const size=400;const R=90;
+  const cx=cropArea.clientWidth/2,cy=cropArea.clientHeight/2;const sf=size/(R*2);
+  ctx.clearRect(0,0,size,size);ctx.save();ctx.beginPath();ctx.arc(size/2,size/2,size/2,0,Math.PI*2);ctx.clip();
+  const w=cropImg.naturalWidth*pos.scale*sf,h=cropImg.naturalHeight*pos.scale*sf;
+  const x=(pos.x-(cx-R))*sf+size/2-R*sf,y=(pos.y-(cy-R))*sf+size/2-R*sf;
+  ctx.drawImage(cropImg,x,y,w,h);ctx.restore();
+  const data=canvas.toDataURL('image/png');
+  localStorage.setItem('adminPerfilComics',data);adminDot.src=data;cerrarEditor();
+}
 </script>
 </body>
 </html>
