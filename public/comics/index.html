@@ -4,49 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CÓMICS</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#070707;font-family:'Poppins',sans-serif;min-height:100vh;color:white;padding:0}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0a0a; color:white; font-family:Arial; min-height:100vh; padding:20px; }
+.header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.btn-x { background:transparent; border:2px solid white; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:20px; }
 
-/* HEADER LIMPIO - SIN RECTANGULO NEGRO */
-.top-bar{display:flex;justify-content:space-between;align-items:center;padding:22px 28px}
-.profile{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.14);padding:6px 14px 6px 6px;border-radius:40px}
-.profile img{width:38px;height:38px;border-radius:50%;border:2px solid #fff;object-fit:cover}
-.profile b{color:#fff;text-shadow:0 0 10px #fff;font-size:14px;letter-spacing:0.5px}
+/* GRID ORIGINAL TUYO */
+#grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:15px; }
 
-/* BOTON X QUE SI REDIRIGE */
-.btn-x{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.18);color:white;font-size:20px;font-weight:700;cursor:pointer;transition:0.2s}
-.btn-x:hover{background:#ff0033;border-color:#ff0033}
-
-/* GRID ORIGINAL */
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;padding:10px 28px 30px}
-.card{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;transition:0.25s}
-.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.25)}
-.card img{width:100%;height:270px;object-fit:cover;display:block}
-.card h3{padding:10px;text-align:center;font-size:14px;font-weight:600;color:#fff;text-shadow:0 0 8px rgba(255,255,255,0.8)}
-
-/* SISTEMA DE PANELES CON SIGNO + */
-.add-panel{height:318px;border-radius:16px;border:2px dashed rgba(255,255,255,0.28);background:rgba(255,255,255,0.04);backdrop-filter:blur(10px);display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;transition:0.25s}
-.add-panel:hover{background:rgba(255,255,255,0.08);border-color:#fff}
-.add-panel .plus{font-size:62px;line-height:1;color:#fff;text-shadow:0 0 15px #fff, 0 0 30px rgba(255,255,255,0.6)}
-.add-panel p{margin-top:8px;color:#fff;font-weight:600;text-shadow:0 0 10px #fff}
-
-/* PANEL TRANSPARENTE OPACO LETRAS BLANCAS BRILLANTES */
-#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);z-index:9998}
-#adminPanel{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:92%;max-width:410px;background:rgba(18,18,18,0.55);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:26px;z-index:9999;box-shadow:0 0 50px rgba(255,255,255,0.12)}
-#adminPanel h2{color:#fff;text-align:center;margin-bottom:18px;font-weight:700;letter-spacing:1px;text-shadow:0 0 12px #fff, 0 0 22px rgba(255,255,255,0.9), 0 0 35px rgba(255,255,255,0.6)}
-#adminPanel input{width:100%;padding:12px 14px;margin:8px 0;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:white;outline:none;font-family:'Poppins'}
-#adminPanel input::placeholder{color:rgba(255,255,255,0.55)}
-#adminPanel input:focus{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,0.35)}
-.btn-primary{width:100%;padding:13px;background:linear-gradient(90deg,#ff0033,#ff1a5c);border:none;border-radius:12px;color:white;font-weight:700;font-size:15px;margin-top:14px;cursor:pointer;text-shadow:0 0 10px #fff;box-shadow:0 0 22px rgba(255,0,51,0.45)}
-.btn-secondary{width:100%;padding:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:12px;color:white;font-weight:600;margin-top:10px;cursor:pointer}
+/* ESTO ES LO ÚNICO NUEVO - PANEL TRANSPARENTE OPACO LETRAS BLANCAS BRILLANTES */
+#overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); z-index:9998; }
+#adminPanel { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(20,20,20,0.6); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.2); padding:25px; border-radius:15px; z-index:9999; width:90%; max-width:400px; box-shadow:0 0 30px rgba(255,255,255,0.15); }
+#adminPanel h2 { color:#fff; text-align:center; margin-bottom:15px; text-shadow:0 0 12px #fff, 0 0 25px rgba(255,255,255,0.8); }
+#adminPanel input { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.07); color:white; }
+#adminPanel input::placeholder { color:rgba(255,255,255,0.5); }
+#adminPanel button { width:100%; padding:12px; background:#ff0033; color:white; border:none; border-radius:8px; margin-top:10px; cursor:pointer; font-weight:bold; text-shadow:0 0 8px white; }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <div class="profile"><img src="https://i.pravatar.cc/100?img=12" id="perfilImg"><b>MIS CÓMICS</b></div>
+<div class="header">
+  <div></div>
   <button class="btn-x" onclick="goHome()">X</button>
 </div>
 
@@ -54,55 +33,40 @@ body{background:#070707;font-family:'Poppins',sans-serif;min-height:100vh;color:
 
 <div id="overlay" onclick="cerrarPanel()"></div>
 <div id="adminPanel">
-  <h2>AGREGAR CÓMIC</h2>
-  <input id="tituloComic" placeholder="Título del cómic">
-  <input id="imgComic" placeholder="Link de portada (https://...)">
-  <input id="linkComic" placeholder="Link del cómic">
-  <button class="btn-primary" onclick="agregarComic()">Agregar Nuevo Cómic</button>
-  <button class="btn-secondary" onclick="cerrarPanel()">Cerrar</button>
+  <h2>Agregar Cómic</h2>
+  <input id="tituloComic" placeholder="Título">
+  <input id="imgComic" placeholder="Link imagen">
+  <input id="linkComic" placeholder="Link cómic">
+  <button onclick="agregarComic()">Agregar Nuevo Cómic</button>
+  <button onclick="cerrarPanel()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);">Cerrar</button>
 </div>
 
 <script>
 let comics = JSON.parse(localStorage.getItem('misComics')) || [];
-
 function goHome(){ window.location.href = '../index.html'; }
-
 function render(){
-  const g = document.getElementById('grid');
-  g.innerHTML = '';
-  comics.forEach((c,i)=>{
-    g.innerHTML += `<div class="card"><img src="${c.img}" onerror="this.src='https://via.placeholder.com/200x280?text=Sin+Imagen'"><h3>${c.titulo}</h3></div>`;
-  });
-  g.innerHTML += `<div class="add-panel" onclick="abrirPanel()"><div class="plus">+</div><p>Nuevo Panel</p></div>`;
+  const grid = document.getElementById('grid');
+  grid.innerHTML = comics.map(c=>`<div style="background:#1a1a1a;padding:10px;border-radius:10px;"><img src="${c.img}" style="width:100%;height:250px;object-fit:cover;border-radius:8px;"><h3 style="margin-top:8px;text-align:center;">${c.titulo}</h3></div>`).join('');
+  grid.innerHTML += `<div onclick="abrirPanel()" style="background:rgba(255,255,255,0.04);border:2px dashed rgba(255,255,255,0.3);border-radius:10px;height:300px;display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;"><div style="font-size:50px;text-shadow:0 0 15px white;">+</div><p>Nuevo Panel</p></div>`;
 }
-
-function abrirPanel(){ document.getElementById('adminPanel').style.display='block'; document.getElementById('overlay').style.display='block'; }
-function cerrarPanel(){ document.getElementById('adminPanel').style.display='none'; document.getElementById('overlay').style.display='none'; }
-
 function agregarComic(){
-  const t = document.getElementById('tituloComic').value.trim();
-  const im = document.getElementById('imgComic').value.trim();
-  const l = document.getElementById('linkComic').value.trim();
-  if(!t || !im){ alert('Falta título o imagen'); return; }
-  comics.push({titulo:t, img:im, link:l});
-  localStorage.setItem('misComics', JSON.stringify(comics));
-  document.getElementById('tituloComic').value='';
-  document.getElementById('imgComic').value='';
-  document.getElementById('linkComic').value='';
-  cerrarPanel();
-  render();
+  const t=tituloComic.value, i=imgComic.value, l=linkComic.value;
+  if(!t||!i) return alert('Falta dato');
+  comics.push({titulo:t,img:i,link:l});
+  localStorage.setItem('misComics',JSON.stringify(comics));
+  cerrarPanel(); render();
 }
-
-let cE=0,lT=0;
+function abrirPanel(){ adminPanel.style.display='block'; overlay.style.display='block'; }
+function cerrarPanel(){ adminPanel.style.display='none'; overlay.style.display='none'; }
+let countE=0,lastTime=0;
 document.addEventListener('keydown',e=>{
   if(e.key.toLowerCase()==='e'){
-    let n=Date.now();
-    if(n-lT>900) cE=0;
-    cE++; lT=n;
-    if(cE===3){ abrirPanel(); cE=0; }
+    let now=Date.now();
+    if(now-lastTime>800) countE=0;
+    countE++; lastTime=now;
+    if(countE===3){ abrirPanel(); countE=0; }
   }
 });
-
 render();
 </script>
 </body>
