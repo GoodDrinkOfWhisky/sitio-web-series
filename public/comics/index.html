@@ -6,21 +6,12 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:#0e0e10;color:white;min-height:100vh;padding-top:80px}
-
-/* PANTALLA NEGRA DE TRANSICION */
-#fade-screen{
-  position:fixed;inset:0;background:black;z-index:9999;
-  opacity:1;transition:opacity 0.6s ease;
-  pointer-events:none;
-}
+#fade-screen{position:fixed;inset:0;background:black;z-index:9999;opacity:1;transition:opacity 0.6s ease;pointer-events:none}
 #fade-screen.hide{opacity:0}
-
-/* TOP BAR SOLO PERFIL Y X */
 .top-bar{position:fixed;top:0;left:0;width:100%;height:70px;display:flex;justify-content:flex-end;align-items:center;padding:0 20px;gap:20px;background:rgba(14,14,16,0.85);backdrop-filter:blur(12px);z-index:1000;border-bottom:1px solid rgba(255,255,255,0.06)}
 .profile-circle{width:42px;height:42px;border-radius:50%;background:#2a2a2e;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid white;box-shadow:0 0 15px rgba(255,255,255,0.8);overflow:hidden}
 .profile-circle img{width:100%;height:100%;object-fit:cover}
 .close-btn{width:42px;height:42px;border-radius:50%;border:2px solid white;background:rgba(0,0,0,0.3);color:white;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 0 15px rgba(255,255,255,0.6)}
-
 .modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:5000}
 .modal.active{display:flex}
 .box{background:#1e1e20;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:25px;width:90%;max-width:340px;text-align:center}
@@ -32,24 +23,17 @@ input[type=range]{width:260px;accent-color:white}
 </style>
 </head>
 <body>
-
 <div id="fade-screen"></div>
-
 <div class="top-bar">
   <div class="profile-circle" id="profileBtn"></div>
   <div class="close-btn" id="closeX">✕</div>
 </div>
-
-<div style="padding:20px">
-  <div id="lista-comics" style="margin-top:20px"></div>
-</div>
-
+<div style="padding:20px"><div id="lista-comics" style="margin-top:20px"></div></div>
 <div class="modal" id="loginModal"><div class="box">
   <h3>Admin Login</h3>
   <input id="emailInput" placeholder="lxvtorres@gmail.com" style="width:100%;padding:12px;margin:15px 0 10px;border-radius:10px;background:#111;border:1px solid #333;color:white">
   <button id="doLogin" style="width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:700">Entrar</button>
 </div></div>
-
 <div class="modal" id="optModal"><div class="box">
   <div id="bigPrev" style="width:90px;height:90px;border-radius:50%;overflow:hidden;margin:0 auto 15px;border:2px solid white;background:#2a2a2e"></div>
   <button onclick="document.getElementById('fileIn').click()" style="width:100%;padding:12px;border-radius:10px;border:none;background:white;color:black;font-weight:600;margin-bottom:8px">Cambiar foto de perfil</button>
@@ -57,7 +41,6 @@ input[type=range]{width:260px;accent-color:white}
   <button onclick="logout()" style="width:100%;padding:10px;border-radius:10px;background:transparent;border:1px solid #333;color:#888;margin-top:5px">Cerrar sesión</button>
   <button onclick="optModal.classList.remove('active')" style="width:100%;padding:10px;border:none;background:transparent;color:white;margin-top:5px">Cancelar</button>
 </div></div>
-
 <div class="modal" id="cropModal">
   <div class="crop-ui">
     <div class="viewport" id="viewport"><img id="cropImg"></div>
@@ -68,20 +51,14 @@ input[type=range]{width:260px;accent-color:white}
     </div>
   </div>
 </div>
-
 <script>
-// TRANSICION ENTRADA
-window.addEventListener("load",()=>{
-  setTimeout(()=>document.getElementById("fade-screen").classList.add("hide"),100);
-});
-// TRANSICION SALIDA
+window.addEventListener("load",()=>{ setTimeout(()=>document.getElementById("fade-screen").classList.add("hide"),100); });
 function goHome(){
   const f=document.getElementById("fade-screen");
   f.classList.remove("hide");
   f.style.pointerEvents="auto";
   setTimeout(()=>{ window.location.href="../index.html"; },600);
 }
-
 const ADMIN="lxvtorres@gmail.com";
 let user=localStorage.getItem("userEmail")||"";
 let pic=localStorage.getItem("adminProfilePic")||"";
@@ -91,9 +68,8 @@ const optModal=document.getElementById("optModal");
 const cropModal=document.getElementById("cropModal");
 const cropImg=document.getElementById("cropImg");
 const viewport=document.getElementById("viewport");
-
 function renderIcon(){
-  const svg=`<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#888" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+  const svg=`<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#888" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
   if(pic){profileBtn.innerHTML=`<img src="${pic}">`;document.getElementById("bigPrev").innerHTML=`<img src="${pic}" style="width:100%;height:100%;object-fit:cover">`;}
   else{profileBtn.innerHTML=svg;document.getElementById("bigPrev").innerHTML=svg;}
 }
@@ -102,7 +78,6 @@ profileBtn.onclick=()=>{ if(user.toLowerCase()!==ADMIN) loginModal.classList.add
 document.getElementById("doLogin").onclick=()=>{ const v=document.getElementById("emailInput").value.trim().toLowerCase(); if(v!==ADMIN)return alert("Solo "+ADMIN); user=v; localStorage.setItem("userEmail",v); loginModal.classList.remove("active"); renderIcon(); };
 function logout(){localStorage.removeItem("userEmail");user="";optModal.classList.remove("active");renderIcon();}
 document.getElementById("closeX").onclick=goHome;
-
 let scale=0.5,posX=0,posY=0,dragging=false,sX,sY;
 const zoom=document.getElementById("zoom");
 document.getElementById("fileIn").onchange=e=>{ const f=e.target.files[0]; if(!f) return; cropImg.src=URL.createObjectURL(f); optModal.classList.remove("active"); cropModal.classList.add("active"); scale=0.5;posX=0;posY=0;zoom.value=0.5; };
@@ -115,7 +90,6 @@ function endDrag(){dragging=false;}
 viewport.addEventListener("mousedown",e=>startDrag(e.clientX,e.clientY));window.addEventListener("mousemove",e=>moveDrag(e.clientX,e.clientY));window.addEventListener("mouseup",endDrag);
 viewport.addEventListener("touchstart",e=>startDrag(e.touches[0].clientX,e.touches[0].clientY),{passive:false});window.addEventListener("touchmove",e=>{if(dragging){e.preventDefault();moveDrag(e.touches[0].clientX,e.touches[0].clientY)}},{passive:false});window.addEventListener("touchend",endDrag);
 document.getElementById("savePic").onclick=()=>{ const canvas=document.createElement("canvas"); const size=400; canvas.width=size; canvas.height=size; const ctx=canvas.getContext("2d"); ctx.beginPath(); ctx.arc(size/2,size/2,size/2,0,Math.PI*2); ctx.clip(); const imgW=cropImg.naturalWidth*scale; const imgH=cropImg.naturalHeight*scale; const cx=size/2+posX; const cy=size/2+posY; ctx.drawImage(cropImg, cx - imgW/2, cy - imgH/2, imgW, imgH); const data=canvas.toDataURL("image/png"); localStorage.setItem("adminProfilePic",data); pic=data; renderIcon(); cropModal.classList.remove("active"); };
-
 let eCount=0,eTimer;window.addEventListener("keydown",e=>{if(e.key.toLowerCase()==='e'){eCount++;clearTimeout(eTimer);eTimer=setTimeout(()=>eCount=0,800);if(eCount===3){eCount=0;if(user.toLowerCase()===ADMIN) alert("Panel secreto abierto");}}});
 </script>
 </body>
