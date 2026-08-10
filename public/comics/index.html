@@ -58,14 +58,16 @@ input[type=range]{width:260px;accent-color:white}
 </div>
 
 <script>
-// LA X SOLO DESAPARECE TODO, SIN FADE, SIN RECARGAR, SIN REDIRIGIR
+// ESTE ES EL BUENO - BORRA TODO HASTA EL FONDO NEGRO PARA DEVELAR LA PRINCIPAL
 function goHome(){
-  document.getElementById("topBar").style.display="none";
-  document.getElementById("contenido").style.display="none";
-  document.getElementById("loginModal").classList.remove("active");
-  document.getElementById("optModal").classList.remove("active");
-  document.getElementById("cropModal").classList.remove("active");
-  document.body.style.background="#000";
+  document.getElementById("topBar").remove();
+  document.getElementById("contenido").remove();
+  document.getElementById("loginModal").remove();
+  document.getElementById("optModal").remove();
+  document.getElementById("cropModal").remove();
+  document.body.style.background="transparent";
+  document.documentElement.style.background="transparent";
+  document.body.innerHTML=""; // limpia cualquier resto
 }
 
 const ADMIN="lxvtorres@gmail.com";
