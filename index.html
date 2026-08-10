@@ -154,7 +154,9 @@ window.addEventListener('load',()=>{
     d.id="visorComics";
     d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999999";
     d.innerHTML=`
-  
+    body{margin:0;background:#000;color:#fff;font-family:sans-serif}
+  #contenido{padding:20px}
+  #closeX{position:fixed;top:2px;right:15px;z-index:99999;width:40px;height:40px;border-radius:50%;background:#000;color:#fff;border:2px solid #fff;cursor:pointer;font-weight:bold;font-size:18px}
       <iframe src="/sitio-web-series/public/comics/" style="width:100%;height:calc(100% - 50px);border:none"></iframe>
     `;
     document.body.appendChild(d);
