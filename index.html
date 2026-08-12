@@ -409,7 +409,7 @@ function verFoto(i){ var d=document.createElement("div"); d.id="visorFoto"; d.st
 var listaBotones=[{img:'COMICSBOTONPORT.png',miniImg:'img/m1.png',tipo:'COMICS'},{img:'img/b2.jpg',miniImg:'img/m2.png',tipo:'GALERIA'},{img:'img/b3.jpg',miniImg:'img/m3.png'},{img:'img/b4.jpg',miniImg:'img/m4.png'},{img:'img/b5.jpg',miniImg:'img/m5.png'},{img:'img/b6.jpg',miniImg:'img/m6.png'}];
 var cont=document.getElementById('botonera');
 listaBotones.forEach(function(b){ var wrap=document.createElement('div'); wrap.className='boton-wrap'; var mini=document.createElement('div'); mini.className='mini-left'; mini.innerHTML='<img src="'+b.miniImg+'">'; var btn=document.createElement('div'); btn.className='btn-img'; btn.innerHTML='<img src="'+b.img+'">'; if(b.tipo==='COMICS') btn.onclick=abrirComics; else if(b.tipo==='GALERIA') btn.onclick=abrirGaleria; wrap.appendChild(mini); wrap.appendChild(btn); cont.appendChild(wrap); });
-</script>
+</script> 
 </body>
 </html>
 <head>
