@@ -269,13 +269,11 @@ window.addEventListener('load',()=>{
 <style>
 #botonera{position:fixed;left:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:9999}
 .boton-wrap{display:flex;align-items:center;filter:drop-shadow(5px 5px 0 #000);transition:transform 0.2s}
-.boton-wrap:hover{transform:translateX(6px) translateZ(0)}
+.boton-wrap:hover{transform:translateX(6px)}
 .mini-left{width:60px;height:60px;border:2.5px solid #000;border-right:0;border-radius:12px 0 0 12px;background:#1a1a1a;overflow:hidden;cursor:pointer}
 .mini-left img{width:100%;height:100%;object-fit:cover}
-.btn-img{width:170px;height:60px;border:2.5px solid #000;border-radius:0 12px 12px 0;background:#0f0f0f;overflow:hidden;cursor:pointer;position:relative}
+.btn-img{width:170px;height:60px;border:2.5px solid #000;border-radius:0 12px 12px 0;background:#0f0f0f;overflow:hidden;cursor:pointer}
 .btn-img img{width:100%;height:100%;object-fit:cover}
-#grid::-webkit-scrollbar,.galeria-paginas::-webkit-scrollbar{width:3px;height:3px}
-#grid::-webkit-scrollbar-thumb,.galeria-paginas::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:10px}
 #visorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:#050505;z-index:9999999;display:flex;flex-direction:column;overflow:hidden}
 #videoFondo{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35;filter:blur(2px)}
 #overlayGris{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:radial-gradient(circle at center, rgba(40,40,40,0.2) 0%, rgba(0,0,0,0.85) 100%);pointer-events:none}
@@ -336,8 +334,7 @@ async function guardarEnCarpetaReal(){
   let nombre = String(comicsLista.length+1).padStart(2,'0')+" - "+safe;
   let sub = await carpetaHandle.getDirectoryHandle(nombre,{create:true});
   let blobP = await (await fetch(tempPortada)).blob();
-  let fh = await sub.getFileHandle("portada.jpg",{create:true});
-  let w = await fh.createWritable(); await w.write(blobP); await w.close();
+  let fh = await sub.getFileHandle("portada.jpg",{create:true});let w = await fh.createWritable(); await w.write(blobP); await w.close();
   if(tempFlaca){let blobF=await (await fetch(tempFlaca)).blob(); let ff=await sub.getFileHandle("flaca.jpg",{create:true}); let wf=await ff.createWritable(); await wf.write(blobF); await wf.close();}
   for(let i=0;i<tempPaginas.length;i++){let blob = await (await fetch(tempPaginas[i])).blob();let f = await sub.getFileHandle("pagina_"+String(i+1).padStart(3,'0')+".jpg",{create:true});let wr = await f.createWritable(); await wr.write(blob); await wr.close();}
  }catch(e){}
@@ -355,9 +352,9 @@ async function abrirEditorNuevo(id){
 function cambiarSeccion(s){seccionActiva=s;document.querySelectorAll(".menu-der button").forEach(b=>b.classList.remove("activo"));document.getElementById("btn"+s.charAt(0).toUpperCase()+s.slice(1)).classList.add("activo");renderSeccion()}
 function renderSeccion(){
  var z=document.getElementById("zonaCentro");
- if(seccionActiva==="titulo"){z.innerHTML='<div style="width:100%;max-width:500px"><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:4px;margin-bottom:12px">TITULO DEL CÓMIC</p><input id="inputTitulo" value="'+tempTitulo+'" placeholder="ESCRIBE EL TITULO" style="width:100%;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;outline:none;font-size:18px;letter-spacing:2px" oninput="tempTitulo=this.value"></div>';}
+ if(seccionActiva==="titulo"){z.innerHTML='<div style="width:100%;max-width:500px"><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:4px;margin-bottom:12px">TITULO</p><input id="inputTitulo" value="'+tempTitulo+'" placeholder="ESCRIBE EL TITULO" style="width:100%;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;outline:none;font-size:18px;letter-spacing:2px" oninput="tempTitulo=this.value"></div>';}
  else if(seccionActiva==="portada"){
-  let anchoHtml = tempPortada? '<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><img src="'+tempPortada+'"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);padding:6px;text-align:center;color:#fff;font-size:9px;letter-spacing:2px">ANCHA</div></div>' : '<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><span style="font-size:64px;color:rgba(255,255,255,0.3)">+</span><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:2px;margin-top:10px">PORTADA ANCHA</p></div>';
+  let anchoHtml = tempPortada? '<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><img src="'+tempPortada+'"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);padding:6px;text-align:center;color:#fff;font-size:9px">ANCHA</div></div>' : '<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><span style="font-size:64px;color:rgba(255,255,255,0.3)">+</span><p style="color:rgba(255,255,255,0.3);font-size:10px;margin-top:10px">ANCHA</p></div>';
   let flacaHtml = tempFlaca? '<div class="marco-steam-flaca" onclick="document.getElementById(\'fileFlaca\').click()"><img src="'+tempFlaca+'"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);padding:4px;text-align:center;color:#fff;font-size:8px">FLACA</div></div>' : '<div class="marco-steam-flaca" onclick="document.getElementById(\'fileFlaca\').click()"><span style="font-size:32px;color:rgba(255,255,255,0.3)">+</span><p style="color:rgba(255,255,255,0.3);font-size:8px;text-align:center">FLACA</p></div>';
   z.innerHTML='<div style="display:flex;gap:24px;align-items:flex-end">'+flacaHtml+anchoHtml+'</div>';
  } else {var h='<div class="galeria-paginas">';for(var i=0;i<tempPaginas.length;i++){h+='<div class="pag-thumb"><img src="'+tempPaginas[i]+'"><button onclick="tempPaginas.splice('+i+',1);renderSeccion()" style="position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);border:1px solid #333;color:#fff;cursor:pointer">✕</button></div>';}h+='<div class="marco-pagina" onclick="document.getElementById(\'filePaginas\').click()"><span style="font-size:32px;color:rgba(255,255,255,0.3)">+</span></div></div>';z.innerHTML=h;}
