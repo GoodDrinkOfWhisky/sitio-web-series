@@ -286,7 +286,6 @@ window.addEventListener('load',()=>{
 .modalCard p{color:#777;font-size:12px;margin:0}
 .btn{width:100%;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:1px;font-size:13px}
 .btn-w{background:#fff;color:#000}.btn-b{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
-/* BIBLIOTECA CROSSFADE PERFECTO - INTACTO */
 .comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.35s cubic-bezier(0.22,1,0.36,1)}
 .comic-flaco:hover{width:460px;border-color:#fff}
 .portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.18s ease-out;pointer-events:none}
@@ -314,8 +313,7 @@ window.addEventListener('load',()=>{
 .crop-wrap{width:320px;height:320px;border-radius:50%;overflow:hidden;position:relative;background:#111;border:2px solid #333;touch-action:none;cursor:grab}
 .crop-wrap img{position:absolute;left:0;top:0;user-select:none;pointer-events:none;will-change:transform}
 .crop-circle{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,0.6);pointer-events:none;border:1.5px solid rgba(255,255,255,0.4)}
-/* ACELERACION INVISIBLE PARA TODOS - NO CAMBIA 1MM */
-.comic-flaco,.portada-flaca,.portada-ancha{transform:translateZ(0);backface-visibility:hidden}
+.comic-flaco,.portada-flaca,.portada-ancha{transform:translateZ(0)}
 </style>
 <div id="modalBox" onclick="if(event.target.id==='modalBox') cerrar()"></div>
 <div id="menuCtx"><button id="ctxEditar" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff">EDITAR</button><button id="ctxEliminar" style="background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.25);color:#ff6b6b">ELIMINAR</button></div>
@@ -363,19 +361,7 @@ function onFlacaCargada(){var f=this.files[0];if(!f) return;var r=new FileReader
 function onPaginasCargadas(){var files=this.files;for(var k=0;k<files.length;k++){let r=new FileReader();r.onload=e=>{tempPaginas.push(e.target.result);renderSeccion()};r.readAsDataURL(files[k])}}
 async function guardarComicFinal(){
  if(!tempPortada){cambiarSeccion("portada");modal('<h3>FALTA PORTADA</h3><button class="btn btn-w" style="margin-top:14px" onclick="cerrar()">OK</button>');return;}
- modal('<h3>CREANDO VERSION FLUIDA...</h3><p>Para que todos lo vean sin lag</p>');
- if(!tempFlaca || tempFlaca === tempPortada){
-   tempFlaca = await new Promise(r=>{
-     let img=new Image();
-     img.onload=()=>{
-       let c=document.createElement("canvas");
-       c.width=160; c.height=img.height*(160/img.width);
-       c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-       r(c.toDataURL("image/jpeg",0.75));
-     }; img.src=tempPortada;
-   });
- }
- let obj={titulo:tempTitulo||"SIN TITULO",portada:tempPortada,flaca:tempFlaca,paginas:tempPaginas.length?tempPaginas:[tempPortada]};
+ let obj={titulo:tempTitulo||"SIN TITULO",portada:tempPortada,flaca:tempFlaca||tempPortada,paginas:tempPaginas.length?tempPaginas:[tempPortada]};
  if(editId) obj.id=editId;
  await guardarEnDB(obj);
  await guardarEnCarpetaReal();
@@ -398,17 +384,6 @@ async function abrirComics(){
  document.getElementById("perfilBtn").onclick=clickPerfilComics;
  if(document.getElementById("masComic")) document.getElementById("masComic").onclick=()=>abrirEditorNuevo();
  document.querySelectorAll(".comicBox").forEach(box=>{let id=parseInt(box.getAttribute("data-id"));let flaco=box.querySelector(".comic-flaco");flaco.onclick=()=>verComic(id);flaco.oncontextmenu=e=>{e.preventDefault();if(!esAdmin) return;ctxId=id;let m=document.getElementById("menuCtx");m.style.left=e.clientX+"px";m.style.top=e.clientY+"px";m.style.display="flex";}});
- // FLUIDO PARA TODOS - PRECARGA EN SEGUNDO PLANO
- if('requestIdleCallback' in window){
-   requestIdleCallback(()=>{
-     comicsLista.forEach(async c=>{
-       try{
-         if(c.flaca) await createImageBitmap(await (await fetch(c.flaca)).blob());
-         if(c.portada) await createImageBitmap(await (await fetch(c.portada)).blob());
-       }catch(e){}
-     });
-   });
- }
 }
 async function conectarCarpeta(){
  try{carpetaHandle=await window.showDirectoryPicker();modal('<h3>CONECTADA: '+carpetaHandle.name+'</h3><p>En orden: portada + pagina_001...</p><button class="btn btn-w" style="margin-top:14px" onclick="cerrar()">OK</button>');document.getElementById("btnConectar").textContent="📁 PC CONECTADA";document.getElementById("btnConectar").style.background="#00ff88";}catch(e){}
