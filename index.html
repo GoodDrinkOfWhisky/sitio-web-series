@@ -276,7 +276,6 @@ window.addEventListener('load',()=>{
 .btn-img img{width:100%;height:100%;object-fit:cover}
 #grid::-webkit-scrollbar,.galeria-paginas::-webkit-scrollbar{width:3px;height:3px}
 #grid::-webkit-scrollbar-thumb,.galeria-paginas::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:10px}
-#grid::-webkit-scrollbar-track{background:transparent}
 #visorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:#050505;z-index:9999999;display:flex;flex-direction:column;overflow:hidden}
 #videoFondo{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35;filter:blur(2px)}
 #overlayGris{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:radial-gradient(circle at center, rgba(40,40,40,0.2) 0%, rgba(0,0,0,0.85) 100%);pointer-events:none}
@@ -287,12 +286,15 @@ window.addEventListener('load',()=>{
 .modalCard p{color:#777;font-size:12px;margin:0}
 .btn{width:100%;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:1px;font-size:13px}
 .btn-w{background:#fff;color:#000}.btn-b{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
-.comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.25s ease}
+
+/* BIBLIOTECA CROSSFADE PERFECTO */
+.comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.4s cubic-bezier(0.22,1,0.36,1)}
 .comic-flaco:hover{width:460px;border-color:#fff}
-.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.2s ease;pointer-events:none}
-.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:1;transition:opacity 0.2s ease}
+.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.35s ease;pointer-events:none}
+.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 0.35s ease 0.05s}
 .comic-flaco:hover.portada-flaca{opacity:0}
 .comic-flaco:hover.portada-ancha{opacity:1}
+
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #editorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);z-index:99999999;display:flex;overflow:hidden}
 .menu-der{position:absolute;right:22px;top:22px;display:flex;flex-direction:column;gap:10px;z-index:5}
@@ -312,7 +314,6 @@ window.addEventListener('load',()=>{
 .btnX{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:10px 32px;border-radius:30px;background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;letter-spacing:3px;font-weight:700;cursor:pointer}
 #editorPerfil{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);backdrop-filter:blur(20px);z-index:9999999999;display:flex;align-items:center;justify-content:center}
 .crop-wrap{width:320px;height:320px;border-radius:50%;overflow:hidden;position:relative;background:#111;border:2px solid #333;touch-action:none;cursor:grab}
-.crop-wrap:active{cursor:grabbing}
 .crop-wrap img{position:absolute;left:0;top:0;user-select:none;pointer-events:none;will-change:transform}
 .crop-circle{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,0.6);pointer-events:none;border:1.5px solid rgba(255,255,255,0.4)}
 </style>
@@ -338,12 +339,10 @@ function comprimirImagen(base64, maxW){
     img.onload=()=>{
       let scale = Math.min(1, maxW / img.width);
       let c=document.createElement("canvas");
-      c.width=img.width*scale;
-      c.height=img.height*scale;
+      c.width=img.width*scale; c.height=img.height*scale;
       c.getContext("2d").drawImage(img,0,0,c.width,c.height);
       r(c.toDataURL("image/jpeg",0.72));
-    };
-    img.src=base64;
+    }; img.src=base64;
   });
 }
 async function crearThumbs(){
@@ -351,23 +350,7 @@ async function crearThumbs(){
   if(tempFlaca) tempFlaca = await comprimirImagen(tempFlaca, 160);
   for(let i=0;i<tempPaginas.length;i++){tempPaginas[i] = await comprimirImagen(tempPaginas[i], 800);}
 }
-async function guardarEnCarpetaReal(){
- if(!carpetaHandle) return;
- try{
-  let safe = tempTitulo.replace(/[^a-zA-Z0-9 ]/g,'').trim() || "SinTitulo";
-  let nombre = String(comicsLista.length+1).padStart(2,'0')+" - "+safe;
-  let sub = await carpetaHandle.getDirectoryHandle(nombre,{create:true});
-  let blobP = await (await fetch(tempPortada)).blob();
-  let fh = await sub.getFileHandle("portada.jpg",{create:true});
-  let w = await fh.createWritable(); await w.write(blobP); await w.close();
-  if(tempFlaca){let blobF=await (await fetch(tempFlaca)).blob(); let ff=await sub.getFileHandle("flaca.jpg",{create:true}); let wf=await ff.createWritable(); await wf.write(blobF); await wf.close();}
-  for(let i=0;i<tempPaginas.length;i++){
-    let blob = await (await fetch(tempPaginas[i])).blob();
-    let f = await sub.getFileHandle("pagina_"+String(i+1).padStart(3,'0')+".jpg",{create:true});
-    let wr = await f.createWritable(); await wr.write(blob); await wr.close();
-  }
- }catch(e){}
-}
+async function guardarEnCarpetaReal(){ if(!carpetaHandle) return; try{let safe=tempTitulo.replace(/[^a-zA-Z0-9 ]/g,'').trim()||"SinTitulo";let nombre=String(comicsLista.length+1).padStart(2,'0')+" - "+safe;let sub=await carpetaHandle.getDirectoryHandle(nombre,{create:true});let blobP=await (await fetch(tempPortada)).blob();let fh=await sub.getFileHandle("portada.jpg",{create:true});let w=await fh.createWritable();await w.write(blobP);await w.close();if(tempFlaca){let blobF=await (await fetch(tempFlaca)).blob();let ff=await sub.getFileHandle("flaca.jpg",{create:true});let wf=await ff.createWritable();await wf.write(blobF);await wf.close();}for(let i=0;i<tempPaginas.length;i++){let blob=await (await fetch(tempPaginas[i])).blob();let f=await sub.getFileHandle("pagina_"+String(i+1).padStart(3,'0')+".jpg",{create:true});let wr=await f.createWritable();await wr.write(blob);await wr.close();}}catch(e){}}
 async function abrirEditorNuevo(id){
  if(id!==undefined){let c=comicsLista.find(x=>x.id===id);tempTitulo=c.titulo;tempPortada=c.portada;tempFlaca=c.flaca||c.portada;tempPaginas=[...c.paginas];editId=id;}
  else {tempTitulo="";tempPortada="";tempFlaca="";tempPaginas=[];editId=null;}
@@ -441,18 +424,7 @@ function abrirEditorPerfil(){
  let img=document.getElementById("cropImg");
  let wrap=document.getElementById("cropWrap");
  cropData={x:0,y:0,scale:0.5,img:img,startX:0,startY:0,drag:false};
- img.onload=()=>{
-  let ratioW = wrap.clientWidth / img.naturalWidth;
-  let ratioH = wrap.clientHeight / img.naturalHeight;
-  let fitScale = Math.min(ratioW,ratioH);
-  fitScale = Math.min(fitScale,1);
-  cropData.scale = fitScale;
-  cropData.x = (wrap.clientWidth - img.naturalWidth*fitScale)/2;
-  cropData.y = (wrap.clientHeight - img.naturalHeight*fitScale)/2;
-  aplicarCrop();
-  document.getElementById("zoomRange").value=fitScale;
-  document.getElementById("zoomRange").min=fitScale*0.3;
- };
+ img.onload=()=>{let ratioW=wrap.clientWidth/img.naturalWidth;let ratioH=wrap.clientHeight/img.naturalHeight;let fitScale=Math.min(ratioW,ratioH);fitScale=Math.min(fitScale,1);cropData.scale=fitScale;cropData.x=(wrap.clientWidth-img.naturalWidth*fitScale)/2;cropData.y=(wrap.clientHeight-img.naturalHeight*fitScale)/2;aplicarCrop();document.getElementById("zoomRange").value=fitScale;document.getElementById("zoomRange").min=fitScale*0.3;};
  if(img.complete) img.onload();
  wrap.onpointerdown=e=>{cropData.drag=true;cropData.startX=e.clientX-cropData.x;cropData.startY=e.clientY-cropData.y;wrap.setPointerCapture(e.pointerId)};
  wrap.onpointermove=e=>{if(!cropData.drag) return;cropData.x=e.clientX-cropData.startX;cropData.y=e.clientY-cropData.startY;aplicarCrop()};
@@ -462,56 +434,9 @@ function abrirEditorPerfil(){
  document.getElementById("inputNuevaFoto").onchange=function(){let f=this.files[0];if(!f) return;let r=new FileReader();r.onload=e=>{img.src=e.target.result};r.readAsDataURL(f)};
 }
 function aplicarCrop(){cropData.img.style.transform='translate('+cropData.x+'px,'+cropData.y+'px) scale('+cropData.scale+')';cropData.img.style.transformOrigin='0 0';}
-function zoomCrop(s){
- let wrap=document.getElementById("cropWrap");
- let cx=wrap.clientWidth/2, cy=wrap.clientHeight/2;
- let ratio=s/cropData.scale;
- cropData.x = cx - (cx - cropData.x)*ratio;
- cropData.y = cy - (cy - cropData.y)*ratio;
- cropData.scale=s;
- aplicarCrop();
-}
-async function guardarFotoPerfil(){
- let wrap=document.getElementById("cropWrap");
- let canvas=document.createElement("canvas");canvas.width=320;canvas.height=320;
- let ctx=canvas.getContext("2d");
- let img=cropData.img;
- ctx.save();ctx.beginPath();ctx.arc(160,160,160,0,Math.PI*2);ctx.clip();
- ctx.drawImage(img, cropData.x, cropData.y, img.naturalWidth*cropData.scale, img.naturalHeight*cropData.scale);
- ctx.restore();
- let data=canvas.toDataURL("image/jpeg",0.9);
- await guardarConfig("fotoPerfil",data);
- localStorage.setItem("mi_foto_perfil",data);
- miFoto=data;
- document.getElementById("editorPerfil").remove();
- abrirComics();
-}
-function verComic(id){
- let c=comicsLista.find(x=>x.id===id);let pagina=0;
- let d=document.createElement("div");d.id="visorFoto";
- d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";
- d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="max-width:82%;max-height:78%;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';
- document.body.appendChild(d);
- function cambiar(dir){
-  let img=document.getElementById("imgG2");
-  img.style.transition="all 0.35s ease";
-  img.style.filter="blur(18px)";
-  img.style.opacity="0";
-  img.style.transform="scale(0.94)";
-  setTimeout(()=>{
-   pagina+=dir;
-   if(pagina<0) pagina=c.paginas.length-1;
-   if(pagina>=c.paginas.length) pagina=0;
-   img.src=c.paginas[pagina];
-   document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;
-   img.style.filter="blur(0px)";
-   img.style.opacity="1";
-   img.style.transform="scale(1)";
-  },220);
- }
- document.getElementById("prevB").onclick=()=>cambiar(-1);
- document.getElementById("nextB").onclick=()=>cambiar(1);
-}
+function zoomCrop(s){let wrap=document.getElementById("cropWrap");let cx=wrap.clientWidth/2, cy=wrap.clientHeight/2;let ratio=s/cropData.scale;cropData.x=cx-(cx-cropData.x)*ratio;cropData.y=cy-(cy-cropData.y)*ratio;cropData.scale=s;aplicarCrop();}
+async function guardarFotoPerfil(){let canvas=document.createElement("canvas");canvas.width=320;canvas.height=320;let ctx=canvas.getContext("2d");let img=cropData.img;ctx.save();ctx.beginPath();ctx.arc(160,160,160,0,Math.PI*2);ctx.clip();ctx.drawImage(img, cropData.x, cropData.y, img.naturalWidth*cropData.scale, img.naturalHeight*cropData.scale);ctx.restore();let data=canvas.toDataURL("image/jpeg",0.9);await guardarConfig("fotoPerfil",data);localStorage.setItem("mi_foto_perfil",data);miFoto=data;document.getElementById("editorPerfil").remove();abrirComics();}
+function verComic(id){let c=comicsLista.find(x=>x.id===id);let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="max-width:82%;max-height:78%;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.transition="all 0.35s ease";img.style.filter="blur(18px)";img.style.opacity="0";img.style.transform="scale(0.94)";setTimeout(()=>{pagina+=dir;if(pagina<0) pagina=c.paginas.length-1;if(pagina>=c.paginas.length) pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";img.style.transform="scale(1)";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);}
 var cont=document.getElementById('botonera');
 listaBotones.forEach(function(b){var wrap=document.createElement('div');wrap.className='boton-wrap';var mini=document.createElement('div');mini.className='mini-left';mini.innerHTML='<img src="'+(b.miniImg||b.img)+'">';var btn=document.createElement('div');btn.className='btn-img';btn.innerHTML='<img src="'+b.img+'">';if(b.tipo==='COMICS') btn.onclick=abrirComics;wrap.appendChild(mini);wrap.appendChild(btn);cont.appendChild(wrap);});
 document.addEventListener("click",()=>{document.getElementById("menuCtx").style.display="none";});
