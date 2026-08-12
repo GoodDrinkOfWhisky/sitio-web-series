@@ -289,9 +289,10 @@ window.addEventListener('load',()=>{
 .btn-w{background:#fff;color:#000}.btn-b{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
 .comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.25s ease}
 .comic-flaco:hover{width:460px;border-color:#fff}
-.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2}
-.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1}
+.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.2s ease;pointer-events:none}
+.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:1;transition:opacity 0.2s ease}
 .comic-flaco:hover.portada-flaca{opacity:0}
+.comic-flaco:hover.portada-ancha{opacity:1}
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #editorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);z-index:99999999;display:flex;overflow:hidden}
 .menu-der{position:absolute;right:22px;top:22px;display:flex;flex-direction:column;gap:10px;z-index:5}
@@ -331,7 +332,6 @@ var tempTitulo="", tempPortada="", tempFlaca="", tempPaginas=[], editId=null, se
 var listaBotones=[{img:'COMICSBOTONPORT.png',miniImg:'img/m1.png',tipo:'COMICS'},{img:'img/b2.jpg',miniImg:'img/m2.png'},{img:'img/b3.jpg',miniImg:'img/m3.png'},{img:'img/b4.jpg',miniImg:'img/m4.png'},{img:'img/b5.jpg',miniImg:'img/m6.png'}];
 function modal(h){document.getElementById("modalBox").innerHTML='<div class="modalCard">'+h+'</div>';document.getElementById("modalBox").style.display="flex"}
 function cerrar(){document.getElementById("modalBox").style.display="none"}
-
 function comprimirImagen(base64, maxW){
   return new Promise(r=>{
     let img=new Image();
@@ -349,12 +349,8 @@ function comprimirImagen(base64, maxW){
 async function crearThumbs(){
   if(tempPortada) tempPortada = await comprimirImagen(tempPortada, 460);
   if(tempFlaca) tempFlaca = await comprimirImagen(tempFlaca, 160);
-  // paginas tambien las bajamos a 800px para que no laggee
-  for(let i=0;i<tempPaginas.length;i++){
-    tempPaginas[i] = await comprimirImagen(tempPaginas[i], 800);
-  }
+  for(let i=0;i<tempPaginas.length;i++){tempPaginas[i] = await comprimirImagen(tempPaginas[i], 800);}
 }
-
 async function guardarEnCarpetaReal(){
  if(!carpetaHandle) return;
  try{
