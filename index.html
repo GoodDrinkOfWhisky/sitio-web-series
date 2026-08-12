@@ -268,8 +268,8 @@ window.addEventListener('load',()=>{
 <div id="botonera"></div>
 <style>
 #botonera{position:fixed;left:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:9999}
-.boton-wrap{display:flex;align-items:center;filter:drop-shadow(5px 5px 0 #000);transition:0.2s}
-.boton-wrap:hover{transform:translateX(6px)}
+.boton-wrap{display:flex;align-items:center;filter:drop-shadow(5px 5px 0 #000);transition:transform 0.2s}
+.boton-wrap:hover{transform:translateX(6px) translateZ(0)}
 .mini-left{width:60px;height:60px;border:2.5px solid #000;border-right:0;border-radius:12px 0 0 12px;background:#1a1a1a;overflow:hidden;cursor:pointer}
 .mini-left img{width:100%;height:100%;object-fit:cover}
 .btn-img{width:170px;height:60px;border:2.5px solid #000;border-radius:0 12px 12px 0;background:#0f0f0f;overflow:hidden;cursor:pointer;position:relative}
@@ -287,41 +287,41 @@ window.addEventListener('load',()=>{
 .btn{width:100%;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:1px;transition:0.2s;font-size:13px}
 .btn-w{background:#fff;color:#000}.btn-b{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}.btn-r{background:#ff2a2a;color:#fff}
 .btn:hover{transform:scale(1.02)}
-.flecha{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s}
-.flecha:hover{background:rgba(255,255,255,0.15);border-color:#fff}
-.btnX{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:10px 32px;border-radius:30px;background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;letter-spacing:3px;font-weight:700;cursor:pointer;transition:0.2s}
-.btnX:hover{background:#fff;color:#000}
-/* COMICS NUEVO - OPTIMIZADO */
-.comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transform:translateZ(0);will-change:width;transition:width 0.28s cubic-bezier(0.25,0.8,0.25,1), border-color 0.18s}
-.comic-flaco:hover{width:460px;border-color:#fff}
-.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;transition:opacity 0.18s}
-.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transform:translateZ(0);transition:opacity 0.28s}
+.flecha{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.btnX{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:10px 32px;border-radius:30px;background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);color:#fff;letter-spacing:3px;font-weight:700;cursor:pointer}
+.comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transform:translateZ(0);will-change:width;backface-visibility:hidden;transition:width 0.28s cubic-bezier(0.25,0.8,0.25,1), border-color 0.18s}
+.comic-flaco:hover{width:460px;border-color:#fff;box-shadow:0 0 30px rgba(255,255,255,0.12)}
+.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;transform:translateZ(0);backface-visibility:hidden;transition:opacity 0.18s}
+.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transform:translateZ(0);backface-visibility:hidden;transition:opacity 0.28s}
 .comic-flaco:hover.portada-flaca{opacity:0}
 .comic-flaco:hover.portada-ancha{opacity:1}
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:0.18s}
 .marco-mas:hover{border-color:#fff;background:rgba(255,255,255,0.05)}
-/* EDITOR NUEVO */
 #editorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);z-index:99999999;display:flex;overflow:hidden}
 .menu-der{position:absolute;right:22px;top:22px;display:flex;flex-direction:column;gap:10px;z-index:5}
 .menu-der button{padding:12px 22px;border-radius:30px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);letter-spacing:3px;font-size:11px;font-weight:700;cursor:pointer;transition:0.2s;backdrop-filter:blur(10px)}
 .menu-der button:hover,.menu-der button.activo{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.2);color:#fff;box-shadow:0 0 20px rgba(255,255,255,0.15)}
 .marco-steam-portada{width:300px;height:450px;border-radius:22px;border:2px dashed rgba(255,255,255,0.15);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:0.2s}
-.marco-steam-portada:hover{border-color:#fff;background:rgba(255,255,255,0.05);box-shadow:0 0 40px rgba(255,255,255,0.1)}
+.marco-steam-portada:hover{border-color:#fff;background:rgba(255,255,255,0.05)}
 .marco-steam-portada span.mas{font-size:64px;color:rgba(255,255,255,0.3);transition:0.2s}
 .marco-steam-portada:hover span.mas{color:#fff;transform:scale(1.1)}
 .marco-steam-portada p{color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:2px;margin-top:10px;transition:0.2s}
 .marco-steam-portada:hover p{color:#fff}
-.galeria-paginas{display:flex;gap:14px;flex-wrap:wrap;overflow:auto;max-height:70vh;padding:10px;align-content:flex-start}
+.galeria-paginas{display:flex;gap:14px;flex-wrap:wrap;overflow:auto;max-height:70vh;padding:10px;align-content:flex-start;transform:translateZ(0)}
 .pag-thumb{width:140px;height:200px;border-radius:14px;overflow:hidden;border:1px solid #222;position:relative;background:#0a0a0a;flex-shrink:0}
 .pag-thumb img{width:100%;height:100%;object-fit:cover}
 .marco-pagina{width:140px;height:200px;border-radius:14px;border:1.5px dashed rgba(255,255,255,0.15);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:0.2s}
 .marco-pagina:hover{border-color:#fff;background:rgba(255,255,255,0.05)}
-.marco-pagina span{font-size:32px;color:rgba(255,255,255,0.3);transition:0.2s}
+.marco-pagina span{font-size:32px;color:rgba(255,255,255,0.3)}
 .marco-pagina:hover span{color:#fff}
-.marco-pagina p{color:rgba(255,255,255,0.25);font-size:9px;letter-spacing:1px;margin-top:6px;transition:0.2s}
+.marco-pagina p{color:rgba(255,255,255,0.25);font-size:9px;letter-spacing:1px;margin-top:6px}
 .marco-pagina:hover p{color:#fff}
+#menuCtx{position:fixed;z-index:9999999999;display:none;flex-direction:column;gap:6px;padding:8px;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+#menuCtx button{padding:10px 22px;border-radius:10px;letter-spacing:2px;font-size:11px;font-weight:700;cursor:pointer;transition:0.15s}
+#menuCtx button:hover{transform:scale(1.02)}
 </style>
 <div id="modalBox" onclick="if(event.target.id==='modalBox') cerrar()"></div>
+<div id="menuCtx"><button id="ctxEditar" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff">EDITAR</button><button id="ctxEliminar" style="background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.25);color:#ff6b6b">ELIMINAR</button></div>
 <script>
 var CLAVE="admin123";
 var lista=JSON.parse(localStorage.getItem("fotos")||"[]");
@@ -330,7 +330,7 @@ var miFoto=localStorage.getItem("mi_foto_perfil")||"img/perfil.jpg";
 var videoFondoSrc=localStorage.getItem("video_fondo")||"videos/fondoGaleria.mp4";
 var opacidadFondo=parseFloat(localStorage.getItem("opacidad_fondo")||"0.25");
 var esAdmin=localStorage.getItem("admin_sesion")==="1";
-var editIndex=-1, actual=0;
+var editIndex=-1, actual=0, ctxIndex=-1;
 var tempTitulo="", tempPortada="", tempPaginas=[];
 var seccionActiva="titulo";
 var listaBotones=[
@@ -343,8 +343,6 @@ var listaBotones=[
 ];
 function modal(h){ document.getElementById("modalBox").innerHTML='<div class="modalCard">'+h+'</div>'; document.getElementById("modalBox").style.display="flex"; }
 function cerrar(){ document.getElementById("modalBox").style.display="none"; }
-
-// NUEVA INTERFAZ AGREGAR COMIC DESDE CERO
 function abrirEditorNuevo(editandoIndex){
  var esEdicion = editandoIndex!==undefined;
  if(esEdicion){ editIndex=editandoIndex; tempTitulo=comicsLista[editIndex].titulo||""; tempPortada=comicsLista[editIndex].portada||""; tempPaginas=[...comicsLista[editIndex].paginas]; }
@@ -353,7 +351,7 @@ function abrirEditorNuevo(editandoIndex){
  document.getElementById("visorComics")?.remove();
  document.getElementById("editorComics")?.remove();
  var ed=document.createElement("div"); ed.id="editorComics";
- ed.innerHTML='<div id="videoFondo" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:'+opacidadFondo+';background:url('+(videoFondoSrc?videoFondoSrc:'')+') center/cover"></div><div id="overlayGris"></div><div class="menu-der"><button id="btnTitulo" class="activo" onclick="cambiarSeccion(\'titulo\')">TITULO</button><button id="btnPortada" onclick="cambiarSeccion(\'portada\')">PORTADA</button><button id="btnPaginas" onclick="cambiarSeccion(\'paginas\')">PAGINAS</button><div style="height:1px;background:rgba(255,255,255,0.1);margin:8px 0"></div><button style="background:#fff;color:#000" onclick="guardarComicFinal()">GUARDAR</button><button onclick="document.getElementById(\'editorComics\').remove(); abrirComics()">SALIR</button></div><div id="zonaCentro" style="position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center;padding:40px"></div><input type="file" id="filePortada" accept="image/*" style="display:none"><input type="file" id="filePaginas" accept="image/*" multiple style="display:none">';
+ ed.innerHTML='<div id="overlayGris"></div><div class="menu-der"><button id="btnTitulo" class="activo" onclick="cambiarSeccion(\'titulo\')">TITULO</button><button id="btnPortada" onclick="cambiarSeccion(\'portada\')">PORTADA</button><button id="btnPaginas" onclick="cambiarSeccion(\'paginas\')">PAGINAS</button><div style="height:1px;background:rgba(255,255,255,0.1);margin:8px 0"></div><button style="background:#fff;color:#000" onclick="guardarComicFinal()">GUARDAR</button><button onclick="document.getElementById(\'editorComics\').remove(); abrirComics()">SALIR</button></div><div id="zonaCentro" style="position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center;padding:40px"></div><input type="file" id="filePortada" accept="image/*" style="display:none"><input type="file" id="filePaginas" accept="image/*" multiple style="display:none">';
  document.body.appendChild(ed);
  document.getElementById("filePortada").onchange=onPortadaCargada;
  document.getElementById("filePaginas").onchange=onPaginasCargadas;
@@ -363,13 +361,13 @@ function cambiarSeccion(s){ seccionActiva=s; document.querySelectorAll(".menu-de
 function renderSeccion(){
  var z=document.getElementById("zonaCentro");
  if(seccionActiva==="titulo"){
-   z.innerHTML='<div style="width:100%;max-width:500px"><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:4px;margin-bottom:12px">TITULO DEL CÓMIC</p><input id="inputTitulo" value="'+tempTitulo+'" placeholder="ESCRIBE EL TITULO" style="width:100%;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;outline:none;font-size:18px;letter-spacing:2px" oninput="tempTitulo=this.value"><p style="color:rgba(255,255,255,0.2);font-size:11px;margin-top:14px">Se mostrará en la biblioteca</p></div>';
+   z.innerHTML='<div style="width:100%;max-width:500px"><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:4px;margin-bottom:12px">TITULO DEL CÓMIC</p><input id="inputTitulo" value="'+tempTitulo+'" placeholder="ESCRIBE EL TITULO" style="width:100%;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;outline:none;font-size:18px;letter-spacing:2px" oninput="tempTitulo=this.value"></div>';
  } else if(seccionActiva==="portada"){
    if(tempPortada) z.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:16px"><img src="'+tempPortada+'" style="width:300px;height:450px;object-fit:cover;border-radius:22px;border:1px solid #333"><button class="btn btn-b" style="width:300px" onclick="document.getElementById(\'filePortada\').click()">CAMBIAR PORTADA</button></div>';
    else z.innerHTML='<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><span class="mas">+</span><p>agregar portada abajo</p></div>';
- } else if(seccionActiva==="paginas"){
+ } else {
    var html='<div class="galeria-paginas" id="galPags">';
-   for(var i=0;i<tempPaginas.length;i++){ html+='<div class="pag-thumb"><img src="'+tempPaginas[i]+'"><button onclick="borrarPagina('+i+')" style="position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);border:1px solid #333;color:#fff;cursor:pointer">✕</button></div>'; }
+   for(var i=0;i<tempPaginas.length;i++){ html+='<div class="pag-thumb"><img src="'+tempPaginas[i]+'" loading="lazy"><button onclick="borrarPagina('+i+')" style="position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);border:1px solid #333;color:#fff;cursor:pointer">✕</button></div>'; }
    html+='<div class="marco-pagina" onclick="document.getElementById(\'filePaginas\').click()"><span>+</span><p>agregar página</p></div></div>';
    z.innerHTML=html;
  }
@@ -377,133 +375,78 @@ function renderSeccion(){
 function onPortadaCargada(){ var f=this.files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ tempPortada=e.target.result; renderSeccion(); }; r.readAsDataURL(f); }
 function onPaginasCargadas(){
  var files=this.files; if(!files.length) return;
- var done=0; var nuevas=[];
+ var tot=files.length; var nuevas=[];
  for(var k=0;k<files.length;k++){
    var r=new FileReader();
-   r.onload=function(e){ nuevas.push(e.target.result); done++; if(done===files.length){ tempPaginas=tempPaginas.concat(nuevas); renderSeccion(); } };
+   r.onload=function(e){ nuevas.push(e.target.result); if(nuevas.length===tot){ tempPaginas=tempPaginas.concat(nuevas); renderSeccion(); } };
    r.readAsDataURL(files[k]);
  }
 }
 function borrarPagina(i){ tempPaginas.splice(i,1); renderSeccion(); }
 function guardarComicFinal(){
  if(!tempPortada){ cambiarSeccion("portada"); modal('<h3>FALTA PORTADA</h3><button class="btn btn-w" style="margin-top:14px" onclick="cerrar()">OK</button>'); return; }
- var obj={titulo:tempTitulo||"SIN TITULO", portada:tempPortada, flaca:tempPortada, paginas:tempPaginas.length?tempPaginas:[tempPortada]};
- if(editIndex>=0) comicsLista[editIndex]=obj;
- else comicsLista.push(obj);
- localStorage.setItem("comicsLista", JSON.stringify(comicsLista));
- document.getElementById("editorComics").remove();
- abrirComics();
+ modal('<h3>GUARDANDO...</h3><p>No cierres</p>');
+ setTimeout(function(){
+   var obj={titulo:tempTitulo||"SIN TITULO", portada:tempPortada, flaca:tempPortada, paginas:tempPaginas.length?tempPaginas:[tempPortada]};
+   if(editIndex>=0) comicsLista[editIndex]=obj; else comicsLista.push(obj);
+   try{ localStorage.setItem("comicsLista", JSON.stringify(comicsLista)); }catch(e){ modal('<h3>MEMORIA LLENA</h3><p>Borra un cómic</p><button class="btn btn-w" style="margin-top:14px" onclick="cerrar()">OK</button>'); return; }
+   cerrar(); document.getElementById("editorComics")?.remove(); abrirComics();
+ }, 60);
 }
-
-// BIBLIOTECA - REHECHA OPTIMIZADA
 function abrirComics(){
- document.getElementById("visorComics")?.remove();
- document.getElementById("editorComics")?.remove();
+ document.getElementById("visorComics")?.remove(); document.getElementById("editorComics")?.remove();
  var v=document.createElement("div"); v.id="visorComics";
  var videoTag = videoFondoSrc? '<video id="videoFondo" src="'+videoFondoSrc+'" autoplay muted loop playsinline style="opacity:'+opacidadFondo+'"></video>' : '';
- var comicsHtml=""; for(var i=0;i<comicsLista.length;i++){ comicsHtml+='<div class="comicBox" data-i="'+i+'" style="position:relative"><div class="comic-flaco"><img class="portada-flaca" src="'+(comicsLista[i].flaca||comicsLista[i].portada)+'" loading="lazy"><img class="portada-ancha" src="'+comicsLista[i].portada+'" loading="lazy"></div><div style="position:absolute;bottom:8px;left:8px;right:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border-radius:8px;padding:4px 8px;z-index:3"><p style="color:#fff;font-size:9px;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(comicsLista[i].titulo||"SIN TITULO")+'</p></div></div>'; }
+ var comicsHtml=""; for(var i=0;i<comicsLista.length;i++){ comicsHtml+='<div class="comicBox" data-i="'+i+'" style="position:relative"><div class="comic-flaco"><img class="portada-flaca" src="'+(comicsLista[i].flaca||comicsLista[i].portada)+'" loading="lazy" decoding="async"><img class="portada-ancha" src="'+comicsLista[i].portada+'" loading="lazy" decoding="async"></div><div style="position:absolute;bottom:8px;left:8px;right:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border-radius:8px;padding:4px 8px;z-index:3"><p style="color:#fff;font-size:9px;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(comicsLista[i].titulo||"SIN TITULO")+'</p></div></div>'; }
  var masHtml=esAdmin? '<div class="marco-mas" id="masComic"><span style="color:#fff;font-size:48px;font-weight:800">+</span></div>' : '';
  var vacio='<div style="text-align:center;margin-top:80px"><p style="color:#333;letter-spacing:4px;font-size:12px">BIBLIOTECA VACÍA</p></div>';
- var gridContent=comicsLista.length? comicsHtml+masHtml : (esAdmin? masHtml : vacio);
- v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;flex-shrink:0"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px;font-size:13px">BIBLIOTECA</b><span style="color:#444;font-size:10px">'+comicsLista.length+' CÓMICS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtn" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" onerror="this.src=\'https://i.imgur.com/8Km9tLL.png\'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff;cursor:pointer">✕</button></div></div><input type="file" id="fileIn" accept="image/*" multiple style="display:none"><input type="file" id="filePerfil" accept="image/*" style="display:none"><input type="file" id="fileEdit" accept="image/*" style="display:none"><input type="file" id="fileVideo" accept="video/*" style="display:none"><div id="grid" style="display:flex;gap:14px;padding:20px;overflow:auto;flex:1;align-items:center">'+gridContent+'</div></div>';
+ v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px;font-size:13px">BIBLIOTECA</b><span style="color:#444;font-size:10px">'+comicsLista.length+' CÓMICS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtn" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff">✕</button></div></div><input type="file" id="filePerfil" accept="image/*" style="display:none"><input type="file" id="fileVideo" accept="video/*" style="display:none"><div id="grid" style="display:flex;gap:14px;padding:20px;overflow:auto;flex:1;align-items:center">'+(comicsLista.length?comicsHtml+masHtml:(esAdmin?masHtml:vacio))+'</div></div>';
  document.body.appendChild(v);
  document.getElementById("perfilBtn").onclick=clickPerfilComics;
- document.getElementById("fileIn").onchange=function(){ abrirEditorNuevo(); };
  document.getElementById("filePerfil").onchange=subirPerfilComics;
- document.getElementById("fileEdit").onchange=confirmarEditComics;
  document.getElementById("fileVideo").onchange=cambiarVideoFondoComics;
  if(document.getElementById("masComic")) document.getElementById("masComic").onclick=function(){ abrirEditorNuevo(); };
  document.querySelectorAll(".comicBox").forEach(function(box){
    var i=parseInt(box.getAttribute("data-i"));
    var flaco=box.querySelector(".comic-flaco");
    flaco.addEventListener("click", function(){ verComic(i); });
-   flaco.addEventListener("dblclick", function(e){
-     e.preventDefault(); e.stopPropagation();
-     if(!esAdmin){ modal('<h3>SOLO ADMIN</h3><p>Inicia sesión desde tu perfil</p><button class="btn btn-w" style="margin-top:16px" onclick="cerrar()">OK</button>'); return; }
-     modal('<h3>GESTIONAR CÓMIC</h3><img src="'+comicsLista[i].portada+'" style="width:100%;height:130px;object-fit:cover;border-radius:12px;margin:14px 0;border:1px solid #222"><p style="color:#fff;letter-spacing:2px">'+(comicsLista[i].titulo||"")+'</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar(); abrirEditorNuevo('+i+')">✎ EDITAR CÓMIC</button><button class="btn btn-r" style="margin-top:10px" onclick="cerrar(); pedirBorrarComic('+i+')">BORRAR CÓMIC</button><button class="btn btn-b" style="margin-top:10px" onclick="cerrar()">CANCELAR</button>');
+   flaco.addEventListener("contextmenu", function(e){
+     e.preventDefault();
+     if(!esAdmin){ modal('<h3>SOLO ADMIN</h3><button class="btn btn-w" style="margin-top:16px" onclick="cerrar()">OK</button>'); return; }
+     ctxIndex=i;
+     var menu=document.getElementById("menuCtx");
+     menu.style.left=e.clientX+"px"; menu.style.top=e.clientY+"px"; menu.style.display="flex";
    });
  });
 }
-function clickPerfilComics(){
- if(!esAdmin){
-   modal('<h3>ADMIN LOGIN</h3><p>Ingresa la clave</p><input id="pass" type="password" placeholder="••••••••" style="width:100%;padding:14px;background:#000;color:#fff;border:1px solid #222;border-radius:12px;margin-top:14px;text-align:center;outline:none"><button class="btn btn-w" style="margin-top:14px" onclick="var v=document.getElementById(\'pass\').value; if(v===\''+CLAVE+'\'){esAdmin=true; localStorage.setItem(\'admin_sesion\',\'1\'); cerrar(); abrirComics()}else{document.getElementById(\'pass\').style.borderColor=\'#ff2a2a\'}">ENTRAR</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar()">CANCELAR</button>');
- } else {
-   modal('<div style="width:84px;height:84px;border-radius:50%;border:2px solid #222;overflow:hidden;margin:0 auto"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><h3 style="margin-top:12px">MI PERFIL</h3><p>'+comicsLista.length+' cómics guardados</p><button class="btn btn-w" style="margin-top:16px" onclick="cerrar(); abrirEditorNuevo()">+ AÑADIR CÓMICS</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar(); document.getElementById(\'filePerfil\').click()">CAMBIAR MI FOTO</button><div style="height:1px;background:#1a1a1a;margin:14px 0"></div><p style="margin-bottom:8px">FONDO VIDEO</p><button class="btn btn-b" onclick="cerrar(); document.getElementById(\'fileVideo\').click()">CAMBIAR VIDEO FONDO</button><div style="display:flex;align-items:center;gap:10px;margin-top:10px"><span style="color:#555;font-size:11px">OPACIDAD</span><input type="range" id="rangeOp" min="0.05" max="0.6" step="0.05" value="'+opacidadFondo+'" style="flex:1" oninput="document.getElementById(\'videoFondo\').style.opacity=this.value; localStorage.setItem(\'opacidad_fondo\',this.value)"></div><button class="btn btn-b" style="margin-top:16px;color:#ff5555;border-color:#2a1111" onclick="esAdmin=false; localStorage.removeItem(\'admin_sesion\'); cerrar(); abrirComics()">CERRAR SESIÓN</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar()">SALIR</button>');
- }
-}
-function subirPerfilComics(){ var f=document.getElementById("filePerfil").files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ miFoto=e.target.result; localStorage.setItem("mi_foto_perfil", miFoto); cerrar(); abrirComics(); }; r.readAsDataURL(f); }
-function cambiarVideoFondoComics(){ var f=document.getElementById("fileVideo").files[0]; if(!f) return; var url=URL.createObjectURL(f); videoFondoSrc=url; localStorage.setItem("video_fondo", url); abrirComics(); }
-function confirmarEditComics(){ var f=document.getElementById("fileEdit").files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ comicsLista[editIndex].portada=e.target.result; comicsLista[editIndex].flaca=e.target.result; localStorage.setItem("comicsLista", JSON.stringify(comicsLista)); abrirComics(); }; r.readAsDataURL(f); }
-function pedirBorrarComic(i){ modal('<h3>¿BORRAR CÓMIC?</h3><p>No se puede deshacer</p><div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-b" style="flex:1" onclick="cerrar()">NO</button><button class="btn btn-r" style="flex:1" onclick="comicsLista.splice('+i+',1); localStorage.setItem(\'comicsLista\', JSON.stringify(comicsLista)); cerrar(); abrirComics()">SÍ, BORRAR</button></div>'); }
+function clickPerfilComics(){ if(!esAdmin){ modal('<h3>ADMIN LOGIN</h3><p>Ingresa la clave</p><input id="pass" type="password" placeholder="••••••••" style="width:100%;padding:14px;background:#000;color:#fff;border:1px solid #222;border-radius:12px;margin-top:14px;text-align:center"><button class="btn btn-w" style="margin-top:14px" onclick="var v=document.getElementById(\'pass\').value; if(v===\''+CLAVE+'\'){esAdmin=true; localStorage.setItem(\'admin_sesion\',\'1\'); cerrar(); abrirComics()}">ENTRAR</button>'); } else { modal('<div style="width:84px;height:84px;border-radius:50%;border:2px solid #222;overflow:hidden;margin:0 auto"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><h3 style="margin-top:12px">MI PERFIL</h3><p>'+comicsLista.length+' cómics</p><button class="btn btn-w" style="margin-top:16px" onclick="cerrar(); abrirEditorNuevo()">+ AÑADIR CÓMICS</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar(); document.getElementById(\'filePerfil\').click()">CAMBIAR MI FOTO</button><button class="btn btn-b" style="margin-top:16px;color:#ff5555" onclick="esAdmin=false; localStorage.removeItem(\'admin_sesion\'); cerrar(); abrirComics()">SALIR</button>'); } }
+function subirPerfilComics(){ var f=document.getElementById("filePerfil").files[0]; var r=new FileReader(); r.onload=function(e){ miFoto=e.target.result; localStorage.setItem("mi_foto_perfil", miFoto); cerrar(); abrirComics(); }; r.readAsDataURL(f); }
+function cambiarVideoFondoComics(){ var f=document.getElementById("fileVideo").files[0]; var url=URL.createObjectURL(f); videoFondoSrc=url; localStorage.setItem("video_fondo", url); abrirComics(); }
+function pedirBorrarComic(i){ modal('<h3>¿BORRAR?</h3><div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-b" style="flex:1" onclick="cerrar()">NO</button><button class="btn btn-r" style="flex:1" onclick="comicsLista.splice('+i+',1); localStorage.setItem(\'comicsLista\', JSON.stringify(comicsLista)); cerrar(); abrirComics()">SÍ</button></div>'); }
 function verComic(i){
- actual=i; var pagina=0;
+ var pagina=0;
  var old=document.getElementById("visorFoto"); if(old) old.remove();
  var d=document.createElement("div"); d.id="visorFoto"; d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";
  d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+comicsLista[i].paginas[0]+'" style="max-width:82%;max-height:78%;border-radius:16px;border:1px solid #222"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+comicsLista[i].paginas.length+'</div>';
  document.body.appendChild(d);
  function cambiar(dir){
-   var img=document.getElementById("imgG2"); img.style.opacity="0"; img.style.filter="blur(14px)";
-   setTimeout(function(){ pagina+=dir; if(pagina<0) pagina=comicsLista[actual].paginas.length-1; if(pagina>=comicsLista[actual].paginas.length) pagina=0; img.src=comicsLista[actual].paginas[pagina]; document.getElementById("pInfo").textContent=(pagina+1)+" / "+comicsLista[actual].paginas.length; img.onload=function(){ img.style.opacity="1"; img.style.filter="blur(0px)"; }; setTimeout(function(){ img.style.opacity="1"; img.style.filter="blur(0px)"; },20); },200);
+   var img=document.getElementById("imgG2"); img.style.opacity="0";
+   setTimeout(function(){ pagina+=dir; if(pagina<0) pagina=comicsLista[i].paginas.length-1; if(pagina>=comicsLista[i].paginas.length) pagina=0; img.src=comicsLista[i].paginas[pagina]; document.getElementById("pInfo").textContent=(pagina+1)+" / "+comicsLista[i].paginas.length; img.style.opacity="1"; },180);
  }
  document.getElementById("prevB").onclick=function(){ cambiar(-1); }; document.getElementById("nextB").onclick=function(){ cambiar(1); };
 }
-function abrirGaleria(){
- document.getElementById("visorComics")?.remove();
- document.getElementById("editorComics")?.remove();
- var v=document.createElement("div"); v.id="visorComics";
- var fotosHtml=""; for(var i=0;i<lista.length;i++){ fotosHtml+='<div class="fotoBox" data-i="'+i+'" style="position:relative;overflow:hidden;border-radius:14px;border:1px solid #222;background:#0a0a0a"><img src="'+lista[i]+'" style="width:100%;height:210px;object-fit:cover;display:block;transition:0.4s"><div style="position:absolute;bottom:0;left:0;width:100%;height:50%;background:linear-gradient(transparent,rgba(0,0,0,0.6));pointer-events:none"></div></div>'; }
- if(!fotosHtml) fotosHtml='<div style="grid-column:1/-1;text-align:center;margin-top:80px"><p style="color:#333;letter-spacing:4px;font-size:12px">GALERÍA VACÍA</p><p style="color:#555;font-size:11px;margin-top:8px">Doble click para editar cuando seas admin</p></div>';
- var videoTag = videoFondoSrc? '<video id="videoFondo" src="'+videoFondoSrc+'" autoplay muted loop playsinline style="opacity:'+opacidadFondo+'"></video>' : '';
- v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;flex-shrink:0"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px;font-size:13px">GALERÍA</b><span style="color:#444;font-size:10px">'+lista.length+' FOTOS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtn" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" onerror="this.src=\'https://i.imgur.com/8Km9tLL.png\'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff;cursor:pointer">✕</button></div></div><input type="file" id="fileIn" accept="image/*" multiple style="display:none"><input type="file" id="filePerfil" accept="image/*" style="display:none"><input type="file" id="fileEdit" accept="image/*" style="display:none"><input type="file" id="fileVideo" accept="video/*" style="display:none"><div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;padding:20px;overflow:auto;flex:1">'+fotosHtml+'</div></div>';
- document.body.appendChild(v);
- document.getElementById("perfilBtn").onclick=clickPerfil;
- document.getElementById("fileIn").onchange=subirFotos;
- document.getElementById("filePerfil").onchange=subirPerfil;
- document.getElementById("fileEdit").onchange=confirmarEdit;
- document.getElementById("fileVideo").onchange=cambiarVideoFondo;
- document.querySelectorAll(".fotoBox").forEach(function(box){
-   var i=parseInt(box.getAttribute("data-i"));
-   var img=box.querySelector("img");
-   box.addEventListener("click", function(){ verFoto(i); });
-   box.addEventListener("dblclick", function(e){
-     e.preventDefault(); e.stopPropagation();
-     if(!esAdmin){ modal('<h3>SOLO ADMIN</h3><p>Inicia sesión desde tu perfil</p><button class="btn btn-w" style="margin-top:16px" onclick="cerrar()">OK</button>'); return; }
-     editIndex=i;
-     modal('<h3>GESTIONAR FOTO</h3><img src="'+lista[i]+'" style="width:100%;height:130px;object-fit:cover;border-radius:12px;margin:14px 0;border:1px solid #222"><button class="btn btn-w" onclick="cerrar(); document.getElementById(\'fileEdit\').click()">✎ EDITAR FOTO</button><button class="btn btn-r" style="margin-top:10px" onclick="cerrar(); pedirBorrar('+i+')">BORRAR FOTO</button><button class="btn btn-b" style="margin-top:10px" onclick="cerrar()">CANCELAR</button>');
-   });
-   box.addEventListener("mouseenter", function(){ img.style.transform="scale(1.06)"; });
-   box.addEventListener("mouseleave", function(){ img.style.transform="scale(1)"; });
- });
-}
-function clickPerfil(){
- if(!esAdmin){
-   modal('<h3>ADMIN LOGIN</h3><p>Ingresa la clave</p><input id="pass" type="password" placeholder="••••••••" style="width:100%;padding:14px;background:#000;color:#fff;border:1px solid #222;border-radius:12px;margin-top:14px;text-align:center;outline:none"><button class="btn btn-w" style="margin-top:14px" onclick="var v=document.getElementById(\'pass\').value; if(v===\''+CLAVE+'\'){esAdmin=true; localStorage.setItem(\'admin_sesion\',\'1\'); cerrar(); abrirGaleria()}else{document.getElementById(\'pass\').style.borderColor=\'#ff2a2a\'}">ENTRAR</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar()">CANCELAR</button>');
- } else {
-   modal('<div style="width:84px;height:84px;border-radius:50%;border:2px solid #222;overflow:hidden;margin:0 auto"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><h3 style="margin-top:12px">MI PERFIL</h3><p>'+lista.length+' fotos guardadas</p><button class="btn btn-w" style="margin-top:16px" onclick="cerrar(); document.getElementById(\'fileIn\').click()">+ AÑADIR IMÁGENES</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar(); document.getElementById(\'filePerfil\').click()">CAMBIAR MI FOTO</button><div style="height:1px;background:#1a1a1a;margin:14px 0"></div><p style="margin-bottom:8px">FONDO VIDEO</p><button class="btn btn-b" onclick="cerrar(); document.getElementById(\'fileVideo\').click()">CAMBIAR VIDEO FONDO</button><div style="display:flex;align-items:center;gap:10px;margin-top:10px"><span style="color:#555;font-size:11px">OPACIDAD</span><input type="range" id="rangeOp" min="0.05" max="0.6" step="0.05" value="'+opacidadFondo+'" style="flex:1" oninput="document.getElementById(\'videoFondo\').style.opacity=this.value; localStorage.setItem(\'opacidad_fondo\',this.value)"></div><button class="btn btn-b" style="margin-top:16px;color:#ff5555;border-color:#2a1111" onclick="esAdmin=false; localStorage.removeItem(\'admin_sesion\'); cerrar(); abrirGaleria()">CERRAR SESIÓN</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar()">SALIR</button>');
- }
-}
-function subirPerfil(){ var f=document.getElementById("filePerfil").files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ miFoto=e.target.result; localStorage.setItem("mi_foto_perfil", miFoto); cerrar(); abrirGaleria(); }; r.readAsDataURL(f); }
-function subirFotos(){ var files=document.getElementById("fileIn").files; if(!files.length) return; var done=0; for(var k=0;k<files.length;k++){ var r=new FileReader(); r.onload=function(e){ lista.push(e.target.result); done++; if(done===files.length){ localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); } }; r.readAsDataURL(files[k]); } }
-function cambiarVideoFondo(){ var f=document.getElementById("fileVideo").files[0]; if(!f) return; var url=URL.createObjectURL(f); videoFondoSrc=url; localStorage.setItem("video_fondo", url); abrirGaleria(); }
-function confirmarEdit(){ var f=document.getElementById("fileEdit").files[0]; if(!f) return; var r=new FileReader(); r.onload=function(e){ lista[editIndex]=e.target.result; localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); }; r.readAsDataURL(f); }
-function pedirBorrar(i){ modal('<h3>¿BORRAR FOTO?</h3><p>No se puede deshacer</p><div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-b" style="flex:1" onclick="cerrar()">NO</button><button class="btn btn-r" style="flex:1" onclick="lista.splice('+i+',1); localStorage.setItem(\'fotos\', JSON.stringify(lista)); cerrar(); abrirGaleria()">SÍ, BORRAR</button></div>'); }
-function verFoto(i){
- actual=i;
- var old=document.getElementById("visorFoto"); if(old) old.remove();
- var d=document.createElement("div"); d.id="visorFoto"; d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";
- d.innerHTML='<button class="flecha" style="left:20px" onclick="actual--; if(actual<0) actual=lista.length-1; document.getElementById(\'imgG\').src=lista[actual]">‹</button><img id="imgG" src="'+lista[i]+'" style="max-width:82%;max-height:78%;border-radius:16px;border:1px solid #222;box-shadow:0 20px 80px rgba(0,0,0,0.8)"><button class="flecha" style="right:20px" onclick="actual++; if(actual>=lista.length) actual=0; document.getElementById(\'imgG\').src=lista[actual]">›</button><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button>';
- document.body.appendChild(d);
- d.addEventListener("click", function(e){ if(e.target===d) d.remove(); });
-}
+function abrirGaleria(){ document.getElementById("visorComics")?.remove(); document.getElementById("editorComics")?.remove(); var v=document.createElement("div"); v.id="visorComics"; var fotosHtml=""; for(var i=0;i<lista.length;i++){ fotosHtml+='<div class="fotoBox" data-i="'+i+'" style="position:relative;overflow:hidden;border-radius:14px;border:1px solid #222;background:#0a0a0a"><img src="'+lista[i]+'" style="width:100%;height:210px;object-fit:cover;display:block;transition:0.4s"><div style="position:absolute;bottom:0;left:0;width:100%;height:50%;background:linear-gradient(transparent,rgba(0,0,0,0.6));pointer-events:none"></div></div>'; } if(!fotosHtml) fotosHtml='<div style="grid-column:1/-1;text-align:center;margin-top:80px"><p style="color:#333;letter-spacing:4px;font-size:12px">GALERÍA VACÍA</p></div>'; var videoTag = videoFondoSrc? '<video id="videoFondo" src="'+videoFondoSrc+'" autoplay muted loop playsinline style="opacity:'+opacidadFondo+'"></video>' : ''; v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a"><b style="color:#fff;letter-spacing:4px;font-size:13px">GALERÍA</b><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtn" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff">✕</button></div></div><input type="file" id="fileIn" accept="image/*" multiple style="display:none"><input type="file" id="filePerfil" accept="image/*" style="display:none"><input type="file" id="fileEdit" accept="image/*" style="display:none"><input type="file" id="fileVideo" accept="video/*" style="display:none"><div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;padding:20px;overflow:auto;flex:1">'+fotosHtml+'</div></div>'; document.body.appendChild(v); document.getElementById("perfilBtn").onclick=clickPerfil; document.getElementById("fileIn").onchange=subirFotos; document.getElementById("filePerfil").onchange=subirPerfil; document.getElementById("fileEdit").onchange=confirmarEdit; document.getElementById("fileVideo").onchange=cambiarVideoFondo; document.querySelectorAll(".fotoBox").forEach(function(box){ var i=parseInt(box.getAttribute("data-i")); box.onclick=function(){ verFoto(i); }; }); }
+function clickPerfil(){ if(!esAdmin){ modal('<h3>ADMIN LOGIN</h3><input id="pass" type="password" style="width:100%;padding:14px;background:#000;color:#fff;border:1px solid #222;border-radius:12px;margin-top:14px;text-align:center"><button class="btn btn-w" style="margin-top:14px" onclick="if(document.getElementById(\'pass\').value===\''+CLAVE+'\'){esAdmin=true; localStorage.setItem(\'admin_sesion\',\'1\'); cerrar(); abrirGaleria()}">ENTRAR</button>'); } else { modal('<div style="width:84px;height:84px;border-radius:50%;border:2px solid #222;overflow:hidden;margin:0 auto"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><h3 style="margin-top:12px">MI PERFIL</h3><button class="btn btn-w" style="margin-top:16px" onclick="cerrar(); document.getElementById(\'fileIn\').click()">+ AÑADIR</button>'); } }
+function subirPerfil(){ var f=document.getElementById("filePerfil").files[0]; var r=new FileReader(); r.onload=function(e){ miFoto=e.target.result; localStorage.setItem("mi_foto_perfil", miFoto); cerrar(); abrirGaleria(); }; r.readAsDataURL(f); }
+function subirFotos(){ var files=document.getElementById("fileIn").files; var done=0; for(var k=0;k<files.length;k++){ var r=new FileReader(); r.onload=function(e){ lista.push(e.target.result); done++; if(done===files.length){ localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); } }; r.readAsDataURL(files[k]); } }
+function cambiarVideoFondo(){ var f=document.getElementById("fileVideo").files[0]; var url=URL.createObjectURL(f); videoFondoSrc=url; localStorage.setItem("video_fondo", url); abrirGaleria(); }
+function confirmarEdit(){ var f=document.getElementById("fileEdit").files[0]; var r=new FileReader(); r.onload=function(e){ lista[editIndex]=e.target.result; localStorage.setItem("fotos", JSON.stringify(lista)); abrirGaleria(); }; r.readAsDataURL(f); }
+function verFoto(i){ var d=document.createElement("div"); d.id="visorFoto"; d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:99999999;display:flex;align-items:center;justify-content:center"; d.innerHTML='<img src="'+lista[i]+'" style="max-width:82%;max-height:78%;border-radius:16px"><button class="btnX" onclick="this.parentElement.remove()">CERRAR</button>'; document.body.appendChild(d); }
 var cont=document.getElementById('botonera');
-listaBotones.forEach(function(b){
- var wrap=document.createElement('div'); wrap.className='boton-wrap';
- var mini=document.createElement('div'); mini.className='mini-left'; mini.innerHTML='<img src="'+(b.miniImg||b.img)+'" onerror="this.style.display=\'none\'">';
- var btn=document.createElement('div'); btn.className='btn-img'; btn.innerHTML='<img src="'+b.img+'" onerror="this.style.display=\'none\'">';
- if(b.tipo==='COMICS') btn.onclick=abrirComics; else if(b.tipo==='GALERIA') btn.onclick=abrirGaleria;
- else if(b.link && b.link!=='#') btn.onclick=function(){ location.href=b.link; };
- wrap.appendChild(mini); wrap.appendChild(btn); cont.appendChild(wrap);
-});
+listaBotones.forEach(function(b){ var wrap=document.createElement('div'); wrap.className='boton-wrap'; var mini=document.createElement('div'); mini.className='mini-left'; mini.innerHTML='<img src="'+(b.miniImg||b.img)+'">'; var btn=document.createElement('div'); btn.className='btn-img'; btn.innerHTML='<img src="'+b.img+'">'; if(b.tipo==='COMICS') btn.onclick=abrirComics; else if(b.tipo==='GALERIA') btn.onclick=abrirGaleria; wrap.appendChild(mini); wrap.appendChild(btn); cont.appendChild(wrap); });
+document.addEventListener("click", function(){ document.getElementById("menuCtx").style.display="none"; });
+document.getElementById("ctxEditar").onclick=function(){ document.getElementById("menuCtx").style.display="none"; abrirEditorNuevo(ctxIndex); };
+document.getElementById("ctxEliminar").onclick=function(){ document.getElementById("menuCtx").style.display="none"; pedirBorrarComic(ctxIndex); };
 </script>
 </body>
 </html>
