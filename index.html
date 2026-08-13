@@ -328,6 +328,23 @@ window.addEventListener('load',()=>{
 <div id="modalBox" onclick="if(event.target.id==='modalBox') cerrar()"></div>
 <div id="menuCtx"><button id="ctxEditar" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff">EDITAR</button><button id="ctxEliminar" style="background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.25);color:#ff6b6b">ELIMINAR</button></div>
 <script>
+async function comprimirImagen(src, anchoMax = 460){
+ return new Promise(res=>{
+  let img=new Image();
+  img.onload=()=>{
+   let ratio=anchoMax/img.width;
+   let w=anchoMax;
+   let h=img.height*ratio;
+   let canvas=document.createElement("canvas");
+   canvas.width=w; canvas.height=h;
+   let ctx=canvas.getContext("2d");
+   ctx.imageSmoothingQuality="high";
+   ctx.drawImage(img,0,0,w,h);
+   res(canvas.toDataURL("image/webp",0.85));
+  };
+  img.src=src;
+ });
+}
 let db, comicsLista=[], carpetaHandle=null;
 function abrirDB(){return new Promise(r=>{let q=indexedDB.open("comicsDB_v2",2);q.onupgradeneeded=e=>{let d=e.target.result;if(!d.objectStoreNames.contains("comics")) d.createObjectStore("comics",{keyPath:"id",autoIncrement:true});if(!d.objectStoreNames.contains("config")) d.createObjectStore("config",{keyPath:"k"})};q.onsuccess=e=>{db=e.target.result;r()}})}
 async function cargarComics(){if(!db) await abrirDB();return new Promise(r=>{let t=db.transaction("comics","readonly").objectStore("comics").getAll();t.onsuccess=()=>{comicsLista=t.result;r()}})}
