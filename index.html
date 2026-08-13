@@ -344,7 +344,7 @@ async function comprimirImagen(src, anchoMax = 460){
   };
   img.src=src;
  });
-}
+} 
 let db, comicsLista=[], carpetaHandle=null;
 function abrirDB(){return new Promise(r=>{let q=indexedDB.open("comicsDB_v2",2);q.onupgradeneeded=e=>{let d=e.target.result;if(!d.objectStoreNames.contains("comics")) d.createObjectStore("comics",{keyPath:"id",autoIncrement:true});if(!d.objectStoreNames.contains("config")) d.createObjectStore("config",{keyPath:"k"})};q.onsuccess=e=>{db=e.target.result;r()}})}
 async function cargarComics(){if(!db) await abrirDB();return new Promise(r=>{let t=db.transaction("comics","readonly").objectStore("comics").getAll();t.onsuccess=()=>{comicsLista=t.result;r()}})}
