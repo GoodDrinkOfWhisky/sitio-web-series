@@ -296,14 +296,18 @@ window.addEventListener('load',()=>{
  overflow:hidden;
  border:1.5px solid #222;
  position:relative;
- transition:width 0.35s ease;
+ transition:width 0.18s cubic-bezier(0.25,1,0.5,1);
+ will-change:width;
+ transform:translateZ(0);
 }
 .comicBox:hover{width:460px;border-color:#fff}
 .comic-flaco{width:460px;height:100%;position:relative}
-.portada-flaca{position:absolute;left:0;top:0;width:160px;height:100%;object-fit:cover;transition:opacity 0.18s}
-.portada-ancha{position:absolute;left:0;top:0;width:460px;height:100%;object-fit:cover;opacity:0;transition:opacity 0.18s}
+.portada-flaca{position:absolute;left:0;top:0;width:160px;height:100%;object-fit:cover;transition:opacity 0.1s}
+.portada-ancha{position:absolute;left:0;top:0;width:460px;height:100%;object-fit:cover;opacity:0;transition:opacity 0.1s}
 .comicBox:hover .portada-flaca{opacity:0}
 .comicBox:hover .portada-ancha{opacity:1}
+
+#grid{will-change:transform;transform:translateZ(0)}
 
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #editorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);z-index:99999999;display:flex;overflow:hidden}
