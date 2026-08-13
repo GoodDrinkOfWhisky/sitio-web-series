@@ -426,22 +426,25 @@ let inpV=document.createElement("input");inpV.type="file";inpV.id="inputVideoFon
 inpV.onchange=function(){let f=this.files[0];if(!f) return;let r=new FileReader();r.onload=async e=>{await guardarConfig("videoFondo",e.target.result);modal('<h3>VIDEO GUARDADO</h3><p>Se verá para todos</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirComics()">OK</button>')};r.readAsDataURL(f);};
 document.body.appendChild(inpV);
 </script>
-<!-- DESATRABE EXTERNO - NO TOCA TU CODIGO NI TU HOVER -->
-<script id="fix-trabado">
+<script id="fix-real-fluido">
 (function(){
-  const grid = document.getElementById('grid');
-  if(!grid) return;
-  // 1. Le dice a tu PC que no renderice lo que no se ve
-  const st = document.createElement('style');
-  st.textContent = `
-    .comicBox{ content-visibility: auto; contain-intrinsic-size: 0 500px; }
-    #grid{ will-change: scroll-position; }
-  `;
-  document.head.appendChild(st);
-  // 2. Fuerza decodificación en segundo plano
-  const imgs = grid.querySelectorAll('img');
-  imgs.forEach(img=>{
-    if(img.decode) img.decode().catch(()=>{});
+  const comics = document.querySelectorAll('.comic-flaco');
+  comics.forEach(c=>{
+    // Limpia lo anterior
+    c.style.willChange = 'auto';
+    // Solo activa GPU cuando pones tu bello click encima
+    c.addEventListener('mouseenter', ()=>{
+      c.style.willChange = 'width, transform';
+      c.querySelectorAll('.portada-flaca, .portada-ancha').forEach(img=>{
+        img.style.willChange = 'opacity';
+      });
+    }, {passive:true});
+    c.addEventListener('mouseleave', ()=>{
+      c.style.willChange = 'auto';
+      c.querySelectorAll('.portada-flaca, .portada-ancha').forEach(img=>{
+        img.style.willChange = 'auto';
+      });
+    }, {passive:true});
   });
 })();
 </script>
