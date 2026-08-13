@@ -426,17 +426,23 @@ let inpV=document.createElement("input");inpV.type="file";inpV.id="inputVideoFon
 inpV.onchange=function(){let f=this.files[0];if(!f) return;let r=new FileReader();r.onload=async e=>{await guardarConfig("videoFondo",e.target.result);modal('<h3>VIDEO GUARDADO</h3><p>Se verá para todos</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirComics()">OK</button>')};r.readAsDataURL(f);};
 document.body.appendChild(inpV);
 </script>
-<!-- FUERZA GPU TOTAL - EXTERNA - NO TOCA TU CODIGO -->
-<script id="gpu-total">
+<!-- DESATRABE EXTERNO - NO TOCA TU CODIGO NI TU HOVER -->
+<script id="fix-trabado">
 (function(){
-  const els = document.querySelectorAll('.comic-flaco, .portada-flaca, .portada-ancha');
-  els.forEach(el=>{
-    el.style.setProperty('will-change','transform, opacity','important');
-    el.style.setProperty('transform','translate3d(0,0,0)','important');
-    el.style.setProperty('backface-visibility','hidden','important');
+  const grid = document.getElementById('grid');
+  if(!grid) return;
+  // 1. Le dice a tu PC que no renderice lo que no se ve
+  const st = document.createElement('style');
+  st.textContent = `
+    .comicBox{ content-visibility: auto; contain-intrinsic-size: 0 500px; }
+    #grid{ will-change: scroll-position; }
+  `;
+  document.head.appendChild(st);
+  // 2. Fuerza decodificación en segundo plano
+  const imgs = grid.querySelectorAll('img');
+  imgs.forEach(img=>{
+    if(img.decode) img.decode().catch(()=>{});
   });
-  // Fuerza a tu PC a mantenerlos en VRAM
-  requestAnimationFrame(()=>{ els.forEach(e=>e.getBoundingClientRect()); });
 })();
 </script>
 </body>
