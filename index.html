@@ -426,28 +426,11 @@ let inpV=document.createElement("input");inpV.type="file";inpV.id="inputVideoFon
 inpV.onchange=function(){let f=this.files[0];if(!f) return;let r=new FileReader();r.onload=async e=>{await guardarConfig("videoFondo",e.target.result);modal('<h3>VIDEO GUARDADO</h3><p>Se verá para todos</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirComics()">OK</button>')};r.readAsDataURL(f);};
 document.body.appendChild(inpV);
 </script>
-<script id="fix-real-fluido">
-(function(){
-  const comics = document.querySelectorAll('.comic-flaco');
-  comics.forEach(c=>{
-    // Limpia lo anterior
-    c.style.willChange = 'auto';
-    // Solo activa GPU cuando pones tu bello click encima
-    c.addEventListener('mouseenter', ()=>{
-      c.style.willChange = 'width, transform';
-      c.querySelectorAll('.portada-flaca, .portada-ancha').forEach(img=>{
-        img.style.willChange = 'opacity';
-      });
-    }, {passive:true});
-    c.addEventListener('mouseleave', ()=>{
-      c.style.willChange = 'auto';
-      c.querySelectorAll('.portada-flaca, .portada-ancha').forEach(img=>{
-        img.style.willChange = 'auto';
-      });
-    }, {passive:true});
-  });
-})();
-</script>
+<style id="aislar-reflow">
+  .comicBox{ contain: layout style; }
+  .comic-flaco{ contain: layout paint; }
+  #grid{ gap: 14px !important; }
+</style>
 </body>
 </html>
 <head>
