@@ -287,13 +287,14 @@ window.addEventListener('load',()=>{
 .btn{width:100%;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:1px;font-size:13px}
 .btn-w{background:#fff;color:#000}.btn-b{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
 
-/* === TU CODIGO PRECIADO FIXEADO PARA FLUIDEZ === */
-.comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.35s cubic-bezier(0.22,1,0.36,1);contain:layout style;will-change:width;transform:translateZ(0)}
-.comic-flaco:hover{width:460px;border-color:#fff}
-.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.18s ease-out;pointer-events:none;transform:translateZ(0)}
-.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 0.18s ease-out;transform:translateZ(0)}
-.comic-flaco:hover .portada-flaca{opacity:0}
-.comic-flaco:hover .portada-ancha{opacity:1}
+/* === VERSIÓN HERMOSA Y FLUIDA - IMÁGENES NÍTIDAS === */
+.comicBox{width:160px;height:calc(100vh - 88px);flex-shrink:0;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;position:relative;transition:width 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.2s;contain:layout style;will-change:width}
+.comicBox:hover{width:460px;border-color:#fff}
+.comic-flaco{width:460px;height:100%;position:relative}
+.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.18s ease-out;pointer-events:none}
+.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 0.18s ease-out}
+.comicBox:hover.portada-flaca{opacity:0}
+.comicBox:hover.portada-ancha{opacity:1}
 
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #editorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);z-index:99999999;display:flex;overflow:hidden}
