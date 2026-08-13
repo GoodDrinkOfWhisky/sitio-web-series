@@ -426,11 +426,17 @@ let inpV=document.createElement("input");inpV.type="file";inpV.id="inputVideoFon
 inpV.onchange=function(){let f=this.files[0];if(!f) return;let r=new FileReader();r.onload=async e=>{await guardarConfig("videoFondo",e.target.result);modal('<h3>VIDEO GUARDADO</h3><p>Se verá para todos</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirComics()">OK</button>')};r.readAsDataURL(f);};
 document.body.appendChild(inpV);
 </script>
-<script id="gpu-externa-js">
-(function(){ 
-  document.body.style.transform='translateZ(0)';
-  void document.body.offsetHeight;
-  document.body.style.transform='';
+<!-- FUERZA GPU TOTAL - EXTERNA - NO TOCA TU CODIGO -->
+<script id="gpu-total">
+(function(){
+  const els = document.querySelectorAll('.comic-flaco, .portada-flaca, .portada-ancha');
+  els.forEach(el=>{
+    el.style.setProperty('will-change','transform, opacity','important');
+    el.style.setProperty('transform','translate3d(0,0,0)','important');
+    el.style.setProperty('backface-visibility','hidden','important');
+  });
+  // Fuerza a tu PC a mantenerlos en VRAM
+  requestAnimationFrame(()=>{ els.forEach(e=>e.getBoundingClientRect()); });
 })();
 </script>
 </body>
