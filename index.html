@@ -385,14 +385,12 @@ async function abrirComics(){
  if(document.getElementById("masComic")) document.getElementById("masComic").onclick=()=>abrirEditorNuevo();
  document.querySelectorAll(".comicBox").forEach(box=>{let id=parseInt(box.getAttribute("data-id"));let flaco=box.querySelector(".comic-flaco");flaco.onclick=()=>verComic(id);flaco.oncontextmenu=e=>{e.preventDefault();if(!esAdmin) return;ctxId=id;let m=document.getElementById("menuCtx");m.style.left=e.clientX+"px";m.style.top=e.clientY+"px";m.style.display="flex";}});
 
-// MANDA TODO A LA RAM ANTES DEL HOVER
-comicsLista.forEach(async c => {
-  try {
-    const b1 = await (await fetch(c.flaca)).blob();
-    await createImageBitmap(b1);
-    const b2 = await (await fetch(c.portada)).blob();
-    await createImageBitmap(b2);
-  } catch(e){}
+// PRECARGA A TU RAM - VERSIÓN SEGURA PARA TU DB
+comicsLista.forEach(c => {
+  let i1 = new Image(); i1.decoding = "async"; i1.src = c.flaca;
+  let i2 = new Image(); i2.decoding = "async"; i2.src = c.portada;
+  if(i1.decode) i1.decode().catch(()=>{});
+  if(i2.decode) i2.decode().catch(()=>{});
 });
 }
 async function conectarCarpeta(){
