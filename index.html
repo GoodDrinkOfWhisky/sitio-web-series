@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>www.GoodDrinkOfSeries.com</title>
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
 <style>
 #mac-open-btn{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);z-index:99997; width:420px; max-width:88vw; height:62px;background:linear-gradient(110deg, rgba(10,10,10,0.75), rgba(40,40,40,0.75), rgba(10,10,10,0.75));background-size:300% 300%;backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.18);border-radius:16px;color:#8a8a8a;font-family:'Cinzel', serif;font-size:18px; letter-spacing:5px; text-transform:uppercase;cursor:pointer; display:flex; align-items:center; justify-content:center; gap:14px;animation: shineMove 5s linear infinite, borderPulse 3.5s ease-in-out infinite;box-shadow: inset 0 0 20px rgba(255,255,255,0.04);transition:.35s}
@@ -16,28 +14,32 @@
 #mac-title{color:#777;font-size:11px;letter-spacing:4px;font-family:'Cinzel', serif}
 #xbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px;background:radial-gradient(circle at center,#181818,#0c0c0c)}
 .xbox-tile{height:110px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:linear-gradient(135deg, rgba(30,30,30,0.9), rgba(15,15,15,0.9));border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(4px);color:#aaa; font-family:'Cinzel', serif; font-size:14px; letter-spacing:2px;transition:.25s; position:relative; overflow:hidden}
-.xbox-tile:hover{transform:scale(1.04); border-color:rgba(255,255,255,0.85); color:white; box-shadow:0 0 20px rgba(255,255,255,0.4)}
+.xbox-tile::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(120deg, transparent, rgba(255,255,255,0.07), transparent);transform:rotate(25deg) translateX(-100%);transition:.6s}
+.xbox-tile:hover::before{transform:rotate(25deg) translateX(100%)}
+.xbox-tile:hover{transform:scale(1.04); border-color:rgba(255,255,255,0.85); color:white; box-shadow:0 0 20px rgba(255,255,255,0.4); text-shadow:0 0 10px white}
+.xbox-tile.logo{font-size:28px;margin-bottom:6px; font-family:'UnifrakturCook', cursive; color:#ccc}
 #mac-foot{display:flex;justify-content:space-between;padding:12px 14px;background:#161616;border-top:1px solid rgba(255,255,255,0.06)}
-.mac-btn{background:#222;color:#aaa;border:1px solid #333;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Cinzel',serif;letter-spacing:2px}
+.mac-btn{background:#222;color:#aaa;border:1px solid #333;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Cinzel',serif;letter-spacing:2px;transition:.2s}
+.mac-btn:hover{color:white;border-color:white;box-shadow:0 0 15px rgba(255,255,255,0.3)}
+.mac-btn.sec{background:#111}
 #mac-edit-panel{display:none;padding:12px;background:#111;border-top:1px solid #222}
 #mac-edit-panel input{width:100%;margin:6px 0;padding:9px;border-radius:7px;border:1px solid #333;background:#1a1a1a;color:white;font-size:12px;box-sizing:border-box}
 
-/* BOTONERA DIVIDIDA */
+/* === BOTONERA DIVIDIDA PARA UBICAR FACIL === */
 #botonera{position:fixed;left:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:18px;z-index:9999;width:252px}
-.grupo-botonera{border:1.5px dashed rgba(255,255,255,0.18);border-radius:16px;padding:12px;background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:12px;position:relative}
-.grupo-botonera::before{content:attr(data-label);position:absolute;top:-9px;left:12px;background:#000;color:#666;font-size:7px;letter-spacing:3px;padding:3px 10px;border-radius:20px;border:1px solid #222}
+.grupo-botonera{border:1.5px dashed rgba(255,255,255,0.18);border-radius:16px;padding:12px;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:12px;position:relative}
+.grupo-botonera::before{content:attr(data-label);position:absolute;top:-9px;left:12px;background:#000;color:#888;font-size:7px;letter-spacing:3px;padding:3px 10px;border-radius:20px;border:1px solid #222}
 .boton-wrap{display:flex;align-items:center;filter:drop-shadow(5px 5px 0 #000);transition:transform 0.2s}
 .boton-wrap:hover{transform:translateX(6px) translateZ(0)}
 .mini-left{width:60px;height:60px;border:2.5px solid #000;border-right:0;border-radius:12px 0 0 12px;background:#1a1a1a;overflow:hidden;cursor:pointer}
 .mini-left img{width:100%;height:100%;object-fit:cover}
-.btn-img{width:170px;height:60px;border:2.5px solid #000;border-radius:0 12px 12px 0;background:#0f0f0f;overflow:hidden;cursor:pointer}
+.btn-img{width:170px;height:60px;border:2.5px solid #000;border-radius:0 12px 12px 0;background:#0f0f0f;overflow:hidden;cursor:pointer;position:relative}
 .btn-img img{width:100%;height:100%;object-fit:cover}
 .fila-cuadrados{display:flex;gap:12px}
-.btn-pixel-square{width:86px;height:86px;background:#0f0f0f;border:2.5px solid #000;border-radius:10px;box-shadow:4px 4px 0 #000, inset 0 0 0 1.5px #222;display:flex;align-items:center;justify-content:center;cursor:pointer;image-rendering:pixelated}
+.btn-pixel-square{width:86px;height:86px;background:#0f0f0f;border:2.5px solid #000;border-radius:10px;box-shadow:4px 4px 0 #000, inset 0 0 0 1.5px #222;display:flex;align-items:center;justify-content:center;cursor:pointer;image-rendering:pixelated;transition:transform 0.08s steps(2)}
 .btn-pixel-square:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 #000, inset 0 0 0 1.5px #fff;background:#1a1a1a}
 .icon-silhouette{width:42px;height:42px;fill:#fff;shape-rendering:crispEdges}
 
-/* BIBLIOTECA ORIGINAL - NO TOCADA */
 #grid::-webkit-scrollbar,.galeria-paginas::-webkit-scrollbar{width:3px;height:3px}
 #grid::-webkit-scrollbar-thumb,.galeria-paginas::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:10px}
 #visorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:#050505;z-index:9999999;display:flex;flex-direction:column;overflow:hidden}
@@ -78,41 +80,60 @@
 .crop-wrap img{position:absolute;left:0;top:0;user-select:none;pointer-events:none;will-change:transform}
 .crop-circle{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,0.6);pointer-events:none;border:1.5px solid rgba(255,255,255,0.4)}
 .comic-flaco,.portada-flaca,.portada-ancha{transform:translateZ(0)}
-#splash{position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;background:#000!important;z-index:9999999!important;display:flex!important;align-items:center!important;justify-content:center!important;transition:opacity.8s ease!important}
-#splash img{width:1200px!important;height:auto!important}#splash.oculto{opacity:0!important;pointer-events:none!important}
-#pj-wrap{position:fixed;left:50%;bottom:2%;transform:translateX(-50%);z-index:10000;display:flex;align-items:flex-end;gap:14px}
-#pj-video-idle,#pj-video-talk{width:110px;height:110px;object-fit:cover;cursor:pointer;border-radius:12px}
-#pj-globo{background:white;color:black;padding:12px 18px;border-radius:18px;border:2px solid black;font-family:monospace;max-width:260px;display:none}
-.video-fondo{--ancho:100%;--alto:100%;--pos-x:0;--pos-y:0;position:fixed!important;width:var(--ancho)!important;height:var(--alto)!important;left:var(--pos-x)!important;top:var(--pos-y)!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important}
-.video-fondo video{width:100%!important;height:100%!important;object-fit:cover!important}
-#music-box{position:fixed;right:10px;top:10px;z-index:10001;display:flex;gap:8px;align-items:center}
-#music-box img{width:38px;height:38px;cursor:pointer}
-#feed-wrap{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:300px;height:610px;background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);border-radius:18px;padding:10px 10px 0 10px;overflow-y:scroll;scroll-snap-type:y mandatory;z-index:5000;scrollbar-width:none}
-#feed-wrap::-webkit-scrollbar{display:none}.feed-item{width:100%;height:290px;scroll-snap-align:start;margin-bottom:10px;border-radius:14px;overflow:hidden}.feed-item img{width:100%;height:100%;object-fit:cover}
-.brasa-img{position:fixed;top:37%;left:50%;transform:translate(-50%,-50%);width:450px;height:auto;z-index:9999;mix-blend-mode:screen;opacity:0.6;filter:brightness(1) contrast(1.2);cursor:pointer}
 </style>
 
 <div id="mac-open-btn" onclick="abrirMac()"><span class="goth">†</span> REDES <span class="goth">†</span></div>
 <div id="mac-wrap"><div id="mac-win"><div id="mac-bar"><div id="mac-dots"><div class="dot r" onclick="cerrarMac()"></div><div class="dot y" onclick="cerrarMac()"></div><div class="dot g"></div></div><div id="mac-title">RELIQUARY</div><div style="width:40px"></div></div><div id="xbox-grid"><div class="xbox-tile" onclick="openLink('tiktok')"><div class="logo">t</div>TikTok</div><div class="xbox-tile" onclick="openLink('discord')"><div class="logo">d</div>Discord</div><div class="xbox-tile" onclick="openLink('youtube')"><div class="logo">y</div>YouTube</div><div class="xbox-tile" onclick="openLink('insta')"><div class="logo">i</div>Instagram</div></div><div id="mac-edit-panel"><input id="inp-tiktok" placeholder="Link TikTok"><input id="inp-discord" placeholder="Link Discord"><input id="inp-youtube" placeholder="Link YouTube"><input id="inp-insta" placeholder="Link Instagram"></div><div id="mac-foot"><button class="mac-btn sec" onclick="cerrarMac()">Cerrar</button><button class="mac-btn" id="mac-edit-btn" onclick="toggleEdit()">EDITAR</button></div></div></div>
+
 <div id="splash"><img src="GOODDRINKICON.png"></div>
+<style>#splash{position:fixed!important;top:0!important; left:0!important;width:100vw!important;height:100vh!important;background:#000!important;z-index:9999999!important;display:flex!important;align-items:center!important;justify-content:center!important;transition:opacity.8s ease!important}#splash img{width:1200px!important; height:auto!important}#splash.oculto{opacity:0!important; pointer-events:none!important}</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splash').classList.add('oculto');setTimeout(()=>document.getElementById('splash').remove(),800)},1200)})</script>
+
+<style>#pj-wrap{position:fixed;left:50%; bottom:2%;transform:translateX(-50%);z-index:10000;display:flex; align-items:flex-end; gap:14px}#pj-video-idle, #pj-video-talk{width:110px; height:110px;object-fit:cover;cursor:pointer;border-radius:12px}#pj-globo{background:white; color:black;padding:12px 18px; border-radius:18px;border:2px solid black;font-family:monospace;max-width:260px;display:none}</style>
 <div id="pj-wrap"><div id="pj-globo"></div><video id="pj-video-idle" autoplay loop muted playsinline></video><video id="pj-video-talk" loop muted playsinline style="display:none"></video></div>
+<script>
+(function(){
+  const PASS2 = "admin123";const VIDEO_QUIETA = "RENYA.mp4";const VIDEO_HABLANDO = "RENYATALKS.mp4";
+  let lista = JSON.parse(localStorage.getItem("frases") || '["Hola!, mucho gusto estoy aqui para brindarte consejos basicos","Mira la galeria","Esta diseñada para los fanarts","tambien puedes apoyar el contenido al visitar las demas redes sociales, los links se encuentran abajo","este sitio se encuentra en una fase muy temprana asi que no hay mucho que hacer por ahora lo siento..."]');
+  let pos=0, busy=false;const elIdle = document.getElementById("pj-video-idle");const elTalk = document.getElementById("pj-video-talk");const elGlobo = document.getElementById("pj-globo");
+  elIdle.src = VIDEO_QUIETA;elTalk.src = VIDEO_HABLANDO;elIdle.load(); elTalk.load();elIdle.play().catch(()=>{});
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function beepOriginal(){const o = audioCtx.createOscillator();const g = audioCtx.createGain();o.type='square';o.frequency.value = 185 + Math.random()*12;g.gain.setValueAtTime(0.18, audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.13);o.connect(g); g.connect(audioCtx.destination);o.start(); o.stop(audioCtx.currentTime+0.13);}
+  function ajustarFuente(t){let s=18; if(t.length>70)s=15; if(t.length>130)s=13; if(t.length>200)s=11.5;elGlobo.style.fontSize=s+"px";}
+  function escribir(texto){if(busy) return;busy=true;if(audioCtx.state==='suspended') audioCtx.resume();elIdle.style.display="none"; elIdle.pause();elTalk.style.display="block"; elTalk.currentTime=0; elTalk.play().catch(()=>{});elGlobo.style.display="block"; elGlobo.textContent=""; ajustarFuente(texto);let i=0;let inter=setInterval(()=>{elGlobo.textContent+=texto[i]||"";if(texto[i] && texto[i]!=" " && i%2==0) beepOriginal();i++;if(i>=texto.length){clearInterval(inter);elTalk.pause(); elTalk.style.display="none";elIdle.style.display="block"; elIdle.play().catch(()=>{});setTimeout(()=>{ elGlobo.style.display="none"; busy=false; },2500);}},28);}
+  function siguienteFrase(){if(busy ||!lista.length) return;escribir(lista[pos]);pos=(pos+1)%lista.length;}
+  elIdle.addEventListener("click", siguienteFrase);elTalk.addEventListener("click", siguienteFrase);
+  let t=null;function startHold(){ t=setTimeout(openAdmin,1200); }function stopHold(){ clearTimeout(t); }
+  elIdle.addEventListener("mousedown",startHold);elIdle.addEventListener("mouseup",stopHold);elIdle.addEventListener("mouseleave",stopHold);elIdle.addEventListener("touchstart",startHold,{passive:true});elIdle.addEventListener("touchend",stopHold);
+  function openAdmin(){if(prompt("Pass:")!==PASS2) return;let txt=prompt("Actuales:\n"+lista.join("\n")+"\n\nNuevo texto, vacio borra ultimo:");if(txt===null) return; txt=txt.trim();if(txt==="") lista.pop(); else lista.push(txt);localStorage.setItem("frases",JSON.stringify(lista));}
+})();
+</script>
+
+<div id="botonera"></div>
+
+<script>const MAC_PASS="admin123";const LINK_KEY="xbox_links_v1";let links = JSON.parse(localStorage.getItem(LINK_KEY) || '{"tiktok":"","discord":"","youtube":"","insta":""}');let macEditable=false;function abrirMac(){ document.getElementById("mac-wrap").style.display="block"; }function cerrarMac(){ document.getElementById("mac-wrap").style.display="none"; }function openLink(t){ if(macEditable) return; const u=links[t]; if(!u) return alert("Sin link para "+t); window.open(u,"_blank"); }function toggleEdit(){const panel=document.getElementById("mac-edit-panel"), btn=document.getElementById("mac-edit-btn");if(!macEditable){if(prompt("Pass:")!==MAC_PASS) return;macEditable=true; panel.style.display="block";document.getElementById("inp-tiktok").value=links.tiktok;document.getElementById("inp-discord").value=links.discord;document.getElementById("inp-youtube").value=links.youtube;document.getElementById("inp-insta").value=links.insta;btn.textContent="GUARDAR"; btn.style.color="white"; btn.style.borderColor="white";}else{links.tiktok=document.getElementById("inp-tiktok").value.trim();links.discord=document.getElementById("inp-discord").value.trim();links.youtube=document.getElementById("inp-youtube").value.trim();links.insta=document.getElementById("inp-insta").value.trim();localStorage.setItem(LINK_KEY, JSON.stringify(links));macEditable=false; panel.style.display="none"; btn.textContent="EDITAR"; btn.style.color=""; btn.style.borderColor=""; alert("Guardado!");}}(function(){const bar=document.getElementById("mac-bar"), wrap=document.getElementById("mac-wrap");let down=false,sx,sy,il,it;bar.addEventListener("mousedown",e=>{down=true;const r=wrap.getBoundingClientRect();il=r.left;it=r.top;sx=e.clientX;sy=e.clientY;});window.addEventListener("mousemove",e=>{if(!down)return;wrap.style.left=(il+e.clientX-sx+wrap.offsetWidth/2)+"px";wrap.style.top=(it+e.clientY-sy+wrap.offsetHeight/2)+"px";});window.addEventListener("mouseup",()=>down=false);})();</script>
+
+<head><title>www.GoodDrinkOfSeries.com</title></head>
 <div class="video-fondo"><video autoplay loop muted playsinline><source src="0001-0027.mp4" type="video/mp4"></video></div>
+<style>.video-fondo{--ancho: 100%; --alto: 100%; --pos-x: 0; --pos-y: 0;position: fixed!important;width: var(--ancho)!important;height: var(--alto)!important;left: var(--pos-x)!important;top: var(--pos-y)!important;z-index: 1!important;pointer-events: none!important;overflow: hidden!important}.video-fondo video{width: 100%!important;height: 100%!important;object-fit: cover!important;pointer-events: none!important}</style>
 <video autoplay loop muted playsinline style="position:fixed; top:18%; left:50%; transform:translate(-50%,-50%); width:650px; pointer-events:none; z-index:9999; mix-blend-mode:screen; filter: brightness(1.0) contrast(2.8);"><source src="celina.mp4" type="video/mp4"></video>
-<div id="music-box"><img id="btn-mute" src="https://cdn-icons-png.flaticon.com/512/138/138817.png"><img id="btn-next" src="https://cdn-icons-png.flaticon.com/512/138/138932.png"></div><audio id="player" loop></audio>
+<style>#music-box{position:fixed; right:10px; top:10px; z-index:10001;display:flex; gap:8px; align-items:center}#music-box img{width:38px; height:38px; cursor:pointer;filter: drop-shadow(0 0 5px #fff);transition: transform 0.1s}#music-box img:active{ transform:scale(0.9); }</style>
+<div id="music-box"><img id="btn-mute" src="https://cdn-icons-png.flaticon.com/512/138/138817.png" title="mute"><img id="btn-next" src="https://cdn-icons-png.flaticon.com/512/138/138932.png" title="next"></div><audio id="player" loop></audio>
+<script>(function(){const SONGS = ["BOSSA.mp3","LANDSCAPE.mp3","EmbersCALL.mp3"];const IMG_SOUND_ON = "https://cdn-icons-png.flaticon.com/512/138/138817.png";const IMG_SOUND_OFF = "https://cdn-icons-png.flaticon.com/512/64/64595.png";const IMG_NEXT = "https://cdn-icons-png.flaticon.com/512/138/138932.png";const player = document.getElementById("player");const btnMute = document.getElementById("btn-mute");const btnNext = document.getElementById("btn-next");let idx = 0;let clicks = 0;const MAX_CLICKS = 5;player.src = SONGS[0];player.volume = 0.6;player.loop = true;document.addEventListener("click", function init(){player.play().catch(()=>{});document.removeEventListener("click", init);});btnMute.src = IMG_SOUND_ON;btnNext.src = IMG_NEXT;btnMute.addEventListener("click", function(){player.muted =!player.muted;btnMute.src = player.muted? IMG_SOUND_OFF : IMG_SOUND_ON;});btnNext.addEventListener("click", function(){if(clicks >= MAX_CLICKS) return;clicks++;idx = (idx + 1) % SONGS.length;player.src = SONGS[idx];player.play().catch(()=>{});if(clicks >= MAX_CLICKS){btnNext.style.opacity = "0.3";btnNext.style.pointerEvents = "none";}});})();</script>
+
+<style>#feed-wrap{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:300px;height:610px;background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:18px;padding:10px 10px 0 10px;overflow-y:scroll;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-padding-top:10px;z-index:5000;-ms-overflow-style:none;scrollbar-width:none}#feed-wrap::-webkit-scrollbar{ display:none; }.feed-item{width:100%;height:290px;scroll-snap-align:start;margin-bottom:10px;border-radius:14px;overflow:hidden;flex-shrink:0}.feed-item img{width:100%;height:100%;object-fit:cover;display:block}</style>
 <div id="feed-wrap"></div>
-<div style="position:fixed;top:15%;left:48%;width:159px;height:198px;background:black;transform:translate(-50%,-50%);pointer-events:none;z-index:9998"></div>
-<div style="position:fixed;top:25%;left:49%;width:750px;height:70px;background:black;transform:translate(-50%,-50%);pointer-events:none;z-index:9998"></div>
+<script>(function(){const PASS_F = "admin123";const MAX_IMG = 6;let imagenes = JSON.parse(localStorage.getItem("feed_imgs") || '["https://picsum.photos/300/300?1","https://picsum.photos/300/300?2","https://picsum.photos/300/300?3","https://picsum.photos/300/300?4"]');const cont = document.getElementById("feed-wrap");function render(){cont.innerHTML = "";imagenes.forEach((src)=>{const div = document.createElement("div");div.className = "feed-item";div.innerHTML = `<img src="${src}" loading="lazy">`;cont.appendChild(div);});}render();cont.addEventListener("dblclick", openAdmin);function openAdmin(){if(prompt("Pass:")!== PASS_F) return;let op = prompt("1=agregar 2=borrar ultima 3=borrar todas | Total:"+imagenes.length+"/"+MAX_IMG);if(op==="1"){if(imagenes.length>=MAX_IMG){ alert("Max "+MAX_IMG); return; }let url = prompt("URL o archivo:");if(!url) return;imagenes.push(url.trim());localStorage.setItem("feed_imgs", JSON.stringify(imagenes));render();}if(op==="2"){imagenes.pop();localStorage.setItem("feed_imgs", JSON.stringify(imagenes));render();}if(op==="3"){imagenes=[];localStorage.setItem("feed_imgs", JSON.stringify(imagenes));render();}}})();</script>
+
+<div style="position:fixed;top:15%;left:48%;width:159px;height:198px;background:black;transform:translate(-50%, -50%);pointer-events:none;z-index:9998"></div>
+<div style="position:fixed;top:25%;left:49%;width:750px;height:70px;background:black;transform:translate(-50%, -50%);pointer-events:none;z-index:9998"></div>
+<style>.brasa-img {position: fixed;top: 37%;left: 50%;transform: translate(-50%, -50%);width: 450px;height: auto;z-index: 9999;mix-blend-mode: screen;opacity: 0.6;filter: brightness(1) contrast(1.2);transition: all 0.4s ease;pointer-events: auto!important;cursor: pointer}.brasa-img:hover {opacity: 1!important;filter: brightness(1.8) contrast(1.5) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 15px #ff6a00) drop-shadow(0 0 30px #ff3300)!important;animation: brasaImg 0.15s infinite alternate}@keyframes brasaImg {0% { filter: brightness(1.6) contrast(1.4) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 10px #ff6a00); }100% { filter: brightness(2) contrast(1.6) sepia(1) hue-rotate(-10deg) saturate(4) drop-shadow(0 0 25px #ff3300) drop-shadow(0 0 40px #ff6a00); }}</style>
 <img src="tituloOFICIAL13.png" class="brasa-img">
+
 <div id="modalBox" onclick="if(event.target.id==='modalBox') cerrar()"></div>
 <div id="menuCtx"><button id="ctxEditar" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff">EDITAR</button><button id="ctxEliminar" style="background:rgba(255,60,60,0.15);border:1px solid rgba(255,60,60,0.25);color:#ff6b6b">ELIMINAR</button></div>
 
 <script>
-const MAC_PASS="admin123";const LINK_KEY="xbox_links_v1";let links = JSON.parse(localStorage.getItem(LINK_KEY) || '{"tiktok":"","discord":"","youtube":"","insta":""}');let macEditable=false;
-function abrirMac(){document.getElementById("mac-wrap").style.display="block"}function cerrarMac(){document.getElementById("mac-wrap").style.display="none"}
-function openLink(t){if(macEditable) return; const u=links[t]; if(!u) return alert("Sin link para "+t); window.open(u,"_blank")}
-function toggleEdit(){const panel=document.getElementById("mac-edit-panel"), btn=document.getElementById("mac-edit-btn");if(!macEditable){if(prompt("Pass:")!==MAC_PASS) return;macEditable=true; panel.style.display="block";document.getElementById("inp-tiktok").value=links.tiktok;document.getElementById("inp-discord").value=links.discord;document.getElementById("inp-youtube").value=links.youtube;document.getElementById("inp-insta").value=links.insta;btn.textContent="GUARDAR"}else{links.tiktok=document.getElementById("inp-tiktok").value.trim();links.discord=document.getElementById("inp-discord").value.trim();links.youtube=document.getElementById("inp-youtube").value.trim();links.insta=document.getElementById("inp-insta").value.trim();localStorage.setItem(LINK_KEY, JSON.stringify(links));macEditable=false; panel.style.display="none"; btn.textContent="EDITAR"; alert("Guardado!")}}
-window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splash').classList.add('oculto');setTimeout(()=>document.getElementById('splash').remove(),800)},1200)});
-
 let db, comicsLista=[], carpetaHandle=null;
 function abrirDB(){return new Promise(r=>{let q=indexedDB.open("comicsDB_v2",2);q.onupgradeneeded=e=>{let d=e.target.result;if(!d.objectStoreNames.contains("comics")) d.createObjectStore("comics",{keyPath:"id",autoIncrement:true});if(!d.objectStoreNames.contains("config")) d.createObjectStore("config",{keyPath:"k"})};q.onsuccess=e=>{db=e.target.result;r()}})}
 async function cargarComics(){if(!db) await abrirDB();return new Promise(r=>{let t=db.transaction("comics","readonly").objectStore("comics").getAll();t.onsuccess=()=>{comicsLista=t.result;r()}})}
@@ -160,17 +181,17 @@ function zoomCrop(s){let wrap=document.getElementById("cropWrap");let cx=wrap.cl
 async function guardarFotoPerfil(){let canvas=document.createElement("canvas");canvas.width=320;canvas.height=320;let ctx=canvas.getContext("2d");let img=cropData.img;ctx.save();ctx.beginPath();ctx.arc(160,160,160,0,Math.PI*2);ctx.clip();ctx.drawImage(img, cropData.x, cropData.y, img.naturalWidth*cropData.scale, img.naturalHeight*cropData.scale);ctx.restore();let data=canvas.toDataURL("image/jpeg",0.9);await guardarConfig("fotoPerfil",data);localStorage.setItem("mi_foto_perfil",data);miFoto=data;document.getElementById("editorPerfil").remove();abrirComics();}
 function verComic(id){let c=comicsLista.find(x=>x.id===id);let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="max-width:82%;max-height:78%;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.transition="all 0.35s ease";img.style.filter="blur(18px)";img.style.opacity="0";img.style.transform="scale(0.94)";setTimeout(()=>{pagina+=dir;if(pagina<0) pagina=c.paginas.length-1;if(pagina>=c.paginas.length) pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";img.style.transform="scale(1)";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);}
 
-// BOTONERA - DIVIDIDA
+// === BOTONERA DIVIDIDA + 2 CUADRADOS ===
 const ICON_MEGAFONO = `<svg class="icon-silhouette" viewBox="0 0 16 16"><path d="M2 6h2l4-2v8L4 10H2V6z M10 6v4 M12 5v6" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="square" shape-rendering="crispEdges"/></svg>`;
 const ICON_CONTROL = `<svg class="icon-silhouette" viewBox="0 0 16 16"><path d="M3 5h10v6H3V5z M5 7h1v1H5z M5 8h1v1H5z M6 7v1h1V7z M10 7h1v1h-1z M12 7h1v1h-1z M11 6v1h1V6z M11 8v1h1V8z" fill="#fff" shape-rendering="crispEdges"/></svg>`;
 var cont=document.getElementById('botonera'); cont.innerHTML='';
-var g1=document.createElement('div'); g1.className='grupo-botonera'; g1.setAttribute('data-label','PRINCIPALES');
+var g1=document.createElement('div'); g1.className='grupo-botonera'; g1.setAttribute('data-label','PRINCIPALES 1-4');
 listaBotones.slice(0,4).forEach(b=>{var wrap=document.createElement('div');wrap.className='boton-wrap';var mini=document.createElement('div');mini.className='mini-left';mini.innerHTML='<img src="'+(b.miniImg||b.img)+'">';var btn=document.createElement('div');btn.className='btn-img';btn.innerHTML='<img src="'+b.img+'">';if(b.tipo==='COMICS') btn.onclick=abrirComics;wrap.appendChild(mini);wrap.appendChild(btn);g1.appendChild(wrap);});
 cont.appendChild(g1);
 var g2=document.createElement('div'); g2.className='grupo-botonera'; g2.setAttribute('data-label','EXTRAS - CUADRADOS MEDIANOS');
 var fila=document.createElement('div'); fila.className='fila-cuadrados';
-var sq1=document.createElement('div'); sq1.className='btn-pixel-square'; sq1.innerHTML=ICON_MEGAFONO; sq1.onclick=()=>modal('<h3>ANUNCIOS</h3><p>Próximamente</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar()">OK</button>');
-var sq2=document.createElement('div'); sq2.className='btn-pixel-square'; sq2.innerHTML=ICON_CONTROL; sq2.onclick=()=>modal('<h3>CONTROLES</h3><p>Próximamente</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar()">OK</button>');
+var sq1=document.createElement('div'); sq1.className='btn-pixel-square'; sq1.innerHTML=ICON_MEGAFONO; sq1.onclick=()=>modal('<h3>ANUNCIOS</h3><button class="btn btn-w" style="margin-top:12px" onclick="cerrar()">OK</button>');
+var sq2=document.createElement('div'); sq2.className='btn-pixel-square'; sq2.innerHTML=ICON_CONTROL; sq2.onclick=()=>modal('<h3>CONTROLES</h3><button class="btn btn-w" style="margin-top:12px" onclick="cerrar()">OK</button>');
 fila.appendChild(sq1); fila.appendChild(sq2); g2.appendChild(fila); cont.appendChild(g2);
 
 document.addEventListener("click",()=>{document.getElementById("menuCtx").style.display="none";});
