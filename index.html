@@ -82,8 +82,8 @@ function toggleEdit(){const panel=document.getElementById("mac-edit-panel"), btn
 .comic-flaco:hover{width:460px;border-color:#fff}
 .portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.18s ease-out;pointer-events:none}
 .portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 0.18s ease-out}
-.comic-flaco:hover.portada-flaca{opacity:0}
-.comic-flaco:hover.portada-ancha{opacity:1}
+.comic-flaco:hover .portada-flaca{opacity:0}
+.comic-flaco:hover .portada-ancha{opacity:1}
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #pinterestGrid{columns:4 240px;column-gap:14px;padding:20px;overflow:auto;flex:1}
 .pin{break-inside:avoid;margin-bottom:14px;border-radius:16px;overflow:hidden;border:1px solid #1e1e1e;background:#0a0a0a;cursor:pointer;position:relative;transition:0.2s}
