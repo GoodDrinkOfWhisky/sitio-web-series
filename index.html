@@ -82,8 +82,8 @@ function toggleEdit(){const panel=document.getElementById("mac-edit-panel"), btn
 .comic-flaco:hover{width:460px;border-color:#fff}
 .portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;opacity:1;transition:opacity 0.18s ease-out;pointer-events:none}
 .portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 0.18s ease-out}
-.comic-flaco:hover .portada-flaca{opacity:0}
-.comic-flaco:hover .portada-ancha{opacity:1}
+.comic-flaco:hover.portada-flaca{opacity:0}
+.comic-flaco:hover.portada-ancha{opacity:1}
 .marco-mas{height:calc(100vh - 88px);width:100px;border-radius:18px;border:2px dashed #333;background:rgba(255,255,255,0.02);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #pinterestGrid{columns:4 240px;column-gap:14px;padding:20px;overflow:auto;flex:1}
 .pin{break-inside:avoid;margin-bottom:14px;border-radius:16px;overflow:hidden;border:1px solid #1e1e1e;background:#0a0a0a;cursor:pointer;position:relative;transition:0.2s}
@@ -130,7 +130,6 @@ async function guardarConfig(k,v){return new Promise(r=>{let t=db.transaction("c
 async function cargarConfig(k){return new Promise(r=>{let t=db.transaction("config","readonly").objectStore("config").get(k);t.onsuccess=()=>r(t.result?.v||null)})}
 var CLAVE="admin123", miFoto=localStorage.getItem("mi_foto_perfil")||"img/perfil.jpg", esAdmin=localStorage.getItem("admin_sesion")==="1";
 var videoFondoSrc=null, tempTitulo="", tempPortada="", tempFlaca="", tempPaginas=[], editId=null, seccionActiva="titulo", ctxId=null, ctxGaleriaId=null;
-// SOLO 2 BOTONES - NO TOQUE NADA MAS
 var listaBotones=[{img:'COMICSBOTONPORT.png',miniImg:'img/m1.png',tipo:'COMICS'},{img:'img/b2.jpg',miniImg:'img/m2.png',tipo:'GALERIA'}];
 function modal(h){document.getElementById("modalBox").innerHTML='<div class="modalCard">'+h+'</div>';document.getElementById("modalBox").style.display="flex"}
 function cerrar(){document.getElementById("modalBox").style.display="none"}
@@ -201,7 +200,9 @@ function abrirEditorPerfil(origen){
 function aplicarCrop(){cropData.img.style.transform='translate('+cropData.x+'px,'+cropData.y+'px) scale('+cropData.scale+')';cropData.img.style.transformOrigin='0 0';}
 function zoomCrop(s){let wrap=document.getElementById("cropWrap");let cx=wrap.clientWidth/2, cy=wrap.clientHeight/2;let ratio=s/cropData.scale;cropData.x=cx-(cx-cropData.x)*ratio;cropData.y=cy-(cy-cropData.y)*ratio;cropData.scale=s;aplicarCrop();}
 async function guardarFotoPerfil(origen){let canvas=document.createElement("canvas");canvas.width=320;canvas.height=320;let ctx=canvas.getContext("2d");let img=cropData.img;ctx.save();ctx.beginPath();ctx.arc(160,160,160,0,Math.PI*2);ctx.clip();ctx.drawImage(img, cropData.x, cropData.y, img.naturalWidth*cropData.scale, img.naturalHeight*cropData.scale);ctx.restore();let data=canvas.toDataURL("image/jpeg",0.9);await guardarConfig("fotoPerfil",data);localStorage.setItem("mi_foto_perfil",data);miFoto=data;document.getElementById("editorPerfil").remove();if(origen==='galeria')abrirGaleria();else abrirComics();}
-function verComic(id){let c=comicsLista.find(x=>x.id===id);let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="max-width:82%;max-height:78%;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.transition="all 0.35s ease";img.style.filter="blur(18px)";img.style.opacity="0";img.style.transform="scale(0.94)";setTimeout(()=>{pagina+=dir;if(pagina<0) pagina=c.paginas.length-1;if(pagina>=c.paginas.length) pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";img.style.transform="scale(1)";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);}
+
+// === MODIFICADO: PAGINAS MAS GRANDES 90% + X ===
+function verComic(id){let c=comicsLista.find(x=>x.id===id);let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center;padding:5%";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="width:90%;height:90%;max-width:90vw;max-height:90vh;object-fit:contain;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()" style="position:absolute;top:20px;right:25px;background:none;border:none;color:#fff;font-size:42px;font-weight:300;line-height:1;cursor:pointer;z-index:10000;font-family:Arial,sans-serif;left:auto;bottom:auto;padding:0;transform:none;border-radius:0;backdrop-filter:none">X</button><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.transition="all 0.35s ease";img.style.filter="blur(18px)";img.style.opacity="0";img.style.transform="scale(0.94)";setTimeout(()=>{pagina+=dir;if(pagina<0) pagina=c.paginas.length-1;if(pagina>=c.paginas.length) pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";img.style.transform="scale(1)";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);}
 
 // GALERIA PINTEREST
 let tempGaleriaImg="", tempGaleriaTitulo="", editGaleriaId=null;
@@ -219,7 +220,7 @@ async function abrirGaleria(){
  if(document.getElementById("masGaleria")) document.getElementById("masGaleria").onclick=()=>abrirEditorGaleria();
  document.querySelectorAll(".pin").forEach(box=>{let id=parseInt(box.getAttribute("data-id"));box.onclick=()=>verFotoGaleria(id);box.oncontextmenu=e=>{e.preventDefault();if(!esAdmin) return;ctxGaleriaId=id;let m=document.getElementById("menuCtxGaleria");m.style.left=e.clientX+"px";m.style.top=e.clientY+"px";m.style.display="flex";}});
 }
-function verFotoGaleria(id){let g=galeriaLista.find(x=>x.id===id);let d=document.createElement("div");d.id="visorFotoMini";d.innerHTML='<img src="'+g.imagen+'" style="max-width:88%;max-height:85%;border-radius:18px;border:1px solid #222"><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button><div style="position:absolute;top:20px;color:#777;letter-spacing:3px;font-size:11px">'+g.titulo+'</div>';document.body.appendChild(d);d.onclick=e=>{if(e.target===d) d.remove();}}
+function verFotoGaleria(id){let g=galeriaLista.find(x=>x.id===id);let d=document.createElement("div");d.id="visorFotoMini";d.innerHTML='<img src="'+g.imagen+'" style="width:90%;height:90%;max-width:90vw;max-height:90vh;object-fit:contain;border-radius:18px;border:1px solid #222"><button class="btnX" onclick="this.parentElement.remove()" style="position:absolute;top:20px;right:25px;background:none;border:none;color:#fff;font-size:42px;font-weight:300;line-height:1;cursor:pointer;z-index:10000;font-family:Arial,sans-serif;left:auto;bottom:auto;padding:0;transform:none;border-radius:0;backdrop-filter:none">X</button><div style="position:absolute;top:20px;color:#777;letter-spacing:3px;font-size:11px">'+g.titulo+'</div>';document.body.appendChild(d);d.onclick=e=>{if(e.target===d) d.remove();}}
 function abrirEditorGaleria(id){
  if(id!==undefined){let g=galeriaLista.find(x=>x.id===id);tempGaleriaImg=g.imagen;tempGaleriaTitulo=g.titulo;editGaleriaId=id;} else {tempGaleriaImg="";tempGaleriaTitulo="";editGaleriaId=null;}
  modal('<h3>'+(id?'EDITAR FOTO':'NUEVA FOTO')+'</h3><div id="prevG" style="width:100%;height:200px;border-radius:14px;border:1.5px dashed #333;background:#000;margin:14px 0;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="document.getElementById(\'fileGaleria\').click()">'+(tempGaleriaImg?'<img src="'+tempGaleriaImg+'" style="width:100%;height:100%;object-fit:cover">':'<span style="font-size:40px;color:#444">+</span>')+'</div><input id="titG" value="'+tempGaleriaTitulo+'" placeholder="TITULO" style="width:100%;padding:12px;background:#000;border:1px solid #222;border-radius:10px;color:#fff;outline:none;margin-bottom:12px"><input type="file" id="fileGaleria" accept="image/*" style="display:none"><button class="btn btn-w" onclick="guardarGaleriaFinal()">GUARDAR FOTO</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar()">CANCELAR</button>');
@@ -240,46 +241,5 @@ let inpV=document.createElement("input");inpV.type="file";inpV.id="inputVideoFon
 inpV.onchange=function(){let f=this.files[0];if(!f) return;let r=new FileReader();r.onload=async e=>{await guardarConfig("videoFondo",e.target.result);if(origenActual==='galeria')modal('<h3>VIDEO GUARDADO</h3><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirGaleria()">OK</button>');else modal('<h3>VIDEO GUARDADO</h3><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirComics()">OK</button>')};r.readAsDataURL(f);};
 document.body.appendChild(inpV);
 </script>
-
 </body>
 </html>
-<head><title>www.GoodDrinkOfSeries.com</title></head>
-<div class="video-fondo"><video autoplay loop muted playsinline><source src="0001-0027.mp4" type="video/mp4"></video></div>
-<style>
-.video-fondo{--ancho: 100%; --alto: 100%; --pos-x: 0; --pos-y: 0;position: fixed!important;width: var(--ancho)!important;height: var(--alto)!important;left: var(--pos-x)!important;top: var(--pos-y)!important;z-index: 1!important;pointer-events: none!important;overflow: hidden!important}
-.video-fondo video{width: 100%!important;height: 100%!important;object-fit: cover!important;pointer-events: none!important}
-</style>
-<IMG SRC="S3E.png" width="500px" height="300"/>
-<style>.titulo{position:fixed; top:20px; left:50%; transform:translateX(-50%);transition:0.3s}.titulo img{width:200px; transition:0.3s;}.titulo:hover img{width:300px;}</style>
-<body>
-<style>.titulo-top{position: absolute;top: 70px; left: 50%;transform: translateX(-50%);z-index: 20;width: auto}.titulo-top img{width: 220px; height: auto;display: block;transition: transform 0.20s ease-out}.titulo-top img:hover{transform: scale(1.18);}body{padding-top: 15px;}</style>
-<video autoplay loop muted playsinline style="position:fixed; top:18%; left:50%; transform:translate(-50%,-50%); width:650px; pointer-events:none; z-index:9999; mix-blend-mode:screen; filter: brightness(1.0) contrast(2.8);"><source src="celina.mp4" type="video/mp4"></video>
-<style>#music-box{position:fixed; right:10px; top:10px; z-index:10001;display:flex; gap:8px; align-items:center}#music-box img{width:38px; height:38px; cursor:pointer;filter: drop-shadow(0 0 5px #fff);transition: transform 0.1s}#music-box img:active{ transform:scale(0.9); }</style>
-<div id="music-box"><img id="btn-mute" src="https://cdn-icons-png.flaticon.com/512/138/138817.png" title="mute"><img id="btn-next" src="https://cdn-icons-png.flaticon.com/512/138/138932.png" title="next"></div><audio id="player" loop></audio>
-<script>
-(function(){
-  const SONGS = ["BOSSA.mp3","LANDSCAPE.mp3","EmbersCALL.mp3"];
-  const IMG_SOUND_ON = "https://cdn-icons-png.flaticon.com/512/138/138817.png";const IMG_SOUND_OFF = "https://cdn-icons-png.flaticon.com/512/64/64595.png";const IMG_NEXT = "https://cdn-icons-png.flaticon.com/512/138/138932.png";
-  const player = document.getElementById("player");const btnMute = document.getElementById("btn-mute");const btnNext = document.getElementById("btn-next");
-  let idx = 0;let clicks = 0;const MAX_CLICKS = 5;player.src = SONGS[0];player.volume = 0.6;player.loop = true;
-  document.addEventListener("click", function init(){player.play().catch(()=>{});document.removeEventListener("click", init);});
-  btnMute.src = IMG_SOUND_ON;btnNext.src = IMG_NEXT;
-  btnMute.addEventListener("click", function(){player.muted =!player.muted;btnMute.src = player.muted? IMG_SOUND_OFF : IMG_SOUND_ON;});
-  btnNext.addEventListener("click", function(){if(clicks >= MAX_CLICKS) return;clicks++;idx = (idx + 1) % SONGS.length;player.src = SONGS[idx];player.play().catch(()=>{});if(clicks >= MAX_CLICKS){btnNext.style.opacity = "0.3";btnNext.style.pointerEvents = "none";}});
-})();
-</script>
-<style>#feed-wrap{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:300px;height:610px;background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:18px;padding:10px 10px 0 10px;overflow-y:scroll;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-padding-top:10px;z-index:5000;-ms-overflow-style:none;scrollbar-width:none}#feed-wrap::-webkit-scrollbar{ display:none; }.feed-item{width:100%;height:290px;scroll-snap-align:start;margin-bottom:10px;border-radius:14px;overflow:hidden;flex-shrink:0}.feed-item img{width:100%;height:100%;object-fit:cover;display:block}</style>
-<div id="feed-wrap"></div>
-<script>
-(function(){
-  const PASS_F = "admin123";const MAX_IMG = 6;let imagenes = JSON.parse(localStorage.getItem("feed_imgs") || '["https://picsum.photos/300/300?1","https://picsum.photos/300/300?2","https://picsum.photos/300/300?3","https://picsum.photos/300/300?4"]');
-  const cont = document.getElementById("feed-wrap");
-  function render(){cont.innerHTML = "";imagenes.forEach((src)=>{const div = document.createElement("div");div.className = "feed-item";div.innerHTML = `<img src="${src}" loading="lazy">`;cont.appendChild(div);});}render();
-  cont.addEventListener("dblclick", openAdmin);
-  function openAdmin(){if(prompt("Pass:")!== PASS_F) return;let op = prompt("1=agregar 2=borrar ultima 3=borrar todas | Total:"+imagenes.length+"/"+MAX_IMG);if(op==="1"){if(imagenes.length>=MAX_IMG){ alert("Max "+MAX_IMG); return; }let url = prompt("URL o archivo:");if(!url) return;imagenes.push(url.trim());localStorage.setItem("feed_imgs", JSON.stringify(imagenes));render();}if(op==="2"){imagenes.pop();localStorage.setItem("feed_imgs", JSON.stringify(imagenes));render();}if(op==="3"){imagenes=[];localStorage.setItem("feed_imgs", JSON.stringify(imagenes));render();}}
-})();
-</script>
-<div style="position:fixed;top:15%;left:48%;width:159px;height:198px;background:black;transform:translate(-50%, -50%);pointer-events:none;z-index:9998"></div>
-<div style="position:fixed;top:25%;left:49%;width:750px;height:70px;background:black;transform:translate(-50%, -50%);pointer-events:none;z-index:9998"></div>
-<style>.brasa-img {position: fixed;top: 37%;left: 50%;transform: translate(-50%, -50%);width: 450px;height: auto;z-index: 9999;mix-blend-mode: screen;opacity: 0.6;filter: brightness(1) contrast(1.2);transition: all 0.4s ease;pointer-events: auto!important;cursor: pointer}.brasa-img:hover {opacity: 1!important;filter: brightness(1.8) contrast(1.5) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 15px #ff6a00) drop-shadow(0 0 30px #ff3300)!important;animation: brasaImg 0.15s infinite alternate}@keyframes brasaImg {0% { filter: brightness(1.6) contrast(1.4) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 10px #ff6a00); }100% { filter: brightness(2) contrast(1.6) sepia(1) hue-rotate(-10deg) saturate(4) drop-shadow(0 0 25px #ff3300) drop-shadow(0 0 40px #ff6a00); }}</style>
-<img src="tituloOFICIAL13.png" class="brasa-img">
