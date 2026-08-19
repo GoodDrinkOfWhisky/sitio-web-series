@@ -7,6 +7,50 @@
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
 <style>html,body{background:#000!important;margin:0;padding:0;overflow-x:hidden}</style>
 <style>
+/* --- RENYA Y CUADRITOS NEGROS DETRAS DE CELINA --- */
+#celina-stage{
+  position:fixed;
+  top:18%; left:50%;
+  transform:translate(-50%,-50%);
+  width:650px;
+  height:400px;
+  z-index:9998;
+  pointer-events:none;
+}
+.cuadro-negro{
+  position:absolute;
+  background:#000;
+  border:1px solid #1a1a1a;
+  z-index:1;
+}
+.cuadro-negro.c1{width:280px;height:160px;top:40px;left:-20px;transform:rotate(-6deg);}
+.cuadro-negro.c2{width:300px;height:140px;top:120px;right:-10px;transform:rotate(4deg);}
+.cuadro-negro.c3{width:200px;height:100px;top:20px;right:80px;transform:rotate(-3deg);}
+
+#celina-video{
+  position:absolute;
+  top:0; left:50%;
+  transform:translateX(-50%);
+  width:650px;
+  pointer-events:none;
+  z-index:10!important;
+  mix-blend-mode:screen;
+  filter:brightness(1.0) contrast(2.8);
+  filter: drop-shadow(0 0 20px rgba(0,0,0,0.9));
+}
+#renya-img{
+  position:absolute;
+  top:30px; left:55%;
+  width:420px;
+  z-index:9;
+  pointer-events:none;
+  opacity:0.9;
+  mix-blend-mode:screen;
+}
+.brasa-img{position:fixed;top:37%;left:50%;transform:translate(-50%,-50%);width:450px;z-index:11;mix-blend-mode:screen;opacity:0.6;transition:.4s;cursor:pointer}
+.brasa-img:hover{opacity:1!important;filter:brightness(1.8) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 15px #ff6a00)!important}
+
+/* resto de tu CSS */
 #mac-open-btn{position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);z-index:99997; width:420px; max-width:88vw; height:62px;background:linear-gradient(110deg, rgba(10,10,10,0.75), rgba(40,40,40,0.75), rgba(10,10,10,0.75));background-size:300% 300%;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.18);border-radius:16px;color:#8a8a8a;font-family:'Cinzel', serif;font-size:18px; letter-spacing:5px; text-transform:uppercase;cursor:pointer; display:flex; align-items:center; justify-content:center; gap:14px;animation: shineMove 5s linear infinite, borderPulse 3.5s ease-in-out infinite;transition:.35s}
 #mac-open-btn:hover{color:#fff; border-color:#fff;box-shadow:0 0 30px rgba(255,255,255,0.55);letter-spacing:8px}
 @keyframes shineMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@keyframes borderPulse{0%,100%{border-color:rgba(255,255,255,0.15)}50%{border-color:rgba(255,255,255,0.4)}}
@@ -35,11 +79,11 @@
 #modalBox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);z-index:999999999;display:none;align-items:center;justify-content:center}
 .modalCard{width:90%;max-width:360px;background:#111;border:1px solid #2a2a2a;border-radius:20px;padding:24px;text-align:center}
 .btn{width:100%;padding:13px;border-radius:12px;font-weight:700;cursor:pointer;border:none}.btn-w{background:#fff;color:#000}.btn-b{background:#1a1a1a;color:#fff;border:1px solid #2a2a2a}
-.comic-flaco{height:calc(100vh - 88px);width:160px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.35s}.comic-flaco:hover{width:460px;border-color:#fff}
-.portada-flaca{position:absolute;top:0;left:0;width:160px;height:100%;object-fit:cover;z-index:2;transition:.18s}.portada-ancha{position:absolute;top:0;left:0;width:460px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:.18s}
+.comic-flaco{height:calc(100vh - 88px);width:190px;border-radius:18px;overflow:hidden;border:1.5px solid #222;background:#0a0a0a;cursor:pointer;flex-shrink:0;position:relative;transition:width 0.35s}.comic-flaco:hover{width:520px;border-color:#fff}
+.portada-flaca{position:absolute;top:0;left:0;width:190px;height:100%;object-fit:cover;z-index:2;transition:.18s}.portada-ancha{position:absolute;top:0;left:0;width:520px;height:100%;object-fit:cover;z-index:1;opacity:0;transition:.18s}
 .comic-flaco:hover.portada-flaca{opacity:0}.comic-flaco:hover.portada-ancha{opacity:1}
-#pinterestGrid{columns:4 240px;column-gap:14px;padding:20px;overflow:auto;flex:1}
-.pin{break-inside:avoid;margin-bottom:14px;border-radius:16px;overflow:hidden;border:1px solid #1e1e1e;background:#0a0a0a;cursor:pointer}.pin img{width:100%;display:block}.pin-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(0,0,0,0.9));padding:24px 10px 10px 10px;color:#fff;font-size:10px}
+#pinterestGrid{columns:5 280px;column-gap:18px;padding:20px 40px;overflow:auto;flex:1}
+.pin{break-inside:avoid;margin-bottom:14px;border-radius:16px;overflow:hidden;border:1px solid #1e1e1e;background:#0a0a0a;cursor:pointer;position:relative}.pin img{width:100%;display:block}.pin-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(0,0,0,0.9));padding:24px 10px 10px 10px;color:#fff;font-size:10px}
 .marco-pin-mas{height:200px;border-radius:16px;border:2px dashed #333;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;cursor:pointer;break-inside:avoid;margin-bottom:14px}
 #editorComics{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,5,0.92);backdrop-filter:blur(24px);z-index:99999999;display:flex;overflow:hidden}
 .menu-der{position:absolute;right:22px;top:22px;display:flex;flex-direction:column;gap:10px;z-index:5}.menu-der button{padding:12px 22px;border-radius:30px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);letter-spacing:3px;font-size:11px;cursor:pointer}.menu-der button.activo{background:rgba(255,255,255,0.09);color:#fff}
@@ -50,7 +94,6 @@
 .video-fondo{position:fixed!important;width:100%!important;height:100%!important;left:0!important;top:0!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important}.video-fondo video{width:100%!important;height:100%!important;object-fit:cover!important}
 #music-box{position:fixed; right:10px; top:10px; z-index:10001;display:flex; gap:8px}#music-box img{width:38px; height:38px; cursor:pointer;filter: drop-shadow(0 0 5px #fff)}
 #feed-wrap{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:300px;height:610px;background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);border-radius:18px;padding:10px 10px 0 10px;overflow-y:scroll;z-index:5000}#feed-wrap::-webkit-scrollbar{display:none}.feed-item{width:100%;height:290px;margin-bottom:10px;border-radius:14px;overflow:hidden}.feed-item img{width:100%;height:100%;object-fit:cover}
-.brasa-img{position:fixed;top:37%;left:50%;transform:translate(-50%,-50%);width:450px;z-index:9999;mix-blend-mode:screen;opacity:0.6;transition:.4s;cursor:pointer}.brasa-img:hover{opacity:1!important;filter:brightness(1.8) sepia(1) hue-rotate(-15deg) saturate(3) drop-shadow(0 0 15px #ff6a00)!important}
 #editorPerfil{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999999999;display:flex;align-items:center;justify-content:center}
 .crop-wrap{width:320px;height:320px;border-radius:50%;overflow:hidden;position:relative;background:#111;border:2px solid #333}
 .crop-wrap img{position:absolute;left:0;top:0}
@@ -60,23 +103,43 @@
 #rotate-lock{position:fixed; inset:0; background:#000; z-index:99999999999; display:none; align-items:center; justify-content:center; text-align:center; padding:20px}
 .rotate-video-wrap{width:280px; height:160px; border:1px solid #222; border-radius:16px; overflow:hidden; background:#0a0a0a; margin:0 auto 18px auto; position:relative; display:flex; align-items:center; justify-content:center}
 #rotate-video{width:100%; height:100%; object-fit:cover}
+
+/* HD + NO GUARDAR */
+img{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
+.comicBox::after,.pin::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;}
+
 @media screen and (max-width:1024px) and (orientation:portrait){#rotate-lock{display:flex}}
 @media screen and (max-width:1024px){
  #botonera{left:6px!important;gap:8px!important;top:38%!important}
 .btn-img{width:96px!important;height:42px!important}.mini-left{width:40px!important;height:42px!important}
 .brasa-img{width:220px!important;top:28%!important}
-.comic-flaco{width:88px!important;height:55vh!important}.comic-flaco:hover{width:150px!important}.portada-ancha{width:150px!important}
+#celina-stage{width:300px!important;height:200px!important;top:22%!important}
+#celina-video{width:300px!important}
+#renya-img{width:180px!important;top:20px!important}
+.cuadro-negro.c1{width:120px!important;height:70px!important}
+.cuadro-negro.c2{width:130px!important;height:60px!important}
+.comic-flaco{width:105px!important;height:55vh!important}.comic-flaco:hover{width:175px!important}.portada-ancha{width:175px!important}.portada-flaca{width:105px!important}
  #feed-wrap{display:none!important}
  #mac-open-btn{width:82vw!important;height:48px!important;font-size:12px!important}
+ #grid{padding:10px 12px!important;gap:10px!important}
+ #pinterestGrid{columns:2 140px!important;padding:10px!important}
 }
 </style>
 </head>
 <body>
 <div class="video-fondo"><video autoplay loop muted playsinline><source src="0001-0027.mp4" type="video/mp4"></video></div>
-<video autoplay loop muted playsinline style="position:fixed; top:18%; left:50%; transform:translate(-50%,-50%); width:650px; pointer-events:none; z-index:9999; mix-blend-mode:screen; filter: brightness(1.0) contrast(2.8);"><source src="celina.mp4" type="video/mp4"></video>
+
+<div id="celina-stage">
+  <div class="cuadro-negro c1"></div>
+  <div class="cuadro-negro c2"></div>
+  <div class="cuadro-negro c3"></div>
+  <video id="celina-video" autoplay loop muted playsinline><source src="celina.mp4" type="video/mp4"></video>
+  <img id="renya-img" src="renya.png" alt="Renya">
+</div>
+
 <img src="tituloOFICIAL13.png" class="brasa-img">
 <div id="mac-open-btn" onclick="abrirMac()">† REDES †</div>
-<div id="mac-wrap"><div id="mac-win"><div id="mac-bar"><div id="mac-dots"><div class="dot r" onclick="cerrarMac()"></div><div class="dot y" onclick="cerrarMac()"></div><div class="dot g"></div></div><div id="mac-title">RELIQUARY</div><div style="width:40px"></div></div><div id="xbox-grid"><div class="xbox-tile" onclick="openLink('tiktok')">TikTok</div><div class="xbox-tile" onclick="openLink('discord')">Discord</div><div class="xbox-tile" onclick="openLink('youtube')">YouTube</div><div class="xbox-tile" onclick="openLink('insta')">Instagram</div></div><div id="mac-edit-panel"><input id="inp-tiktok" placeholder="Link TikTok"><input id="inp-discord" placeholder="Link Discord"><input id="inp-youtube" placeholder="Link YouTube"><input id="inp-insta" placeholder="Link Instagram"></div><div id="mac-foot"><button class="mac-btn sec" onclick="cerrarMac()">Cerrar</button><button class="mac-btn" id="mac-edit-btn" onclick="toggleEdit()">EDITAR</button></div></div></div>
+<div id="mac-wrap"><div id="mac-win"><div id="mac-bar"><div id="mac-dots"><div class="dot r" onclick="cerrarMac()"></div><div class="dot y" onclick="cerrarMac()"></div><div class="dot g"></div></div><div id="mac-title">RELIQUARY</div><div style="width:40px"></div></div><div id="xbox-grid"><div class="xbox-tile" onclick="openLink('tiktok')">TikTok</div><div class="xbox-tile" onclick="openLink('discord')">Discord</div><div class="xbox-tile" onclick="openLink('youtube')">YouTube</div><div class="xbox-tile" onclick="openLink('insta')">Instagram</div></div><div id="mac-edit-panel" style="display:none;padding:10px"><input id="inp-tiktok" placeholder="Link TikTok" style="width:100%;margin-bottom:6px"><input id="inp-discord" placeholder="Link Discord" style="width:100%;margin-bottom:6px"><input id="inp-youtube" placeholder="Link YouTube" style="width:100%;margin-bottom:6px"><input id="inp-insta" placeholder="Link Instagram" style="width:100%"></div><div id="mac-foot"><button class="mac-btn sec" onclick="cerrarMac()">Cerrar</button><button class="mac-btn" id="mac-edit-btn" onclick="toggleEdit()">EDITAR</button></div></div></div>
 <div id="splash"><img src="GOODDRINKICON.png"></div>
 <div id="pj-wrap"><div id="pj-globo"></div><video id="pj-video-idle" autoplay loop muted playsinline></video><video id="pj-video-talk" loop muted playsinline style="display:none"></video></div>
 <div id="botonera"></div>
@@ -86,6 +149,9 @@
 <div id="menuCtx"><button id="ctxEditar">EDITAR</button><button id="ctxEliminar">ELIMINAR</button></div>
 <div id="menuCtxGaleria"><button id="ctxGaleriaEditar">EDITAR</button><button id="ctxGaleriaEliminar">ELIMINAR</button></div>
 <div id="rotate-lock"><div class="rotate-box"><p style="color:#fff;letter-spacing:5px">GIRA TU CELULAR</p><div class="rotate-video-wrap"><video id="rotate-video" autoplay loop muted playsinline><source src="VIDEO_GIRA_AQUI.mp4" type="video/mp4"></video><div style="position:absolute;font-size:42px">📱 ↻</div></div><p style="color:#333;font-size:10px">Acosta tu celular</p></div></div>
+
+<div id="blackScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:999999999999;align-items:center;justify-content:center;color:#222;letter-spacing:8px;font-family:'Cinzel'">BLOQUEADO</div>
+
 <script>
 const MAC_PASS="admin123";const LINK_KEY="xbox_links_v1";let links=JSON.parse(localStorage.getItem(LINK_KEY)||'{"tiktok":"","discord":"","youtube":"","insta":""}');let macEditable=false;
 function abrirMac(){document.getElementById("mac-wrap").style.display="block"}function cerrarMac(){document.getElementById("mac-wrap").style.display="none"}
@@ -107,115 +173,21 @@ var videoFondoSrc=null,tempTitulo="",tempPortada="",tempFlaca="",tempPaginas=[],
 var listaBotones=[{img:'COMICSBOTONPORT.png',miniImg:'img/m1.png',tipo:'COMICS'},{img:'img/b2.jpg',miniImg:'img/m2.png',tipo:'GALERIA'}];
 function modal(h){document.getElementById("modalBox").innerHTML='<div class="modalCard">'+h+'</div>';document.getElementById("modalBox").style.display="flex"}
 function cerrar(){document.getElementById("modalBox").style.display="none"}
-async function abrirEditorNuevo(id){
- if(id!==undefined){let c=comicsLista.find(x=>x.id===id);tempTitulo=c.titulo;tempPortada=c.portada;tempFlaca=c.flaca||c.portada;tempPaginas=[...c.paginas];editId=id;}
- else {tempTitulo="";tempPortada="";tempFlaca="";tempPaginas=[];editId=null;}
- seccionActiva="titulo";document.getElementById("visorComics")?.remove();document.getElementById("visorGaleria")?.remove();document.getElementById("editorComics")?.remove();
- var ed=document.createElement("div");ed.id="editorComics";
- ed.innerHTML='<div id="overlayGris"></div><div class="menu-der"><button id="btnTitulo" class="activo" onclick="cambiarSeccion(\'titulo\')">TITULO</button><button id="btnPortada" onclick="cambiarSeccion(\'portada\')">PORTADA</button><button id="btnPaginas" onclick="cambiarSeccion(\'paginas\')">PAGINAS</button><div style="height:1px;background:rgba(255,255,255,0.1);margin:8px 0"></div><button style="background:#fff;color:#000;padding:12px 22px;border-radius:30px;font-weight:700;letter-spacing:2px;border:none;cursor:pointer" onclick="guardarComicFinal()">GUARDAR</button><button onclick="document.getElementById(\'editorComics\').remove();abrirComics()" style="padding:12px 22px;border-radius:30px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);letter-spacing:3px;font-size:11px;cursor:pointer">SALIR</button></div><div id="zonaCentro" style="position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center;padding:40px"></div><input type="file" id="filePortada" accept="image/*" style="display:none"><input type="file" id="fileFlaca" accept="image/*" style="display:none"><input type="file" id="filePaginas" accept="image/*" multiple style="display:none">';
- document.body.appendChild(ed);document.getElementById("filePortada").onchange=onPortadaCargada;document.getElementById("fileFlaca").onchange=onFlacaCargada;document.getElementById("filePaginas").onchange=onPaginasCargadas;renderSeccion();
-}
+async function abrirEditorNuevo(id){ if(id!==undefined){let c=comicsLista.find(x=>x.id===id);tempTitulo=c.titulo;tempPortada=c.portada;tempFlaca=c.flaca||c.portada;tempPaginas=[...c.paginas];editId=id;} else {tempTitulo="";tempPortada="";tempFlaca="";tempPaginas=[];editId=null;} seccionActiva="titulo";document.getElementById("visorComics")?.remove();document.getElementById("visorGaleria")?.remove();document.getElementById("editorComics")?.remove(); var ed=document.createElement("div");ed.id="editorComics"; ed.innerHTML='<div id="overlayGris"></div><div class="menu-der"><button id="btnTitulo" class="activo" onclick="cambiarSeccion(\'titulo\')">TITULO</button><button id="btnPortada" onclick="cambiarSeccion(\'portada\')">PORTADA</button><button id="btnPaginas" onclick="cambiarSeccion(\'paginas\')">PAGINAS</button><div style="height:1px;background:rgba(255,255,255,0.1);margin:8px 0"></div><button style="background:#fff;color:#000;padding:12px 22px;border-radius:30px;font-weight:700;letter-spacing:2px;border:none;cursor:pointer" onclick="guardarComicFinal()">GUARDAR</button><button onclick="document.getElementById(\'editorComics\').remove();abrirComics()" style="padding:12px 22px;border-radius:30px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);letter-spacing:3px;font-size:11px;cursor:pointer">SALIR</button></div><div id="zonaCentro" style="position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center;padding:40px"></div><input type="file" id="filePortada" accept="image/*" style="display:none"><input type="file" id="fileFlaca" accept="image/*" style="display:none"><input type="file" id="filePaginas" accept="image/*" multiple style="display:none">'; document.body.appendChild(ed);document.getElementById("filePortada").onchange=onPortadaCargada;document.getElementById("fileFlaca").onchange=onFlacaCargada;document.getElementById("filePaginas").onchange=onPaginasCargadas;renderSeccion();}
 function cambiarSeccion(s){seccionActiva=s;document.querySelectorAll(".menu-der button").forEach(b=>b.classList.remove("activo"));document.getElementById("btn"+s.charAt(0).toUpperCase()+s.slice(1)).classList.add("activo");renderSeccion()}
-function renderSeccion(){
- var z=document.getElementById("zonaCentro");
- if(seccionActiva==="titulo"){z.innerHTML='<div style="width:100%;max-width:500px"><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:4px;margin-bottom:12px">TITULO DEL CÓMIC</p><input id="inputTitulo" value="'+tempTitulo+'" placeholder="ESCRIBE EL TITULO" style="width:100%;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;outline:none;font-size:18px" oninput="tempTitulo=this.value"></div>';}
- else if(seccionActiva==="portada"){
-  let a=tempPortada?'<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><img src="'+tempPortada+'"></div>':'<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><span style="font-size:64px;color:rgba(255,255,255,0.3)">+</span></div>';
-  let f=tempFlaca?'<div class="marco-steam-flaca" onclick="document.getElementById(\'fileFlaca\').click()"><img src="'+tempFlaca+'"></div>':'<div class="marco-steam-flaca" onclick="document.getElementById(\'fileFlaca\').click()"><span style="font-size:32px;color:rgba(255,255,255,0.3)">+</span></div>';
-  z.innerHTML='<div style="display:flex;gap:24px;align-items:flex-end">'+f+a+'</div>';
- }else{var h='<div class="galeria-paginas">';for(var i=0;i<tempPaginas.length;i++){h+='<div class="pag-thumb"><img src="'+tempPaginas[i]+'"><button onclick="tempPaginas.splice('+i+',1);renderSeccion()" style="position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);border:1px solid #333;color:#fff">✕</button></div>';}h+='<div class="marco-pagina" onclick="document.getElementById(\'filePaginas\').click()"><span style="font-size:32px;color:rgba(255,255,255,0.3)">+</span></div></div>';z.innerHTML=h;}
-}
+function renderSeccion(){ var z=document.getElementById("zonaCentro"); if(seccionActiva==="titulo"){z.innerHTML='<div style="width:100%;max-width:500px"><p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:4px;margin-bottom:12px">TITULO DEL CÓMIC</p><input id="inputTitulo" value="'+tempTitulo+'" placeholder="ESCRIBE EL TITULO" style="width:100%;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;outline:none;font-size:18px" oninput="tempTitulo=this.value"></div>';} else if(seccionActiva==="portada"){ let a=tempPortada?'<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><img src="'+tempPortada+'"></div>':'<div class="marco-steam-portada" onclick="document.getElementById(\'filePortada\').click()"><span style="font-size:64px;color:rgba(255,255,255,0.3)">+</span></div>'; let f=tempFlaca?'<div class="marco-steam-flaca" onclick="document.getElementById(\'fileFlaca\').click()"><img src="'+tempFlaca+'"></div>':'<div class="marco-steam-flaca" onclick="document.getElementById(\'fileFlaca\').click()"><span style="font-size:32px;color:rgba(255,255,255,0.3)">+</span></div>'; z.innerHTML='<div style="display:flex;gap:24px;align-items:flex-end">'+f+a+'</div>'; }else{var h='<div class="galeria-paginas">';for(var i=0;i<tempPaginas.length;i++){h+='<div class="pag-thumb"><img src="'+tempPaginas[i]+'"><button onclick="tempPaginas.splice('+i+',1);renderSeccion()" style="position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);border:1px solid #333;color:#fff">✕</button></div>';}h+='<div class="marco-pagina" onclick="document.getElementById(\'filePaginas\').click()"><span style="font-size:32px;color:rgba(255,255,255,0.3)">+</span></div></div>';z.innerHTML=h;}}
 function onPortadaCargada(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=e=>{tempPortada=e.target.result;if(!tempFlaca)tempFlaca=e.target.result;renderSeccion()};r.readAsDataURL(f)}
 function onFlacaCargada(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=e=>{tempFlaca=e.target.result;renderSeccion()};r.readAsDataURL(f)}
 function onPaginasCargadas(){var files=this.files;for(var k=0;k<files.length;k++){let r=new FileReader();r.onload=e=>{tempPaginas.push(e.target.result);renderSeccion()};r.readAsDataURL(files[k])}}
 async function guardarComicFinal(){if(!tempPortada){cambiarSeccion("portada");modal('<h3>FALTA PORTADA</h3><button class="btn btn-w" style="margin-top:14px" onclick="cerrar()">OK</button>');return;}let obj={titulo:tempTitulo||"SIN TITULO",portada:tempPortada,flaca:tempFlaca||tempPortada,paginas:tempPaginas.length?tempPaginas:[tempPortada]};if(editId)obj.id=editId;await guardarEnDB(obj);cerrar();document.getElementById("editorComics")?.remove();abrirComics();}
+async function cargarComicsPublicos(){ try{ let r = await fetch('./comics.json?v='+Date.now()); if(r.ok){ let data = await r.json(); if(Array.isArray(data) && data.length>0){ comicsLista = data; return true; } } }catch(e){} return false; }
+async function abrirComics(){ origenActual="comics"; let publicos = await cargarComicsPublicos(); if(!publicos) await cargarComics(); videoFondoSrc = await cargarConfig("videoFondo"); miFoto = await cargarConfig("fotoPerfil") || localStorage.getItem("mi_foto_perfil") || "img/perfil.jpg"; document.getElementById("visorComics")?.remove();document.getElementById("visorGaleria")?.remove();document.getElementById("editorComics")?.remove(); var v=document.createElement("div");v.id="visorComics"; var videoTag = videoFondoSrc? '<video id="videoFondo" autoplay loop muted playsinline src="'+videoFondoSrc+'"></video>' : ''; var comicsHtml="";for(var i=0;i<comicsLista.length;i++){comicsHtml+='<div class="comicBox" data-id="'+(comicsLista[i].id||i)+'" style="position:relative"><div class="comic-flaco"><img class="portada-flaca" src="'+comicsLista[i].flaca+'" draggable="false"><img class="portada-ancha" src="'+comicsLista[i].portada+'" draggable="false"></div><div style="position:absolute;bottom:8px;left:8px;right:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border-radius:8px;padding:4px 8px;z-index:6"><p style="color:#fff;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+comicsLista[i].titulo+'</p></div></div>';} var vacio='<div style="text-align:center;margin-top:80px"><p style="color:#333;letter-spacing:4px;font-size:12px">BIBLIOTECA VACÍA - '+comicsLista.length+'</p></div>'; v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px;font-size:13px">BIBLIOTECA</b><span style="color:#444;font-size:10px">'+comicsLista.length+' CÓMICS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtn" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff">✕</button></div></div><div id="grid" style="display:flex;gap:18px;padding:20px 40px;overflow:auto;flex:1;align-items:center">'+(comicsLista.length?comicsHtml:vacio)+'</div></div>'; document.body.appendChild(v); document.getElementById("perfilBtn").onclick=clickPerfilComics; document.querySelectorAll(".comicBox").forEach((box,idx)=>{let flaco=box.querySelector(".comic-flaco");flaco.onclick=()=>verComicPorIndice(idx);flaco.oncontextmenu=e=>{e.preventDefault();if(!esAdmin)return;ctxId=comicsLista[idx].id;let m=document.getElementById("menuCtx");m.style.left=e.clientX+"px";m.style.top=e.clientY+"px";m.style.display="flex";}});}
+function clickPerfilComics(){ if(!esAdmin){modal('<h3>ACCESO DENEGADO</h3><p>Solo Lxvtorres</p><input id="loginAdmin" type="password" placeholder="Pass" style="width:100%;margin-top:12px;padding:10px;background:#000;border:1px solid #222;border-radius:8px;color:#fff"><button class="btn btn-w" style="margin-top:10px" onclick="if(document.getElementById(\'loginAdmin\').value===\'admin123\'){localStorage.setItem(\'admin_sesion\',\'1\');esAdmin=true;cerrar();abrirComics();}else{alert(\'Incorrecto\')}">ENTRAR</button>');return;} modal('<h3>MI PERFIL - LXVTORRES</h3><p>'+comicsLista.length+' cómics (local)</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirEditorNuevo()">+ AÑADIR CÓMIC</button><button class="btn btn-b" style="margin-top:8px" onclick="exportarComics()">⬇ JSON (comprimido)</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar();abrirEditorPerfil(\'comics\')">📷 CAMBIAR FOTO</button><button class="btn btn-b" style="margin-top:8px;color:#ff5555" onclick="esAdmin=false;localStorage.removeItem(\'admin_sesion\');cerrar();document.getElementById(\'visorComics\').remove()">SALIR</button>');}
+async function exportarComics(){ function comprimirImagen(src, maxW, calidad){ return new Promise(res=>{ let img=new Image(); img.onload=()=>{ let ratio=img.width/img.height; let w=maxW, h=maxW/ratio; if(img.width<maxW){ w=img.width; h=img.height; } let c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h); res(c.toDataURL('image/jpeg', calidad)); }; img.onerror=()=>res(src); img.src=src; }); } let listaComprimida=[]; for(let c of comicsLista){ let portadaC = await comprimirImagen(c.portada, 600, 0.5); let flacaC = await comprimirImagen(c.flaca||c.portada, 300, 0.5); let paginasC=[]; for(let p of c.paginas){ paginasC.push(await comprimirImagen(p, 800, 0.5)); } listaComprimida.push({id:c.id, titulo:c.titulo, portada:portadaC, flaca:flacaC, paginas:paginasC}); } let data = JSON.stringify(listaComprimida); let blob = new Blob([data], {type:'application/json'}); let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href=url; a.download='comics.json'; a.click(); alert('¡Listo COMPRIMIDO!');}
+function verComicPorIndice(idx){let c=comicsLista[idx];let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" draggable="false" style="width:90vw;height:90vh;max-width:90vw;max-height:90vh;object-fit:contain;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()" style="top:20px;right:22px;left:auto;bottom:auto;transform:none;padding:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,0.5)">X</button><div id="btnLupa">⤢</div><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.filter="blur(18px)";img.style.opacity="0";setTimeout(()=>{pagina+=dir;if(pagina<0)pagina=c.paginas.length-1;if(pagina>=c.paginas.length)pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);document.getElementById("btnLupa").onclick=()=>{d.classList.toggle("modo-lupa")};}
 
-// NUEVO: CARGA DE COMICS DESDE comics.json PARA QUE SE VEAN EN TODOS LOS CELULARES
-async function cargarComicsPublicos(){
-  try{
-    let r = await fetch('./comics.json?v='+Date.now());
-    if(r.ok){
-      let data = await r.json();
-      if(Array.isArray(data) && data.length>0){
-        comicsLista = data;
-        return true;
-      }
-    }
-  }catch(e){}
-  return false;
-}
-
-async function abrirComics(){
- origenActual="comics";
- let publicos = await cargarComicsPublicos();
- if(!publicos) await cargarComics();
- videoFondoSrc = await cargarConfig("videoFondo"); miFoto = await cargarConfig("fotoPerfil") || localStorage.getItem("mi_foto_perfil") || "img/perfil.jpg";
- document.getElementById("visorComics")?.remove();document.getElementById("visorGaleria")?.remove();document.getElementById("editorComics")?.remove();
- var v=document.createElement("div");v.id="visorComics";
- var videoTag = videoFondoSrc? '<video id="videoFondo" autoplay loop muted playsinline src="'+videoFondoSrc+'"></video>' : '';
- var comicsHtml="";for(var i=0;i<comicsLista.length;i++){comicsHtml+='<div class="comicBox" data-id="'+(comicsLista[i].id||i)+'" style="position:relative"><div class="comic-flaco"><img class="portada-flaca" src="'+comicsLista[i].flaca+'"><img class="portada-ancha" src="'+comicsLista[i].portada+'"></div><div style="position:absolute;bottom:8px;left:8px;right:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);border-radius:8px;padding:4px 8px;z-index:3"><p style="color:#fff;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+comicsLista[i].titulo+'</p></div></div>';}
- var vacio='<div style="text-align:center;margin-top:80px"><p style="color:#333;letter-spacing:4px;font-size:12px">BIBLIOTECA VACÍA - '+comicsLista.length+'</p></div>';
- v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px;font-size:13px">BIBLIOTECA</b><span style="color:#444;font-size:10px">'+comicsLista.length+' CÓMICS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtn" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorComics\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff">✕</button></div></div><div id="grid" style="display:flex;gap:14px;padding:20px;overflow:auto;flex:1;align-items:center">'+(comicsLista.length?comicsHtml:vacio)+'</div></div>';
- document.body.appendChild(v);
- document.getElementById("perfilBtn").onclick=clickPerfilComics;
- document.querySelectorAll(".comicBox").forEach((box,idx)=>{let id=box.getAttribute("data-id");let flaco=box.querySelector(".comic-flaco");flaco.onclick=()=>verComicPorIndice(idx);flaco.oncontextmenu=e=>{e.preventDefault();if(!esAdmin)return;ctxId=comicsLista[idx].id;let m=document.getElementById("menuCtx");m.style.left=e.clientX+"px";m.style.top=e.clientY+"px";m.style.display="flex";}});
-}
-function clickPerfilComics(){
- if(!esAdmin){modal('<h3>ACCESO DENEGADO</h3><p>Solo Lxvtorres</p><input id="loginAdmin" type="password" placeholder="Pass" style="width:100%;margin-top:12px;padding:10px;background:#000;border:1px solid #222;border-radius:8px;color:#fff"><button class="btn btn-w" style="margin-top:10px" onclick="if(document.getElementById(\'loginAdmin\').value===\'admin123\'){localStorage.setItem(\'admin_sesion\',\'1\');esAdmin=true;cerrar();abrirComics();}else{alert(\'Incorrecto\')}">ENTRAR</button>');return;}
- modal('<h3>MI PERFIL - LXVTORRES</h3><p>'+comicsLista.length+' cómics (local)</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirEditorNuevo()">+ AÑADIR CÓMIC</button><button class="btn btn-b" style="margin-top:8px" onclick="exportarComics()">⬇ JSON (comprimido)</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar();abrirEditorPerfil(\'comics\')">📷 CAMBIAR FOTO</button><button class="btn btn-b" style="margin-top:8px;color:#ff5555" onclick="esAdmin=false;localStorage.removeItem(\'admin_sesion\');cerrar();document.getElementById(\'visorComics\').remove()">SALIR</button>');
-}
-
-// AQUI ESTA LA VERSION COMPRIMIDA - NO TOCA NADA DE TU CODIGO ORIGINAL, SOLO COMPRIME AL EXPORTAR
-async function exportarComics(){
- function comprimirImagen(src, maxW, calidad){
-  return new Promise(res=>{
-   let img=new Image();
-   img.onload=()=>{
-    let ratio=img.width/img.height;
-    let w=maxW, h=maxW/ratio;
-    if(img.width<maxW){ w=img.width; h=img.height; }
-    let c=document.createElement('canvas'); c.width=w; c.height=h;
-    c.getContext('2d').drawImage(img,0,0,w,h);
-    res(c.toDataURL('image/jpeg', calidad));
-   };
-   img.onerror=()=>res(src);
-   img.src=src;
-  });
- }
- let listaComprimida=[];
- for(let c of comicsLista){
-  let portadaC = await comprimirImagen(c.portada, 600, 0.5);
-  let flacaC = await comprimirImagen(c.flaca||c.portada, 300, 0.5);
-  let paginasC=[];
-  for(let p of c.paginas){
-   paginasC.push(await comprimirImagen(p, 800, 0.5));
-  }
-  listaComprimida.push({id:c.id, titulo:c.titulo, portada:portadaC, flaca:flacaC, paginas:paginasC});
- }
- let data = JSON.stringify(listaComprimida);
- let blob = new Blob([data], {type:'application/json'});
- let url = URL.createObjectURL(blob);
- let a = document.createElement('a'); a.href=url; a.download='comics.json'; a.click();
- alert('¡Listo COMPRIMIDO! Antes pesaba ~'+Math.round(JSON.stringify(comicsLista).length/1024/1024)+'MB, ahora pesa ~'+Math.round(data.length/1024/1024)+'MB. Súbelo a tu hosting');
-}
-
-function verComicPorIndice(idx){let c=comicsLista[idx];let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="width:90vw;height:90vh;max-width:90vw;max-height:90vh;object-fit:contain;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()" style="top:20px;right:22px;left:auto;bottom:auto;transform:none;padding:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,0.5)">X</button><div id="btnLupa">⤢</div><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.filter="blur(18px)";img.style.opacity="0";setTimeout(()=>{pagina+=dir;if(pagina<0)pagina=c.paginas.length-1;if(pagina>=c.paginas.length)pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);document.getElementById("btnLupa").onclick=()=>{d.classList.toggle("modo-lupa")};}
-
-// GALERIA
-async function abrirGaleria(){
- origenActual="galeria"; await cargarGaleria(); videoFondoSrc = await cargarConfig("videoFondo"); miFoto = await cargarConfig("fotoPerfil") || localStorage.getItem("mi_foto_perfil") || "img/perfil.jpg";
- document.getElementById("visorComics")?.remove();document.getElementById("visorGaleria")?.remove();document.getElementById("editorComics")?.remove();
- var v=document.createElement("div");v.id="visorGaleria";
- var videoTag = videoFondoSrc? '<video id="videoFondo" autoplay loop muted playsinline src="'+videoFondoSrc+'"></video>' : '';
- var pinsHtml="";for(var i=0;i<galeriaLista.length;i++){pinsHtml+='<div class="pin" data-id="'+galeriaLista[i].id+'"><img src="'+galeriaLista[i].imagen+'"><div class="pin-title">'+galeriaLista[i].titulo+'</div></div>';}
- var masHtml=esAdmin?'<div class="marco-pin-mas" id="masGaleria"><span style="color:#fff;font-size:48px">+</span></div>':'';
- var vacio='<div style="text-align:center;margin-top:80px;column-span:all"><p style="color:#333;letter-spacing:4px">GALERÍA VACÍA</p></div>';
- v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px">GALERÍA</b><span style="color:#444;font-size:10px">'+galeriaLista.length+' FOTOS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtnG" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorGaleria\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff">✕</button></div></div><div id="pinterestGrid">'+(galeriaLista.length?pinsHtml+masHtml:(esAdmin?masHtml:vacio))+'</div></div>';
- document.body.appendChild(v);
- document.getElementById("perfilBtnG").onclick=clickPerfilGaleria;
- if(document.getElementById("masGaleria")) document.getElementById("masGaleria").onclick=()=>abrirEditorGaleria();
-}
-function verFotoGaleria(id){let g=galeriaLista.find(x=>x.id===id);let d=document.createElement("div");d.id="visorFotoMini";d.innerHTML='<img src="'+g.imagen+'" style="max-width:88%;max-height:85%;border-radius:18px"><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button>';document.body.appendChild(d);d.onclick=e=>{if(e.target===d)d.remove()}}
+async function abrirGaleria(){ origenActual="galeria"; await cargarGaleria(); videoFondoSrc = await cargarConfig("videoFondo"); miFoto = await cargarConfig("fotoPerfil") || localStorage.getItem("mi_foto_perfil") || "img/perfil.jpg"; document.getElementById("visorComics")?.remove();document.getElementById("visorGaleria")?.remove();document.getElementById("editorComics")?.remove(); var v=document.createElement("div");v.id="visorGaleria"; var videoTag = videoFondoSrc? '<video id="videoFondo" autoplay loop muted playsinline src="'+videoFondoSrc+'"></video>' : ''; var pinsHtml="";for(var i=0;i<galeriaLista.length;i++){pinsHtml+='<div class="pin" data-id="'+galeriaLista[i].id+'"><img src="'+galeriaLista[i].imagen+'" draggable="false"><div class="pin-title">'+galeriaLista[i].titulo+'</div></div>';} var masHtml=esAdmin?'<div class="marco-pin-mas" id="masGaleria"><span style="color:#fff;font-size:48px">+</span></div>':''; var vacio='<div style="text-align:center;margin-top:80px;column-span:all"><p style="color:#333;letter-spacing:4px">GALERÍA VACÍA</p></div>'; v.innerHTML=videoTag+'<div id="overlayGris"></div><div id="contenidoGaleria"><div style="height:68px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a"><div style="display:flex;align-items:center;gap:12px"><b style="color:#fff;letter-spacing:4px">GALERÍA</b><span style="color:#444;font-size:10px">'+galeriaLista.length+' FOTOS</span></div><div style="display:flex;gap:10px;align-items:center"><div id="perfilBtnG" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #2a2a2a;overflow:hidden;cursor:pointer;background:#111"><img src="'+miFoto+'" style="width:100%;height:100%;object-fit:cover"></div><button onclick="document.getElementById(\'visorGaleria\').remove()" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid #222;color:#fff">✕</button></div></div><div id="pinterestGrid">'+(galeriaLista.length?pinsHtml+masHtml:(esAdmin?masHtml:vacio))+'</div></div>'; document.body.appendChild(v); document.getElementById("perfilBtnG").onclick=clickPerfilGaleria; if(document.getElementById("masGaleria")) document.getElementById("masGaleria").onclick=()=>abrirEditorGaleria();}
+function verFotoGaleria(id){let g=galeriaLista.find(x=>x.id===id);let d=document.createElement("div");d.id="visorFotoMini";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<img src="'+g.imagen+'" style="max-width:88%;max-height:85%;border-radius:18px"><button class="btnX" onclick="this.parentElement.remove()">CERRAR ✕</button>';document.body.appendChild(d);d.onclick=e=>{if(e.target===d)d.remove()}}
 function abrirEditorGaleria(){}
 function clickPerfilGaleria(){ if(!esAdmin){modal('<h3>SOLO LXVTORRES</h3>');return;} modal('<h3>GALERÍA</h3>'); }
 var cont=document.getElementById('botonera');
@@ -224,15 +196,16 @@ document.addEventListener("click",()=>{document.getElementById("menuCtx").style.
 document.getElementById("ctxEditar").onclick=()=>{document.getElementById("menuCtx").style.display="none";abrirEditorNuevo(ctxId);};
 document.getElementById("ctxEliminar").onclick=async()=>{document.getElementById("menuCtx").style.display="none";await borrarEnDB(ctxId);abrirComics();};
 abrirDB().then(async()=>{await cargarComics();await cargarGaleria();});
-(function(){
-  const SONGS=["BOSSA.mp3","LANDSCAPE.mp3","EmbersCALL.mp3"];
-  const player=document.getElementById("player");const btnMute=document.getElementById("btn-mute");const btnNext=document.getElementById("btn-next");
-  let idx=0;player.src=SONGS[0];player.volume=0.6;player.loop=true;
-  document.addEventListener("click",function init(){player.play().catch(()=>{});document.removeEventListener("click",init);});
-  btnMute.addEventListener("click",()=>{player.muted=!player.muted;});
-  btnNext.addEventListener("click",()=>{idx=(idx+1)%SONGS.length;player.src=SONGS[idx];player.play().catch(()=>{});});
-})();
+(function(){ const SONGS=["BOSSA.mp3","LANDSCAPE.mp3","EmbersCALL.mp3"]; const player=document.getElementById("player");const btnMute=document.getElementById("btn-mute");const btnNext=document.getElementById("btn-next"); let idx=0;player.src=SONGS[0];player.volume=0.6;player.loop=true; document.addEventListener("click",function init(){player.play().catch(()=>{});document.removeEventListener("click",init);}); btnMute.addEventListener("click",()=>{player.muted=!player.muted;}); btnNext.addEventListener("click",()=>{idx=(idx+1)%SONGS.length;player.src=SONGS[idx];player.play().catch(()=>{});});})();
 (function(){function check(){let l=document.getElementById('rotate-lock');if(window.innerWidth<=1024&&window.innerHeight>window.innerWidth){l.style.display='flex'}else{l.style.display='none'}}window.addEventListener('resize',check);window.addEventListener('orientationchange',check);check();})();
+
+// ANTI-CAPTURA + ANTI-GUARDAR
+const black=document.getElementById('blackScreen');
+function ponerNegro(){black.style.display='flex';document.querySelectorAll('img,canvas,video').forEach(e=>{if(e.id!=='celina-video'&&e.id!=='renya-img')e.style.opacity='0';});setTimeout(()=>{black.style.display='none';document.querySelectorAll('img,canvas,video').forEach(e=>e.style.opacity='1');},2500);}
+document.addEventListener('keyup',e=>{if(e.key==='PrintScreen'||e.keyCode===44){ponerNegro();navigator.clipboard.writeText('');}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden) ponerNegro();});
+window.addEventListener('blur', ponerNegro);
+document.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG') e.preventDefault();});
 </script>
 </body>
 </html>
