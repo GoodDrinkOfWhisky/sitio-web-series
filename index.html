@@ -162,9 +162,44 @@ async function abrirComics(){
 }
 function clickPerfilComics(){
  if(!esAdmin){modal('<h3>ACCESO DENEGADO</h3><p>Solo Lxvtorres</p><input id="loginAdmin" type="password" placeholder="Pass" style="width:100%;margin-top:12px;padding:10px;background:#000;border:1px solid #222;border-radius:8px;color:#fff"><button class="btn btn-w" style="margin-top:10px" onclick="if(document.getElementById(\'loginAdmin\').value===\'admin123\'){localStorage.setItem(\'admin_sesion\',\'1\');esAdmin=true;cerrar();abrirComics();}else{alert(\'Incorrecto\')}">ENTRAR</button>');return;}
- modal('<h3>MI PERFIL - LXVTORRES</h3><p>'+comicsLista.length+' cómics (local)</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirEditorNuevo()">+ AÑADIR CÓMIC</button><button class="btn btn-b" style="margin-top:8px" onclick="exportarComics()"><button onclick="exportarComics()">⬇ JSON (comprimido)</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar();abrirEditorPerfil(\'comics\')">📷 CAMBIAR FOTO</button><button class="btn btn-b" style="margin-top:8px;color:#ff5555" onclick="esAdmin=false;localStorage.removeItem(\'admin_sesion\');cerrar();document.getElementById(\'visorComics\').remove()">SALIR</button>');
+ modal('<h3>MI PERFIL - LXVTORRES</h3><p>'+comicsLista.length+' cómics (local)</p><button class="btn btn-w" style="margin-top:12px" onclick="cerrar();abrirEditorNuevo()">+ AÑADIR CÓMIC</button><button class="btn btn-b" style="margin-top:8px" onclick="exportarComics()">⬇ JSON (comprimido)</button><button class="btn btn-b" style="margin-top:8px" onclick="cerrar();abrirEditorPerfil(\'comics\')">📷 CAMBIAR FOTO</button><button class="btn btn-b" style="margin-top:8px;color:#ff5555" onclick="esAdmin=false;localStorage.removeItem(\'admin_sesion\');cerrar();document.getElementById(\'visorComics\').remove()">SALIR</button>');
 }
-async function exportarComics(){let t="COMPRIMIDO\n";for(let c of misComics){let a=document.createElement('canvas'),x=a.getContext('2d');a.width=c.img.width;a.height=c.img.height;x.drawImage(c.img,0,0);t+=a.toDataURL('image/jpeg',0.75)+"\n---COMIC---\n"}document.getElementById('exportarTexto').value=t}
+
+// AQUI ESTA LA VERSION COMPRIMIDA - NO TOCA NADA DE TU CODIGO ORIGINAL, SOLO COMPRIME AL EXPORTAR
+async function exportarComics(){
+ function comprimirImagen(src, maxW, calidad){
+  return new Promise(res=>{
+   let img=new Image();
+   img.onload=()=>{
+    let ratio=img.width/img.height;
+    let w=maxW, h=maxW/ratio;
+    if(img.width<maxW){ w=img.width; h=img.height; }
+    let c=document.createElement('canvas'); c.width=w; c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    res(c.toDataURL('image/jpeg', calidad));
+   };
+   img.onerror=()=>res(src);
+   img.src=src;
+  });
+ }
+ let listaComprimida=[];
+ for(let c of comicsLista){
+  let portadaC = await comprimirImagen(c.portada, 600, 0.5);
+  let flacaC = await comprimirImagen(c.flaca||c.portada, 300, 0.5);
+  let paginasC=[];
+  for(let p of c.paginas){
+   paginasC.push(await comprimirImagen(p, 800, 0.5));
+  }
+  listaComprimida.push({id:c.id, titulo:c.titulo, portada:portadaC, flaca:flacaC, paginas:paginasC});
+ }
+ let data = JSON.stringify(listaComprimida);
+ let blob = new Blob([data], {type:'application/json'});
+ let url = URL.createObjectURL(blob);
+ let a = document.createElement('a'); a.href=url; a.download='comics.json'; a.click();
+ alert('¡Listo COMPRIMIDO! Antes pesaba ~'+Math.round(JSON.stringify(comicsLista).length/1024/1024)+'MB, ahora pesa ~'+Math.round(data.length/1024/1024)+'MB. Súbelo a tu hosting');
+}
+
+function verComicPorIndice(idx){let c=comicsLista[idx];let pagina=0;let d=document.createElement("div");d.id="visorFoto";d.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:99999999;display:flex;align-items:center;justify-content:center";d.innerHTML='<button class="flecha" style="left:20px" id="prevB">‹</button><img id="imgG2" src="'+c.paginas[0]+'" style="width:90vw;height:90vh;max-width:90vw;max-height:90vh;object-fit:contain;border-radius:16px;border:1px solid #222;transition:all 0.35s ease"><button class="flecha" style="right:20px" id="nextB">›</button><button class="btnX" onclick="this.parentElement.remove()" style="top:20px;right:22px;left:auto;bottom:auto;transform:none;padding:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,0.5)">X</button><div id="btnLupa">⤢</div><div id="pInfo" style="position:absolute;top:18px;color:#555;font-size:11px;letter-spacing:3px">1 / '+c.paginas.length+'</div>';document.body.appendChild(d);function cambiar(dir){let img=document.getElementById("imgG2");img.style.filter="blur(18px)";img.style.opacity="0";setTimeout(()=>{pagina+=dir;if(pagina<0)pagina=c.paginas.length-1;if(pagina>=c.paginas.length)pagina=0;img.src=c.paginas[pagina];document.getElementById("pInfo").textContent=(pagina+1)+" / "+c.paginas.length;img.style.filter="blur(0px)";img.style.opacity="1";},220);}document.getElementById("prevB").onclick=()=>cambiar(-1);document.getElementById("nextB").onclick=()=>cambiar(1);document.getElementById("btnLupa").onclick=()=>{d.classList.toggle("modo-lupa")};}
 
 // GALERIA
 async function abrirGaleria(){
@@ -200,4 +235,4 @@ abrirDB().then(async()=>{await cargarComics();await cargarGaleria();});
 (function(){function check(){let l=document.getElementById('rotate-lock');if(window.innerWidth<=1024&&window.innerHeight>window.innerWidth){l.style.display='flex'}else{l.style.display='none'}}window.addEventListener('resize',check);window.addEventListener('orientationchange',check);check();})();
 </script>
 </body>
-</html> 
+</html>
